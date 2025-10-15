@@ -2,29 +2,20 @@
 
 ## Student Details
 
-- **Full Name:** `<Spencer Bussiere>`
-- **CCID:** `<sabussie>`
-
-- **Full Name:** `<Aaron Bedard>`
-- **CCID:** `<abedard1>`
-
-- **Full Name:** `<Seth Close>`
-- **CCID:** `<srclose>`
-
-- **Full Name:** `<Reanna Manuel>`
-- **CCID:** `<reannace>`
-
-- **Full Name:** `<Kyle Nguyen>`
-- **CCID:** `<kmn1>`
-
-- **Full Name:** `<Kishan Prasad>`
-- **CCID:** `<kkprasad>`
+| **Full Name:** | **CCID** |
+| -------------- | -------- |
+| `<Spencer Bussiere>` | `<sabussie>` |
+| `<Aaron Bedard>`     | `<abedard1>` |
+| `<Seth Close>`       | `<srclose>`  |
+| `<Reanna Manuel>`    | `<reannace>` |
+| `<Kyle Nguyen>`      | `<kmn1>`     |
+| `<Kishan Prasad>`    | `<kkprasad>` |
 
 ## References and Resources
 
 **Update as we go, please and thank you.**
 
-## Verbal Collaboration
+## Verbal Collaborations
 
 |  Group Names  | CCID     |
 |  -----------  | -------- |
