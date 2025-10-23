@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="mainblue">#506D84</color>
+    <color name="greyaccent">#D9D9D9</color>
+
+
+    <color name="orangebtn">#FF9655</color>
+    <color name="redbtn">#FF5151</color>
+    <color name="bluebtn">#55B2FF</color>
+    <color name="greenbtn">#64D249</color>
+    <color name="greybtn">#9A9A9A</color>
+
 </resources>
