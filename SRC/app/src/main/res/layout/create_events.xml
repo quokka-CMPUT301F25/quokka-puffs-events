@@ -132,8 +132,9 @@
 
     <Button
         android:id="@+id/addPhotosBtn"
-        android:layout_width="171dp"
+        android:layout_width="141dp"
         android:layout_height="36dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="12dp"
         android:backgroundTint="#11aaff"
         android:text="Add Photos"
