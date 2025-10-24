@@ -1,153 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_editor_absoluteX="1dp"
-    tools:layout_editor_absoluteY="0dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black">
 
-    <TextView
-        android:id="@+id/eventCreateHeader"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:text="Create An Event"
+        android:gravity="center|top"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp"/>
-    <TextView
-        android:id="@+id/enterEventTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Event Title:"
-        app:layout_constraintTop_toBottomOf="@+id/eventCreateHeader"
-        tools:layout_editor_absoluteX="81dp"
-        android:layout_marginTop="24dp"/>
+        android:background="@drawable/border_shape_general"
+        android:padding="8dp"
+        >
 
-    <TextView
-        android:id="@+id/eventDateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Date:"
-        app:layout_constraintTop_toBottomOf="@+id/enterEventTitleText"
-        tools:layout_editor_absoluteX="81dp" />
+        <TextView
+            android:id="@+id/createAnEventHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Create An Event"
+            android:textSize="32dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:id="@+id/eventNameContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Name: "
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                />
+
+            <EditText
+                android:id="@+id/eventTitleInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter an Event Title"
+                android:padding="4dp"
+                android:background="@drawable/border_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/eventDateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter a Date: "
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="4" />
+
+            <EditText
+                android:id="@+id/eventDateInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:hint="Date"
+                android:padding="4dp"
+                android:background="@drawable/border_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/eventDescContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:layout_gravity="center"
+                android:layout_weight="8"
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+            <EditText
+                android:layout_marginTop="8dp"
+                android:id="@+id/eventDescInput"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/border_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/posterImageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Poster Image"
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/eventAddImagesBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/bluebtn"
+                android:text="Add Images">
+            </Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/EventswitchCointers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Switch
+                android:id="@+id/eventLimitParticipantsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:text="Limit Participants" />
+
+            <LinearLayout
+                android:id="@+id/limitParticipantsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Max Participants: "
+                    android:textColor="@color/greybtn"
+                    android:textSize="20dp"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="4" />
+
+                <EditText
+                    android:id="@+id/eventMaxParticipantsInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:hint="Participants"
+                    android:padding="4dp"
+                    android:background="@drawable/border_shape"/>
+            </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/eventDescText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enterEventTitleTextInput2" />
+            <Switch
+                android:id="@+id/eventGeolocationSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:text="Show GeoLocation Of Participants" />
+        </LinearLayout>
 
-    <EditText
-        android:id="@+id/eventDescTextInput"
-        android:layout_width="250dp"
-        android:layout_height="200dp"
-        android:background="@drawable/border_shape"
-        android:gravity="top|start"
-        android:hint="Enter a description here."
-        android:padding="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventDescText" />
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/enterEventTitleTextInput"
-        android:layout_width="200dp"
-        android:layout_height="25dp"
-        android:background="@drawable/border_shape"
-        android:gravity="top|start"
-        android:hint="Enter Title Here"
-        android:padding="2dp"
-        android:textSize="12dp"
-        app:layout_constraintStart_toEndOf="@+id/enterEventTitleText"
-        app:layout_constraintTop_toBottomOf="@+id/eventCreateHeader"
-        android:layout_marginTop="24dp"/>
+            <Button
+                android:id="@+id/cancelEventCreationBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/redbtn"
+                android:text="Cancel">
+            </Button>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-    <EditText
-        android:id="@+id/enterEventTitleTextInput2"
-        android:layout_width="60dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="176dp"
-        android:background="@drawable/border_shape"
-        android:gravity="top|center_horizontal"
-        android:hint="DOB"
-        android:padding="2dp"
-        android:textSize="12dp"
-        app:layout_constraintStart_toEndOf="@+id/eventDateText"
-        app:layout_constraintTop_toBottomOf="@+id/enterEventTitleTextInput" />
+            <Button
+                android:id="@+id/confirmEventCreationBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/greenbtn"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:text="Create">
+            </Button>
 
-    <TextView
-        android:id="@+id/posterImageText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Poster Image"
-        app:layout_constraintTop_toBottomOf="@+id/eventDescTextInput"
-        tools:layout_editor_absoluteX="81dp"
-        android:layout_marginTop="24dp"/>
 
-    <Switch
-        android:id="@+id/limitParticipantsSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Limit Participants"
-        app:layout_constraintTop_toBottomOf="@+id/addPhotosBtn"
-        tools:layout_editor_absoluteX="186dp" />
 
-    <Switch
-        android:id="@+id/geolocationSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Geolocation of Participants"
-        app:layout_constraintTop_toBottomOf="@+id/limitParticipantsSwitch"
-        tools:layout_editor_absoluteX="88dp" />
+        </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="1dp">
 
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="179dp" />
 
-    <Button
-        android:id="@+id/cancelEventCreationBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FF0000"
-        android:text="Cancel"
-        tools:layout_editor_absoluteX="88dp"
-        tools:layout_editor_absoluteY="491dp" />
-
-    <Button
-        android:id="@+id/addPhotosBtn"
-        android:layout_width="141dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="#11aaff"
-        android:text="Add Photos"
-        app:layout_constraintStart_toEndOf="@+id/posterImageText"
-        app:layout_constraintTop_toBottomOf="@+id/eventDescTextInput" />
-
-    <Button
-        android:id="@+id/confirmEventCreationBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#1199FF"
-        android:text="Confirm"
-        tools:layout_editor_absoluteX="244dp"
-        tools:layout_editor_absoluteY="491dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
