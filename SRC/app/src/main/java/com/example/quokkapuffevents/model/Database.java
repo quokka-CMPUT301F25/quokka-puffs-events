@@ -28,12 +28,14 @@ public class Database {
     private CollectionReference usersRef;
     private CollectionReference eventsRef;
     private CollectionReference notifsRef;
+    private CollectionReference imagesRef;
 
     private Database() {
         this.db = FirebaseFirestore.getInstance(); //Get database
         this.usersRef = db.collection("users");
         this.eventsRef = db.collection("events");
         this.notifsRef = db.collection("notifications");
+        this.imagesRef = db.collection("images");
     }
 
     public static Database getInstance() {
@@ -64,6 +66,13 @@ public class Database {
         Event newEvent = new Event(idEvent, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, endDate);
         eventsRef.document(id).set(newEvent);
         return(newEvent);
+    }
+
+    public Notif createNotification(Integer type, String recipient,String originEvent,String originUser,String message){
+        String id = notifsRef.document().getId(); //Creates a document and returns the id
+        Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message);
+        notifsRef.document(id).set(newNotif);
+        return(newNotif);
     }
 
     public ArrayList<Event> listEvents(){
@@ -117,7 +126,7 @@ public class Database {
 
         return(users);
     }
-
+    //TODO these:
     //public ArrayList<User> drawUsers
 
     //public ArrayList<User> redrawUsers
@@ -152,5 +161,26 @@ public class Database {
             }
         });
         return(event.get(0));
+    }
+
+
+    //Notif Methods
+    public ArrayList<Notif> getUserNotifications(User user){
+        ArrayList<Notif> notifs = new ArrayList<>();
+        notifsRef.whereEqualTo("recipient", user.getId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                notifs.add(document.toObject(Notif.class));
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return(notifs);
     }
 }
