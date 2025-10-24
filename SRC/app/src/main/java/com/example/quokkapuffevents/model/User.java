@@ -12,7 +12,9 @@ public class User {
     //etc etc
 
 
-
+    public User(){
+        this.id = "FAILURE";
+    }
     public User(String id, String email, Integer accountType, String hashPassword, String userName){
         this.id = id;
         this.email = email;

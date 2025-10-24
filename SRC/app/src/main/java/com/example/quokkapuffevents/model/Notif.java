@@ -32,7 +32,7 @@ public class Notif {
         return message;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 

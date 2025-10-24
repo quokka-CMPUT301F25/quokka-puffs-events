@@ -61,9 +61,9 @@ public class Database {
         return(newUser);
     }
 
-    public Event createEvent(String idEvent, User org, String description, Integer toBeDrawn, Optional<Integer> maxNumWaitlist, Date startDate, Date endDate){
+    public Event createEvent(User org, String description, Integer toBeDrawn, Optional<Integer> maxNumWaitlist, Date startDate, Date endDate){
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(idEvent, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, endDate);
+        Event newEvent = new Event(id, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, endDate);
         eventsRef.document(id).set(newEvent);
         return(newEvent);
     }
@@ -100,6 +100,7 @@ public class Database {
         ArrayList<User> users = new ArrayList<>(); //because I cannot create or access within the mini function
         ArrayList<Event> specificEvent = new ArrayList<>(); //because I cannot create or access within the mini function
 
+        //Collect the most up to date version of the event
         eventsRef.document(event.getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -107,8 +108,10 @@ public class Database {
             }
         });
 
+        //List of all users in the event
         List usersInEvent = (List) specificEvent.get(0).getEventUsers().keySet();
 
+        //Collects the data for every user with an id in the above list
         usersRef.whereIn("id", usersInEvent)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -140,24 +143,51 @@ public class Database {
     public User getUser(String userID){
         //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
         ArrayList<User> user = new ArrayList<>(); //because I cannot create or access within the mini function
+        user.add(new User());
 
-        usersRef.document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        usersRef.document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                user.set(0, documentSnapshot.toObject(User.class));
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        user.set(0, document.toObject(User.class));
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                        System.out.println("No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                    System.out.println("Document Retrieval Failed");
+                }
             }
         });
+
         return(user.get(0));
     }
 
     public Event getEvent(String eventID){
         //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
         ArrayList<Event> event = new ArrayList<>(); //because I cannot create or access within the mini function
+        event.add(new Event());
 
-        eventsRef.document(eventID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        eventsRef.document(eventID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                event.set(0, documentSnapshot.toObject(Event.class));
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        event.set(0, document.toObject(Event.class));
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                        System.out.println("No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                    System.out.println("Document Retrieval Failed");
+                }
             }
         });
         return(event.get(0));
