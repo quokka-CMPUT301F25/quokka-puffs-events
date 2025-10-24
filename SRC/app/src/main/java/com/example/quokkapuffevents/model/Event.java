@@ -22,6 +22,9 @@ public class Event {
     //Add geo data?
     private Boolean drawn;
 
+    public Event(){
+        this.id = "FAILURE";
+    }
     public Event(String id, String org, String description, Integer toBeDrawn, Optional<Integer> maxNumWaitlist, Date startDate, Date endDate){
         Integer numWait = maxNumWaitlist.isPresent() ? maxNumWaitlist.get() : -1;
 
