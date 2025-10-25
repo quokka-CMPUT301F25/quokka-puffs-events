@@ -53,17 +53,22 @@ public class Database {
         this.userID = userID;
     }
 
-
     public User createUser(String email, Integer type, String hashPass, String userName){
         String id = usersRef.document().getId(); //Creates a document and returns the id
-        User newUser = new User(id, email, type, hashPass, userName);
-        usersRef.document(id).set(newUser);
+        User newUser = new User(id, email, type, hashPass, userName); //Creates new User class
+        usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
     }
 
-    public Event createEvent(User org, String description, Integer toBeDrawn, Optional<Integer> maxNumWaitlist, Date startDate, Date endDate){
+    public Event createEvent(User org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date endDate){
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, endDate);
+        Event newEvent = new Event(id, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, endDate); //This version has the max on the size of the waitlsit
+        eventsRef.document(id).set(newEvent);
+        return(newEvent);
+    }
+    public Event createEvent(User org, String description, Integer toBeDrawn, Date startDate, Date endDate){
+        String id = eventsRef.document().getId(); //Creates a document and returns the id
+        Event newEvent = new Event(id, org.getId(), description, toBeDrawn, startDate, endDate); //This version does not have the limit
         eventsRef.document(id).set(newEvent);
         return(newEvent);
     }
@@ -75,6 +80,7 @@ public class Database {
         return(newNotif);
     }
 
+    //Two version to allow us to use both the object or just their id
     public void deleteUser(User user){
         usersRef.document(user.getId()).delete();
     }
@@ -94,6 +100,7 @@ public class Database {
         notifsRef.document(id).delete();
     }
 
+    //TODO: Test all of these:
     public ArrayList<Event> listEvents(){
         //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
        ArrayList<Event> events = new ArrayList<>();
@@ -181,6 +188,7 @@ public class Database {
         return(events);
     }
 
+    //TODO Make these prettier. They stink right now
     public User getUser(String userID){
         //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
         ArrayList<User> user = new ArrayList<>(); //because I cannot create or access within the mini function
@@ -234,7 +242,7 @@ public class Database {
         return(event.get(0));
     }
 
-    //TODO Add logic for sending out notifications
+    //TODO Add logic for sending out notifications. Need Testing
     public ArrayList<User> drawUsers(Event event){
         //Update from database
         event = getEvent(event.getId());

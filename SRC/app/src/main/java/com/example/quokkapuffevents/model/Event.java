@@ -25,17 +25,29 @@ public class Event {
     public Event(){
         this.id = "FAILURE";
     }
-    public Event(String id, String org, String description, Integer toBeDrawn, Optional<Integer> maxNumWaitlist, Date startDate, Date endDate){
-        Integer numWait = maxNumWaitlist.isPresent() ? maxNumWaitlist.get() : -1;
-
+    public Event(String id, String org, String description, Integer toBeDrawn, Date startDate, Date endDate){
         this.id = id;
+        this.org = org;
         this.description = description;
         this.toBeDrawn = toBeDrawn;
-        this.maxNumWaitlist = numWait;
+        this.maxNumWaitlist = -1;
         this.startDate = startDate;
         this.endDate = endDate;
         this.drawn = false;
         this.imageID = null;
+        this.eventUsers = null;
+    }
+    public Event(String id, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date endDate){
+        this.id = id;
+        this.org = org;
+        this.description = description;
+        this.toBeDrawn = toBeDrawn;
+        this.maxNumWaitlist = maxNumWaitlist;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.drawn = false;
+        this.imageID = null;
+        this.eventUsers = null;
     }
 
     public void setDrawn(Boolean drawn) {
