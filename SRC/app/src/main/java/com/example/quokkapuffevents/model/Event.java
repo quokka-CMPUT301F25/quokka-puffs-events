@@ -102,8 +102,7 @@ public class Event {
                 waitingUsers.add(entry.getKey());
             }
         }
-        //Ensure that no error
-        //TODO add authentication before here
+        //Ensure that no error. Easier to do here than anywhere else
         if (numCalled > waitingUsers.size()){
             numCalled = waitingUsers.size();
         }
