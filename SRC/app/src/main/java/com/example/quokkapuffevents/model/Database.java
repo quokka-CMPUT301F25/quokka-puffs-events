@@ -68,17 +68,35 @@ public class Database {
         return(newEvent);
     }
 
-    public Notif createNotification(Integer type, String recipient,String originEvent,String originUser,String message){
+    public Notif createNotification(Integer type, User recipient, Event originEvent, User originUser, String message){
         String id = notifsRef.document().getId(); //Creates a document and returns the id
-        Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message);
+        Notif newNotif = new Notif(id, type, recipient.getId(), originEvent.getId(), originUser.getId(), message);
         notifsRef.document(id).set(newNotif);
         return(newNotif);
+    }
+
+    public void deleteUser(User user){
+        usersRef.document(user.getId()).delete();
+    }
+    public void deleteUser(String id){
+        usersRef.document(id).delete();
+    }
+    public void deleteEvent(Event event){
+        eventsRef.document(event.getId()).delete();
+    }
+    public void deleteEvent(String id){
+        eventsRef.document(id).delete();
+    }
+    public void deleteNotification(Notif notif){
+        notifsRef.document(notif.getId()).delete();
+    }
+    public void deleteNotification(String id){
+        notifsRef.document(id).delete();
     }
 
     public ArrayList<Event> listEvents(){
         //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
        ArrayList<Event> events = new ArrayList<>();
-
        //Will return every single event
        eventsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -129,16 +147,39 @@ public class Database {
 
         return(users);
     }
-    //TODO these:
-    //public ArrayList<User> drawUsers
 
-    //public ArrayList<User> redrawUsers
+    public ArrayList<Event> getEventsFromUser(User user){
+        ArrayList<User> specificUser = new ArrayList<>(); //because I cannot create or access within the mini function
+        ArrayList<Event> events = new ArrayList<>(); //because I cannot create or access within the mini function
 
-    //public void deleteUser
+        //Collect the most up to date version of the event
+        usersRef.document(user.getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                specificUser.set(0, documentSnapshot.toObject(User.class));
+            }
+        });
 
-    //public void deleteEvent
+        //List of all users in the event
+        List eventsOfUser = specificUser.get(0).getEvents();
 
-    //public ArrayList<Event> getEventsFromUser
+        //Collects the data for every user with an id in the above list
+        eventsRef.whereIn("id", eventsOfUser)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                events.add(document.toObject(Event.class));
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return(events);
+    }
 
     public User getUser(String userID){
         //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
@@ -193,6 +234,33 @@ public class Database {
         return(event.get(0));
     }
 
+    //TODO Add logic for sending out notifications
+    public ArrayList<User> drawUsers(Event event){
+        //Update from database
+        event = getEvent(event.getId());
+        //Collect User IDs
+        ArrayList<String> userID = event.drawUsers(-1);
+
+        //Convert from id to User class
+        ArrayList<User> users = new ArrayList<>();
+        for (int i = 0; i < userID.size(); i ++){
+            users.add(getUser(userID.get(i)));
+        }
+        return(users);
+    }
+
+    public ArrayList<User> redrawUsers(Event event, Integer numToDraw){
+        //Update from database
+        event = getEvent(event.getId());
+        //Collect User IDs
+        ArrayList<String> userID = event.drawUsers(numToDraw);
+        //Convert from id to User class
+        ArrayList<User> users = new ArrayList<>();
+        for (int i = 0; i < userID.size(); i ++){
+            users.add(getUser(userID.get(i)));
+        }
+        return(users);
+    }
 
     //Notif Methods
     public ArrayList<Notif> getUserNotifications(User user){
