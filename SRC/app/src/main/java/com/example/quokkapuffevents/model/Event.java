@@ -101,10 +101,18 @@ public class Event {
 
     //Actual methods
     public void addUser(String userID){
+        //Adding an entry to the map
         this.eventUsers.put(userID, "Waiting");
     }
 
     public ArrayList<String> drawUsers(Integer numCalled){
+        /**
+         * This randomly chooses numCalled people that are waiting for this event
+         * @param numCalled
+         * The number of people to draw
+         * @return
+         * Return the array list of all of the drawn users
+         */
         ArrayList<String> waitingUsers = new ArrayList<>(); //Create empty list to hold users that are still on the waiting list
         Random r= new Random(); //Random class for the draw
 
