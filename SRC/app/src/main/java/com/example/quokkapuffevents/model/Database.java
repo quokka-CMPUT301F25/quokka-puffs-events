@@ -30,7 +30,7 @@ public class Database {
     private CollectionReference notifsRef;
     private CollectionReference imagesRef;
 
-    private Database() {
+    public Database() {
         this.db = FirebaseFirestore.getInstance(); //Get database
         this.usersRef = db.collection("users");
         this.eventsRef = db.collection("events");
@@ -102,7 +102,7 @@ public class Database {
     }
     public Event createEvent(User org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
         /**
-         * Same as the other create event but does not construct it with the optional cap on number of participents
+         * Same as the other create event but does not construct it with the optional cap on number of participants
          * @param org
          * This is the user that is creating the event
          * @param description
