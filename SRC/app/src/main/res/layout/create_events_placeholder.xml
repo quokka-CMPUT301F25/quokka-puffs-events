@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteX="1dp"
+    tools:layout_editor_absoluteY="0dp">
+
+    <TextView
+        android:id="@+id/eventCreateHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create An Event"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="50dp"/>
+    <TextView
+        android:id="@+id/enterEventTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Title:"
+        app:layout_constraintTop_toBottomOf="@+id/eventCreateHeader"
+        tools:layout_editor_absoluteX="81dp"
+        android:layout_marginTop="24dp"/>
+
+    <TextView
+        android:id="@+id/eventDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date:"
+        app:layout_constraintTop_toBottomOf="@+id/enterEventTitleText"
+        tools:layout_editor_absoluteX="81dp" />
+
+
+    <TextView
+        android:id="@+id/eventDescText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enterEventTitleTextInput2" />
+
+    <EditText
+        android:id="@+id/eventDescTextInput"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:background="@drawable/border_shape"
+        android:gravity="top|start"
+        android:hint="Enter a description here."
+        android:padding="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventDescText" />
+
+    <EditText
+        android:id="@+id/enterEventTitleTextInput"
+        android:layout_width="200dp"
+        android:layout_height="25dp"
+        android:background="@drawable/border_shape"
+        android:gravity="top|start"
+        android:hint="Enter Title Here"
+        android:padding="2dp"
+        android:textSize="12dp"
+        app:layout_constraintStart_toEndOf="@+id/enterEventTitleText"
+        app:layout_constraintTop_toBottomOf="@+id/eventCreateHeader"
+        android:layout_marginTop="24dp"/>
+
+    <EditText
+        android:id="@+id/enterEventTitleTextInput2"
+        android:layout_width="60dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="176dp"
+        android:background="@drawable/border_shape"
+        android:gravity="top|center_horizontal"
+        android:hint="DOB"
+        android:padding="2dp"
+        android:textSize="12dp"
+        app:layout_constraintStart_toEndOf="@+id/eventDateText"
+        app:layout_constraintTop_toBottomOf="@+id/enterEventTitleTextInput" />
+
+    <TextView
+        android:id="@+id/posterImageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Poster Image"
+        app:layout_constraintTop_toBottomOf="@+id/eventDescTextInput"
+        tools:layout_editor_absoluteX="81dp"
+        android:layout_marginTop="24dp"/>
+
+    <Switch
+        android:id="@+id/limitParticipantsSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Limit Participants"
+        app:layout_constraintTop_toBottomOf="@+id/addPhotosBtn"
+        tools:layout_editor_absoluteX="186dp" />
+
+    <Switch
+        android:id="@+id/geolocationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Geolocation of Participants"
+        app:layout_constraintTop_toBottomOf="@+id/limitParticipantsSwitch"
+        tools:layout_editor_absoluteX="88dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="1dp">
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="179dp" />
+
+    <Button
+        android:id="@+id/cancelEventCreationBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF0000"
+        android:text="Cancel"
+        tools:layout_editor_absoluteX="88dp"
+        tools:layout_editor_absoluteY="491dp" />
+
+    <Button
+        android:id="@+id/addPhotosBtn"
+        android:layout_width="141dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#11aaff"
+        android:text="Add Photos"
+        app:layout_constraintStart_toEndOf="@+id/posterImageText"
+        app:layout_constraintTop_toBottomOf="@+id/eventDescTextInput" />
+
+    <Button
+        android:id="@+id/confirmEventCreationBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#1199FF"
+        android:text="Confirm"
+        tools:layout_editor_absoluteX="244dp"
+        tools:layout_editor_absoluteY="491dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
