@@ -15,8 +15,10 @@ public class Event {
     private Integer maxNumWaitlist;
     //TODO
     //private QRCode qrCode;
+    //private Geo geo;????
     private Map<String, String> eventUsers; //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
+    private Date drawnDate;
     private Date endDate;
     private String imageID;
     //Add geo data?
@@ -25,25 +27,27 @@ public class Event {
     public Event(){
         this.id = "FAILURE";
     }
-    public Event(String id, String org, String description, Integer toBeDrawn, Date startDate, Date endDate){
+    public Event(String id, String org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
         this.id = id;
         this.org = org;
         this.description = description;
         this.toBeDrawn = toBeDrawn;
         this.maxNumWaitlist = -1;
         this.startDate = startDate;
+        this.drawnDate = drawnDate;
         this.endDate = endDate;
         this.drawn = false;
         this.imageID = null;
         this.eventUsers = null;
     }
-    public Event(String id, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date endDate){
+    public Event(String id, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
         this.id = id;
         this.org = org;
         this.description = description;
         this.toBeDrawn = toBeDrawn;
         this.maxNumWaitlist = maxNumWaitlist;
         this.startDate = startDate;
+        this.drawnDate = drawnDate;
         this.endDate = endDate;
         this.drawn = false;
         this.imageID = null;
@@ -76,6 +80,10 @@ public class Event {
 
     public Date getStartDate() {
         return startDate;
+    }
+
+    public Date getDrawnDate() {
+        return drawnDate;
     }
 
     public Integer getMaxNumWaitlist() {
