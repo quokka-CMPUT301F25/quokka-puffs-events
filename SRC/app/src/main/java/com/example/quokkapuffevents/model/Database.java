@@ -53,6 +53,10 @@ public class Database {
         this.userID = userID;
     }
 
+    public Integer getUserID() {
+        return userID;
+    }
+
     //Base creation methods
     public User createUser(String email, Integer type, String hashPass, String userName){
         /**
