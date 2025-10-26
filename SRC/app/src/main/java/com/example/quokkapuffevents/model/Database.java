@@ -53,6 +53,10 @@ public class Database {
         this.userID = userID;
     }
 
+    public Integer getUserID() {
+        return userID;
+    }
+
     //Base creation methods
     public User createUser(String email, Integer type, String hashPass, String userName){
         /**
@@ -139,21 +143,12 @@ public class Database {
         return(newNotif);
     }
 
-    public Event uploadImage(Event event, BufferedImage image){
-        /**
-         * Creates a new image and adds it to the firebase and event
-         * @param event
-         * This is the city to check
-         * @param image
-         * This denotes the type of account the user is. -1 for admin, 0 for participent, and 1 for organizer
-         * @return
-         * The updated event
-         */
-        String id = imagesRef.document().getId(); //Creates a document and returns the id
-        imagesRef.document(id).set(image);
-
-        return(event);
-    }
+    //TODO: READ
+    //To edit safetly follow this
+    //More wide ranging changes. For quick fixes user:
+    //event = db.getEvent(event.getID())
+    //event.setXYZ(xyz)
+    //db.saveEvent(event)
 
     //TODO Make these prettier. They stink right now
     public User getUser(String userID){
@@ -253,15 +248,64 @@ public class Database {
         });
         return(notif.get(0));
     }
+    //TODO FIX THE IMAHES BELOW
+    /*
+    public Event uploadImage(Event event, BufferedImage image){
+        /**
+         * Creates a new image and adds it to the firebase and event
+         * @param event
+         * This is the city to check
+         * @param image
+         * This denotes the type of account the user is. -1 for admin, 0 for participent, and 1 for organizer
+         * @return
+         * The updated event
+
+    String id = imagesRef.document().getId(); //Creates a document and returns the id
+        imagesRef.document(id).set(image);
+
+        return(event);
+}
+
+    public BufferedImage getImage(Event event){
+        /**
+         * Collects and returns an events image
+         * @param event
+         * The event that is being looked at
+         * @return
+         * A buffered image holding the png
+
+        BufferedImage image;
+        imagesRef.document(event.getImageID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        image = document;
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                        System.out.println("No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                    System.out.println("Document Retrieval Failed");
+                }
+            }
+        });
+
+        return(user.get(0));
+    }
+    */
 
     public void saveUser(User user){
-        imagesRef.document(user.getId()).set(user);
+        usersRef.document(user.getId()).set(user);
     }
     public void saveEvent(Event event){
-        imagesRef.document(event.getId()).set(event);
+        eventsRef.document(event.getId()).set(event);
     }
     public void saveNotif(Notif notif){
-        imagesRef.document(notif.getId()).set(notif);
+        notifsRef.document(notif.getId()).set(notif);
     }
 
     //Two version to allow us to use both the object or just their id
@@ -493,10 +537,5 @@ public class Database {
                 });
         return(notifs);
     }
-
-    //Editing Methods
-
-
-
 
 }
