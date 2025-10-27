@@ -77,22 +77,22 @@ public class Database {
 
     public ArrayList<Event> listEvents(){
         //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
-       ArrayList<Event> events = new ArrayList<>();
+        ArrayList<Event> events = new ArrayList<>();
 
-       //Will return every single event
-       eventsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                events.add(document.toObject(Event.class));
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
+        //Will return every single event
+        eventsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        events.add(document.toObject(Event.class));
                     }
-                });
-       return events;
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+        return events;
     }
 
     public ArrayList<User> usersInEvent(Event event){
