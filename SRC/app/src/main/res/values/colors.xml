@@ -4,6 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="mainblue">#506D84</color>
     <color name="greyaccent">#D9D9D9</color>
+    <color name="lightblue">#7492AA</color>
 
 
     <color name="orangebtn">#FF9655</color>
@@ -11,5 +12,7 @@
     <color name="bluebtn">#55B2FF</color>
     <color name="greenbtn">#64D249</color>
     <color name="greybtn">#9A9A9A</color>
+
+    <color name="transparent">#00000000</color>
 
 </resources>
