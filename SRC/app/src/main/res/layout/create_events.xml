@@ -85,6 +85,36 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/eventParticipantAmountContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number Of Participants: "
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="4" />
+
+            <EditText
+                android:id="@+id/eventParticipantAmountInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:hint="# of Participants"
+                android:padding="4dp"
+                android:background="@drawable/border_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/eventDescContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -148,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:textColor="@color/white"
-                android:text="Limit Participants" />
+                android:text="Limit Participants In Waiting List" />
 
             <LinearLayout
                 android:layout_marginTop="4dp"
@@ -160,9 +190,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Max Participants: "
-                    android:textColor="@color/greybtn"
-                    android:textSize="20dp"/>
+                    android:text="Max Participants In Waiting List: "
+                    android:textColor="@color/white"
+                    android:textSize="16dp"/>
 
                 <View
                     android:layout_width="0dp"
