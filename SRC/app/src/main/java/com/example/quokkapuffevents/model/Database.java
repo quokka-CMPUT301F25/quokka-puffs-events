@@ -146,9 +146,9 @@ public class Database {
     //TODO: READ
     //To edit safetly follow this
     //More wide ranging changes. For quick fixes user:
-    //event = db.getEvent(event.getID())
-    //event.setXYZ(xyz)
-    //db.saveEvent(event)
+    //event = db.getEvent(event.getID()); //Collects the most recent version
+    //event.setXYZ(xyz) //Edits value needed
+    //db.saveEvent(event) //Saves the newly edited event back up to the cloud
 
     //TODO Make these prettier. They stink right now
     public User getUser(String userID){
