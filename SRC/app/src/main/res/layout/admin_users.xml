@@ -13,7 +13,7 @@
         android:background="@color/mainblue"
         android:fontFamily="@font/inter"
         android:gravity="center"
-        android:text="All Events"
+        android:text="All Users"
         android:textColor="@color/white"
         android:textSize="20pt"
         android:textStyle="bold"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/adminEventsListView"
+        android:id="@+id/adminUsersListView"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_marginBottom="80dp"
