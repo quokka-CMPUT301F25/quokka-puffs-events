@@ -20,7 +20,7 @@ public class User {
         this.email = email;
         this.hashPassword = hashPassword;
         this.userName = userName;
-        this.events = new ArrayList();
+        this.events = new ArrayList<>();
         this.accountType = accountType;
     }
 
