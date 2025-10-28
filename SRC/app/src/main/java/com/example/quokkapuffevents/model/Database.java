@@ -150,6 +150,15 @@ public class Database {
     //event.setXYZ(xyz) //Edits value needed
     //db.saveEvent(event) //Saves the newly edited event back up to the cloud
 
+    public void getUserLambda(String userID, OnSuccessListener<User> listener) {
+        usersRef.document(userID).get().addOnSuccessListener(document -> {
+            if(document.exists()){
+                User user = document.toObject(User.class);
+                listener.onSuccess(user);
+            }
+        });
+    }
+
     //TODO Make these prettier. They stink right now
     public User getUser(String userID){
         /**
@@ -529,6 +538,7 @@ public class Database {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 notifs.add(document.toObject(Notif.class));
+                                Log.d("TAGGED", document.toObject(Notif.class).toString());
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

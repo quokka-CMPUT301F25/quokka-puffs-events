@@ -37,9 +37,16 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         TextView userText = view.findViewById(R.id.userText);
         TextView eventText = view.findViewById(R.id.eventText);
 
-        notificationType.setText(notification.getType().toString());
+        if (notification.getType() == 1) {
+            notificationType.setText(R.string.winner_header);
+        } else {
+            notificationType.setText(R.string.not_picked);
+        }
+
         userText.setText(notification.getOriginUser());
         eventText.setText(notification.getOriginEvent());
+
+
 
         return view;
     }
