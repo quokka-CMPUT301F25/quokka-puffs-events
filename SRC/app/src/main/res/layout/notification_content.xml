@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/border_shape">
+
     <TextView
         android:id="@+id/notificationTypeText"
         android:layout_width="match_parent"
