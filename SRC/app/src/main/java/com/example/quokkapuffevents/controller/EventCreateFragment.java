@@ -49,8 +49,7 @@ public class EventCreateFragment extends Fragment {
 
         // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
-        String userID = String.valueOf(db.GetUserID());
-        currentUser = db.getUser(userID);
+        String userID = String.valueOf(db.GetCurrentUserID());
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,7 +110,7 @@ public class EventCreateFragment extends Fragment {
                 Date eventDate = dateConverter(eventDateString);
 
                 //Create event in database
-                createEventObject(currentUser, desc, parts, maxParts, startDate, endDate, eventDate);
+                createEventObject(currentUser, desc, parts, maxParts, startDate, endDate, eventDate, title);
             }
             //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });
@@ -166,7 +165,7 @@ public class EventCreateFragment extends Fragment {
     }
 
     public void createEventObject(User user, String desc, int parts, String maxParts,
-                                  Date startDate, Date endDate, Date eventDate){
+                                  Date startDate, Date endDate, Date eventDate, String title){
         /**
          * Method to create the event itself (easier for testing)
          * @param User
@@ -186,10 +185,10 @@ public class EventCreateFragment extends Fragment {
          * Day of the event
          */
         if (maxParts.isEmpty()){
-            db.CreateEvent(currentUser, desc, parts, startDate, endDate, eventDate);
+            db.CreateEvent(title, currentUser, desc, parts, startDate, endDate, eventDate);
         } else {
             int maxPar = Integer.parseInt(maxParts);
-            db.CreateEvent(currentUser, desc, parts, maxPar, startDate, endDate, eventDate);
+            db.CreateEvent(title, currentUser, desc, parts, maxPar, startDate, endDate, eventDate);
         }
     }
 
