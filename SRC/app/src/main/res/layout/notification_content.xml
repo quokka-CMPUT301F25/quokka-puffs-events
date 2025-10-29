@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/border_shape">
+
     <TextView
         android:id="@+id/notificationTypeText"
         android:layout_width="match_parent"
@@ -61,7 +62,7 @@
             android:backgroundTint="@color/redbtn"
             android:text="Reject"/>
         <Button
-            android:id="@+id/acceptOrOptOutBtn"
+            android:id="@+id/acceptBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
