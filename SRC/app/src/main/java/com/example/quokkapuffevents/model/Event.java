@@ -127,6 +127,11 @@ public class Event {
         this.eventUsers.put(userID, "Waiting");
     }
 
+    public void SetStatus (String userID, String newStatus) {
+        //Changing the status of a user
+        this.eventUsers.put(userID, newStatus);
+    }
+
     public ArrayList<String> drawUsers(Integer numCalled){
         /**
          * This randomly chooses numCalled people that are waiting for this event
