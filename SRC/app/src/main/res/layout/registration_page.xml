@@ -9,13 +9,13 @@
 
     <ImageView
         android:id="@+id/register_logo"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:src="@drawable/template_logo"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/in_app_logo"
         app:layout_constraintBottom_toTopOf="@id/registration_header"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/registration_header"
@@ -49,7 +49,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
             android:background="@drawable/border_shape_grey"
-            android:hint="Email"
+            android:hint="Email Address"
             android:inputType="textEmailAddress"
             android:padding="6px"
             android:textAlignment="center" />
@@ -135,6 +135,7 @@
                 android:layout_marginStart="50dp"/>
 
             <CheckBox
+                android:id="@+id/register_organizer_button"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="50dp"
