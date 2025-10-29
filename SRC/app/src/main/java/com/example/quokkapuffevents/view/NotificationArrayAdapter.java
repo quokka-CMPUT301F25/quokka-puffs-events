@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
+import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Notif;
 
 import java.sql.Array;
@@ -20,6 +21,8 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
     public NotificationArrayAdapter(Context context, ArrayList<Notif> notifications) {
         super(context, 0, notifications);
     }
+
+    Database db = Database.getInstance();
 
     @NonNull
     @Override
@@ -41,9 +44,11 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
             notificationType.setText(R.string.winner_header);
         } else {
             notificationType.setText(R.string.not_picked);
+            view.findViewById(R.id.rejectBtn).setVisibility(View.GONE);
+            view.findViewById(R.id.acceptOrOptOutBtn).setVisibility(View.GONE);
         }
 
-        userText.setText(notification.getOriginUser());
+        userText.setText(String.format("%s's: ", db.getUserByID(notification.getOriginUser()).getUsername()));
         eventText.setText(notification.getOriginEvent());
 
 

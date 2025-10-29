@@ -50,7 +50,7 @@ public class EventCreateFragment extends Fragment {
         // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
         String userID = String.valueOf(db.getUserID());
-        currentUser = db.getUser(userID);
+        currentUser = db.getUserByID(userID);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,7 +111,7 @@ public class EventCreateFragment extends Fragment {
                 Date eventDate = dateConverter(eventDateString);
 
                 //Create event in database
-                createEventObject(currentUser, desc, parts, maxParts, startDate, endDate, eventDate);
+                createEventObject(title, currentUser, desc, parts, maxParts, startDate, endDate, eventDate);
             }
             //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });
@@ -165,7 +165,7 @@ public class EventCreateFragment extends Fragment {
         return true;
     }
 
-    public void createEventObject(User user, String desc, int parts, String maxParts,
+    public void createEventObject(String name, User user, String desc, int parts, String maxParts,
                                   Date startDate, Date endDate, Date eventDate){
         /**
          * Method to create the event itself (easier for testing)
@@ -186,10 +186,10 @@ public class EventCreateFragment extends Fragment {
          * Day of the event
          */
         if (maxParts.isEmpty()){
-            db.createEvent(currentUser, desc, parts, startDate, endDate, eventDate);
+            db.createEvent(name, currentUser, desc, parts, startDate, endDate, eventDate);
         } else {
             int maxPar = Integer.parseInt(maxParts);
-            db.createEvent(currentUser, desc, parts, maxPar, startDate, endDate, eventDate);
+            db.createEvent(name, currentUser, desc, parts, maxPar, startDate, endDate, eventDate);
         }
     }
 
