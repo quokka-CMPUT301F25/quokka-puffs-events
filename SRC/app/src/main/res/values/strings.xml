@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">QuokkaPuffEvents</string>
+    <string name="app_name">Quokka Puff Events</string>
     <string name="winner_header">You\'ve been Selected!</string>
     <string name="not_picked">Unfortunately, You have not been selected</string>
 </resources>
