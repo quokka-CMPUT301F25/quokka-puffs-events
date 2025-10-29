@@ -95,7 +95,7 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
         return(newEvent);
     }
@@ -116,7 +116,7 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org.getId(), description, toBeDrawn, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
         return newEvent;
     }
