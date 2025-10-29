@@ -96,11 +96,8 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         acceptButton.setOnClickListener(v -> {
             notification.setChoice(1);
             notification.setChosen(true);
-<<<<<<< HEAD
-=======
             db.SaveNotif(notification);
             UpdateEventStatus(notification);
->>>>>>> 53ddb9bdb1fea80868a1efe81424e0a1b1aa0575
             notifyDataSetChanged();
         });
 
@@ -109,11 +106,7 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
                 userText.setText(String.format("%s's: ", user.getUserName())));
 
         db.GetEvent(notification.getOriginEvent(), event -> {
-<<<<<<< HEAD
             eventText.setText(event.getName());
-=======
-                eventText.setText(event.getName());
->>>>>>> 53ddb9bdb1fea80868a1efe81424e0a1b1aa0575
         });
 
         if (notification.getChosen()) {
