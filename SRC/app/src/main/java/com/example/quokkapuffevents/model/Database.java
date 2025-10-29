@@ -76,7 +76,7 @@ public class Database {
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
     }
-    public Event CreateEvent(String name, User org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
         /**
          * Creates a new event and saves the new events data to the database
          * @param org
@@ -99,7 +99,7 @@ public class Database {
         eventsRef.document(id).set(newEvent);
         return(newEvent);
     }
-    public Event CreateEvent(String name, User org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
         /**
          * Same as the other create event but does not construct it with the optional cap on number of participants
          * @param org
