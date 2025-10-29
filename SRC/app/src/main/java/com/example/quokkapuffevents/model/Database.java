@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,13 +18,18 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class Database {
     private static volatile Database instance;
-    private Integer userID; //current id of the user of the app
+    private String userID; //current id of the user of the app
     private FirebaseFirestore db;
     private CollectionReference usersRef;
     private CollectionReference eventsRef;
@@ -48,14 +54,8 @@ public class Database {
         }
         return instance;
     }
-
-    public void setUserID(Integer userID) {
-        this.userID = userID;
-    }
-
-    public Integer getUserID() {
-        return userID;
-    }
+    public void setUserID(String userID) { this.userID = userID; }
+    public String getUserID() { return userID; }
 
     //Base creation methods
     public User createUser(String email, Integer type, String hashPass, String userName){
@@ -77,7 +77,7 @@ public class Database {
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
     }
-    public Event createEvent(User org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+    public Event createEvent(String name, User org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
         /**
          * Creates a new event and saves the new events data to the database
          * @param org
@@ -96,11 +96,11 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(name, id, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
         return(newEvent);
     }
-    public Event createEvent(User org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+    public Event createEvent(String name, User org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
         /**
          * Same as the other create event but does not construct it with the optional cap on number of participants
          * @param org
@@ -117,11 +117,11 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, org.getId(), description, toBeDrawn, startDate, drawnDate, endDate); //This version does not have the limit
+        Event newEvent = new Event(name, id, org.getId(), description, toBeDrawn, startDate, drawnDate, endDate); //This version does not have the limit
         eventsRef.document(id).set(newEvent);
         return newEvent;
     }
-    public Notif createNotification(Integer type, User recipient, Event originEvent, User originUser, String message){
+    public Notif createNotification(Integer type, User recipient, Event originEvent, String originUser, String message){
         /**
          * Creates a new notification and saves the new notif data to the database
          * @param type
@@ -138,7 +138,7 @@ public class Database {
          * Returns the notification as a new Class. Ensures that the notification is saved to the cloud
          */
         String id = notifsRef.document().getId(); //Creates a document and returns the id
-        Notif newNotif = new Notif(id, type, recipient.getId(), originEvent.getId(), originUser.getId(), message);
+        Notif newNotif = new Notif(id, type, recipient.getId(), originEvent, originUser, message);
         notifsRef.document(id).set(newNotif);
         return(newNotif);
     }
@@ -149,18 +149,35 @@ public class Database {
     //event = db.getEvent(event.getID()); //Collects the most recent version
     //event.setXYZ(xyz) //Edits value needed
     //db.saveEvent(event) //Saves the newly edited event back up to the cloud
-
-    public void getUserLambda(String userID, OnSuccessListener<User> listener) {
+    public void getUser(OnSuccessListener<User> listener) {
         usersRef.document(userID).get().addOnSuccessListener(document -> {
             if(document.exists()){
                 User user = document.toObject(User.class);
                 listener.onSuccess(user);
+            } else {
+                Log.d(TAG, "No such document");
             }
         });
     }
 
+//    public void GetUserData() {
+//        usersRef.addSnapshotListener((value, error) ->{
+//           if(error != null)
+//               Log.e("Firestore Error", error.toString());
+//           if(value != null && !value.isEmpty()){
+//               for(DocumentSnapshot doc : value.getDocuments()){
+//                   if(userID.equals(doc.getId())) {
+//                       currUserData = doc.getData();
+//                       Log.d("FIRESTORE DATA", "Data filled");
+//                   }
+//               }
+//           }
+//        });
+//    }
+
+
     //TODO Make these prettier. They stink right now
-    public User getUser(String userID){
+    public User getUserByID(String userID){
         /**
          * This method collects the most up to date data from the database of a user based on their id
          * @param userID
@@ -191,40 +208,51 @@ public class Database {
             }
         });
 
+
         return(user.get(0));
     }
-    public Event getEvent(String eventID){
-        /**
-         * This method collects the most up to date data from the database of an event based on their id
-         * @param eventID
-         * The id of the event being searched for
-         * @return
-         * Returns the event in an Event class. The return will have the most up to date data for the event id
-         */
-        //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
-        ArrayList<Event> event = new ArrayList<>(); //because I cannot create or access within the mini function
-        event.add(new Event());
 
-        eventsRef.document(eventID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        event.set(0, document.toObject(Event.class));
-
-                    } else {
-                        Log.d(TAG, "No such document");
-                        System.out.println("No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                    System.out.println("Document Retrieval Failed");
-                }
+    public void getEvent(String eventID, OnSuccessListener<Event> listener) {
+        eventsRef.document(eventID).get().addOnSuccessListener(document -> {
+            if(document.exists()) {
+                Event event = document.toObject(Event.class);
+                listener.onSuccess(event);
             }
         });
-        return(event.get(0));
     }
+//    public Event getEvent(String eventID){
+//        /**
+//         * This method collects the most up to date data from the database of an event based on their id
+//         * @param eventID
+//         * The id of the event being searched for
+//         * @return
+//         * Returns the event in an Event class. The return will have the most up to date data for the event id
+//         */
+//        //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
+//        ArrayList<Event> event = new ArrayList<>(); //because I cannot create or access within the mini function
+//        event.add(new Event());
+//
+//        eventsRef.document(eventID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        event.set(0, document.toObject(Event.class));
+//
+//                    } else {
+//                        Log.d(TAG, "No such document");
+//                        System.out.println("No such document");
+//                    }
+//                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+//                    System.out.println("Document Retrieval Failed");
+//                }
+//            }
+//        });
+//        return(event.get(0));
+//    }
+
     public Notif getNotification(String notifID){
         /**
          * This method collects the most up to date data from the database of notif based on their id
@@ -257,6 +285,7 @@ public class Database {
         });
         return(notif.get(0));
     }
+
     //TODO FIX THE IMAHES BELOW
     /*
     public Event uploadImage(Event event, BufferedImage image){
@@ -476,51 +505,65 @@ public class Database {
     }
 
     //TODO Add logic for sending out notifications. Need Testing
-    public ArrayList<User> drawUsers(Event event){
-        /**
-         * This method draws the correct number of people for an event. It is the random raffle mechanism
-         * @param event
-         * The event that is randomly selecting participents from its waiting list
-         * @return
-         * Returns an Array List containing all of the chosen users
-         */
-        //Update from database
-        event = getEvent(event.getId());
-        //Collect User IDs
-        ArrayList<String> userID = event.drawUsers(-1);
-
-        //Convert from id to User class
-        ArrayList<User> users = new ArrayList<>();
-        for (int i = 0; i < userID.size(); i ++){
-            users.add(getUser(userID.get(i)));
-        }
-        return(users);
-    }
-
-    public ArrayList<User> redrawUsers(Event event, Integer numToDraw){
-        /**
-         * This method is used to redraw a specific number of participents. It is used after an event as already drawn the majority of its users
-         * It allows for gaps caused by people cancelling or rejecting to be filled
-         * @param event
-         * The event that is randomly selecting participents from its waiting list
-         * @param numToDraw
-         * The number of new users from the waiting list to be drawn
-         * @return
-         * Returns an Array List containing all of the newly chosen users
-         */
-        //Update from database
-        event = getEvent(event.getId());
-        //Collect User IDs
-        ArrayList<String> userID = event.drawUsers(numToDraw);
-        //Convert from id to User class
-        ArrayList<User> users = new ArrayList<>();
-        for (int i = 0; i < userID.size(); i ++){
-            users.add(getUser(userID.get(i)));
-        }
-        return(users);
-    }
+//    public ArrayList<User> drawUsers(Event event){
+//        /**
+//         * This method draws the correct number of people for an event. It is the random raffle mechanism
+//         * @param event
+//         * The event that is randomly selecting participents from its waiting list
+//         * @return
+//         * Returns an Array List containing all of the chosen users
+//         */
+//        //Update from database
+//        event = getEvent(event.getId());
+//        //Collect User IDs
+//        ArrayList<String> userID = event.drawUsers(-1);
+//
+//        //Convert from id to User class
+//        ArrayList<User> users = new ArrayList<>();
+//        for (int i = 0; i < userID.size(); i ++){
+//            users.add(getUser(userID.get(i)));
+//        }
+//        return(users);
+//    }
+//
+//    public ArrayList<User> redrawUsers(Event event, Integer numToDraw){
+//        /**
+//         * This method is used to redraw a specific number of participents. It is used after an event as already drawn the majority of its users
+//         * It allows for gaps caused by people cancelling or rejecting to be filled
+//         * @param event
+//         * The event that is randomly selecting participents from its waiting list
+//         * @param numToDraw
+//         * The number of new users from the waiting list to be drawn
+//         * @return
+//         * Returns an Array List containing all of the newly chosen users
+//         */
+//        //Update from database
+//        event = getEvent(event.getId());
+//        //Collect User IDs
+//        ArrayList<String> userID = event.drawUsers(numToDraw);
+//        //Convert from id to User class
+//        ArrayList<User> users = new ArrayList<>();
+//        for (int i = 0; i < userID.size(); i ++){
+//            users.add(getUser(userID.get(i)));
+//        }
+//        return(users);
+//    }
 
     //Notif Methods
+    public void GetUserNotifications(OnSuccessListener<ArrayList<Notif>> listener) {
+        notifsRef.whereEqualTo("recipient", userID).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<Notif> notifs = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            notifs.add(doc.toObject(Notif.class));
+                        }
+                        listener.onSuccess(notifs);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
+                    }
+                });
+    }
     public ArrayList<Notif> getUserNotifications(User user){
         /**
          * This method collects and returns all of the notifications that have been sent to a user

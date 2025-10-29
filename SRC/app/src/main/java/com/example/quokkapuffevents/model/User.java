@@ -6,7 +6,7 @@ public class User {
     private String id;
     private String email;
     private String hashPassword;
-    private String userName;
+    private String username;
     private ArrayList<String> events;
     private Integer accountType; //-'ve Admin, 0 for normal user, +'ve for organiser
     //etc etc
@@ -15,11 +15,11 @@ public class User {
     public User(){
         this.id = "FAILURE";
     }
-    public User(String id, String email, Integer accountType, String hashPassword, String userName){
+    public User(String id, String email, Integer accountType, String hashPassword, String username){
         this.id = id;
         this.email = email;
         this.hashPassword = hashPassword;
-        this.userName = userName;
+        this.username = username;
         this.events = new ArrayList<>();
         this.accountType = accountType;
     }
@@ -44,12 +44,12 @@ public class User {
         return hashPassword;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setAccountType(Integer accountType) {

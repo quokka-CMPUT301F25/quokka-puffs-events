@@ -14,9 +14,11 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.*;
 import com.example.quokkapuffevents.view.NotificationArrayAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class NotificationDash extends AppCompatActivity {
 
@@ -33,8 +35,12 @@ public class NotificationDash extends AppCompatActivity {
             return insets;
         });
 
-        db.getUserLambda("u4CvxmhTPNVVsWKgAZo6", user ->{
-            Log.d("TAGGED NOTIF", user.getId());
+        db.getUser(user -> {
+            db.GetUserNotifications(notifs -> {
+                ListView listView = findViewById(R.id.NotifList);
+                NotificationArrayAdapter adapter = new NotificationArrayAdapter(this, notifs);
+                listView.setAdapter(adapter);
+            });
         });
     }
 }
