@@ -9,9 +9,6 @@ import java.util.Random;
 
 public class Event {
     private String id;
-
-
-
     private String name;
     private String org;
     private String description;
