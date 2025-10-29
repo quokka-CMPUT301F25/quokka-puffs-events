@@ -2,8 +2,6 @@ package com.example.quokkapuffevents.controller;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,10 +11,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.*;
-import com.example.quokkapuffevents.view.NotificationArrayAdapter;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 public class NotificationDash extends AppCompatActivity {
 
@@ -33,7 +27,7 @@ public class NotificationDash extends AppCompatActivity {
             return insets;
         });
 
-        db.getUserLambda("u4CvxmhTPNVVsWKgAZo6", user ->{
+        db.GetUser("u4CvxmhTPNVVsWKgAZo6", user ->{
             Log.d("TAGGED NOTIF", user.getId());
         });
     }
