@@ -165,11 +165,6 @@ public class Event {
             SetStatus(chosenUser, "Invited"); //Update map to show that they have been invited
         }
 
-        for(String id : this.eventUsers.keySet()){
-            if (!Objects.equals(this.eventUsers.get(id), "Invited"))
-                SetStatus(id, "Not Chosen");
-        }
-
         return(chosen); //Return list of ids
     }
 }
