@@ -75,7 +75,7 @@ public class Database {
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
     }
-    public Event CreateEvent(User org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+    public Event CreateEvent(String name, User org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
         /**
          * Creates a new event and saves the new events data to the database
          * @param org
@@ -94,11 +94,11 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
         return(newEvent);
     }
-    public Event CreateEvent(User org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+    public Event CreateEvent(String name, User org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
         /**
          * Same as the other create event but does not construct it with the optional cap on number of participants
          * @param org
@@ -115,7 +115,7 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, org.getId(), description, toBeDrawn, startDate, drawnDate, endDate); //This version does not have the limit
+        Event newEvent = new Event(id, name, org.getId(), description, toBeDrawn, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
         return newEvent;
     }
@@ -293,31 +293,28 @@ public class Database {
 
     //Extrapolated Date Methods
     //TODO: Test all of these:
-    public ArrayList<Event> listEvents(){
+    public void ListEvents(OnSuccessListener<ArrayList<Event>> listener){
         /**
          * This method provides a list of every event that is in the database
          * @return
          * Returns an ArrayList that holds all of the known events
          */
-        //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
-        ArrayList<Event> events = new ArrayList<>();
-        //Will return every single event
-        eventsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        events.add(document.toObject(Event.class));
+        //Collects the data for every user with an id in the above list
+        eventsRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<Event> events = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            events.add(doc.toObject(Event.class));
+                        }
+                        listener.onSuccess(events);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
-        return events;
+                });
     }
 
-    public ArrayList<User> usersInEvent(Event event){
+    public void UsersInEvent(Event event, OnSuccessListener<ArrayList<User>> listener){
         /**
          * This method provides a list of every user that is signed up to an event
          * @param event
@@ -325,41 +322,25 @@ public class Database {
          * @return
          * Returns an ArrayList that holds all of the users that have signed up for this event
          */
-        //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
-        ArrayList<User> users = new ArrayList<>(); //because I cannot create or access within the mini function
-        ArrayList<Event> specificEvent = new ArrayList<>(); //because I cannot create or access within the mini function
-
-        //Collect the most up to date version of the event
-        eventsRef.document(event.getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                specificEvent.set(0, documentSnapshot.toObject(Event.class));
-            }
-        });
-
         //List of all users in the event
-        List usersInEvent = (List) specificEvent.get(0).getEventUsers().keySet();
+        List usersInEvent = (List) event.getEventUsers().keySet();
 
         //Collects the data for every user with an id in the above list
-        usersRef.whereIn("id", usersInEvent)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                users.add(document.toObject(User.class));
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+        usersRef.whereIn("id", (List) usersInEvent).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            users.add(doc.toObject(User.class));
                         }
+                        listener.onSuccess(users);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
                     }
                 });
-
-        return(users);
     }
 
-    public ArrayList<Event> getEventsFromUser(User user){
+    public void GetEventsFromUser(User user, OnSuccessListener<ArrayList<Event>> listener){
         /**
          * This method provides a list of every event that a user has signed up for
          * @param user
@@ -367,40 +348,26 @@ public class Database {
          * @return
          * Returns an ArrayList that holds all of the events that the user has signed up for
          */
-        ArrayList<User> specificUser = new ArrayList<>(); //because I cannot create or access within the mini function
-        ArrayList<Event> events = new ArrayList<>(); //because I cannot create or access within the mini function
-
-        //Collect the most up to date version of the event
-        usersRef.document(user.getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                specificUser.set(0, documentSnapshot.toObject(User.class));
-            }
-        });
-
         //List of all users in the event
-        List eventsOfUser = specificUser.get(0).getEvents();
+        List eventsOfUser = user.getEvents();
 
         //Collects the data for every user with an id in the above list
-        eventsRef.whereIn("id", eventsOfUser)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                events.add(document.toObject(Event.class));
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+        eventsRef.whereIn("id", eventsOfUser).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<Event> events = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            events.add(doc.toObject(Event.class));
                         }
+                        listener.onSuccess(events);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
                     }
                 });
-        return(events);
     }
 
     //TODO Add logic for sending out notifications. Need Testing
-    public ArrayList<String> drawUsers(Event event){
+    public void DrawUsers(Event event, OnSuccessListener<ArrayList<User>> listener){
         /**
          * This method draws the correct number of people for an event. It is the random raffle mechanism
          * @param event
@@ -408,14 +375,24 @@ public class Database {
          * @return
          * Returns an Array List containing all of the chosen users
          */
-        //Update from database
-        //event = getEvent(event.getId());
         //Collect User IDs
         ArrayList<String> userID = event.drawUsers(-1);
-        return(userID);
+        //Make into Users
+        usersRef.whereIn("id", (List) userID).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            users.add(doc.toObject(User.class));
+                        }
+                        listener.onSuccess(users);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
+                    }
+                });
     }
 
-    public ArrayList<String> redrawUsers(Event event, Integer numToDraw){
+    public void RedrawUsers(Event event, Integer numToDraw, OnSuccessListener<ArrayList<User>> listener){
         /**
          * This method is used to redraw a specific number of participents. It is used after an event as already drawn the majority of its users
          * It allows for gaps caused by people cancelling or rejecting to be filled
@@ -426,16 +403,25 @@ public class Database {
          * @return
          * Returns an Array List containing all of the newly chosen users
          */
-        //Update from database
-        //event = getEvent(event.getId());
         //Collect User IDs
         ArrayList<String> userID = event.drawUsers(numToDraw);
-
-        return(userID);
+        //Make into Users
+        usersRef.whereIn("id", (List) userID).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            users.add(doc.toObject(User.class));
+                        }
+                        listener.onSuccess(users);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
+                    }
+                });
     }
 
     //Notif Methods
-    public ArrayList<Notif> getUserNotifications(User user){
+    public void GetUserNotifications(User user, OnSuccessListener<ArrayList<Notif>> listener) {
         /**
          * This method collects and returns all of the notifications that have been sent to a user
          * @param user
@@ -443,23 +429,18 @@ public class Database {
          * @return
          * Returns an Array List containing all of the notifications
          */
-        ArrayList<Notif> notifs = new ArrayList<>();
-        notifsRef.whereEqualTo("recipient", user.getId())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                notifs.add(document.toObject(Notif.class));
-                                Log.d("TAGGED", document.toObject(Notif.class).toString());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+        notifsRef.whereEqualTo("recipient", user.getId()).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<Notif> notifs = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            notifs.add(doc.toObject(Notif.class));
                         }
+                        listener.onSuccess(notifs);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
                     }
                 });
-        return(notifs);
     }
 
 }
