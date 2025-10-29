@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,7 +76,7 @@ public class Database {
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
     }
-    public Event CreateEvent(String name, User org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
         /**
          * Creates a new event and saves the new events data to the database
          * @param org
@@ -94,11 +95,11 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org.getId(), description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
         return(newEvent);
     }
-    public Event CreateEvent(String name, User org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
         /**
          * Same as the other create event but does not construct it with the optional cap on number of participants
          * @param org
@@ -115,7 +116,7 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org.getId(), description, toBeDrawn, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
         return newEvent;
     }
@@ -139,6 +140,16 @@ public class Database {
         Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message);
         notifsRef.document(id).set(newNotif);
         return(newNotif);
+    }
+
+    public Event AddImageToEvent(Event event, URI uri){
+        String id = imagesRef.document().getId(); //Creates a document and returns the id
+        event.setImageID(id);
+
+        imagesRef.document(id).set(uri).addOnSuccessListener(task -> {
+                Log.e("Firestore", "Images uploaded successfully");
+        });
+        return event;
     }
 
     //TODO: READ
@@ -181,55 +192,22 @@ public class Database {
             }
         });
     }
-    //TODO FIX THE IMAHES BELOW
-    /*
-    public Event uploadImage(Event event, BufferedImage image){
+
+    public void GetImage(Event event, OnSuccessListener<URI> listener) {
         /**
-         * Creates a new image and adds it to the firebase and event
+         * This method collects the image from an event
          * @param event
-         * This is the city to check
-         * @param image
-         * This denotes the type of account the user is. -1 for admin, 0 for participent, and 1 for organizer
+         * The event that the image is from
          * @return
-         * The updated event
-
-    String id = imagesRef.document().getId(); //Creates a document and returns the id
-        imagesRef.document(id).set(image);
-
-        return(event);
-}
-
-    public BufferedImage getImage(Event event){
-        /**
-         * Collects and returns an events image
-         * @param event
-         * The event that is being looked at
-         * @return
-         * A buffered image holding the png
-
-        BufferedImage image;
-        imagesRef.document(event.getImageID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        image = document;
-
-                    } else {
-                        Log.d(TAG, "No such document");
-                        System.out.println("No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                    System.out.println("Document Retrieval Failed");
-                }
+         * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
+         */
+        imagesRef.document(event.getImageID()).get().addOnSuccessListener(document -> {
+            if (document.exists()) {
+                URI uri = document.toObject(URI.class);
+                listener.onSuccess(uri);
             }
         });
-
-        return(user.get(0));
     }
-    */
 
     public void SaveUser(User user){
         usersRef.document(user.getId()).set(user);
@@ -442,5 +420,7 @@ public class Database {
                     }
                 });
     }
+
+
 
 }

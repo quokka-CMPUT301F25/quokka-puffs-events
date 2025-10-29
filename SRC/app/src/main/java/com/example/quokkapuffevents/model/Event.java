@@ -2,6 +2,7 @@ package com.example.quokkapuffevents.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class Event {
     //TODO
     //private QRCode qrCode;
     //private Geo geo;????
-    private Map<String, String> eventUsers; //Have the string be Waitlist, invited, cancelled, etc
+    private Map<String, String> eventUsers = new HashMap<>(); //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
     private Date drawnDate;
     private Date endDate;
@@ -40,7 +41,6 @@ public class Event {
         this.endDate = endDate;
         this.drawn = false;
         this.imageID = null;
-        this.eventUsers = null;
     }
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
         this.name = name;
@@ -54,7 +54,6 @@ public class Event {
         this.endDate = endDate;
         this.drawn = false;
         this.imageID = null;
-        this.eventUsers = null;
     }
 
     public String getName() {
