@@ -41,7 +41,6 @@ public class Event {
         this.endDate = endDate;
         this.drawn = false;
         this.imageID = null;
-        this.eventUsers = null;
     }
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
         this.name = name;
@@ -55,7 +54,6 @@ public class Event {
         this.endDate = endDate;
         this.drawn = false;
         this.imageID = null;
-        this.eventUsers = null;
     }
 
     public String getName() {
