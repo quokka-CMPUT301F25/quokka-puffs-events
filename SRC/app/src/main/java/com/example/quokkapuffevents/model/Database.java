@@ -119,7 +119,7 @@ public class Database {
         String id = eventsRef.document().getId(); //Creates a document and returns the id
         Event newEvent = new Event(id, org.getId(), description, toBeDrawn, startDate, drawnDate, endDate); //This version does not have the limit
         eventsRef.document(id).set(newEvent);
-        return(newEvent);
+        return newEvent;
     }
     public Notif createNotification(Integer type, User recipient, Event originEvent, User originUser, String message){
         /**
@@ -149,6 +149,15 @@ public class Database {
     //event = db.getEvent(event.getID()); //Collects the most recent version
     //event.setXYZ(xyz) //Edits value needed
     //db.saveEvent(event) //Saves the newly edited event back up to the cloud
+
+    public void getUserLambda(String userID, OnSuccessListener<User> listener) {
+        usersRef.document(userID).get().addOnSuccessListener(document -> {
+            if(document.exists()){
+                User user = document.toObject(User.class);
+                listener.onSuccess(user);
+            }
+        });
+    }
 
     //TODO Make these prettier. They stink right now
     public User getUser(String userID){
@@ -318,7 +327,7 @@ public class Database {
         usersRef.document(user.getId()).delete();
     }
     public void deleteUser(String id){
-         /**
+        /**
          * Deletes the provided user from the firebase database
          * @param id
          * This is the id of the user that is being deleted
@@ -367,21 +376,21 @@ public class Database {
          * Returns an ArrayList that holds all of the known events
          */
         //Got the basis of this code from the firebase website: https://firebase.google.com/docs/firestore/query-data/get-data
-       ArrayList<Event> events = new ArrayList<>();
-       //Will return every single event
-       eventsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                events.add(document.toObject(Event.class));
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
+        ArrayList<Event> events = new ArrayList<>();
+        //Will return every single event
+        eventsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        events.add(document.toObject(Event.class));
                     }
-                });
-       return events;
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+        return events;
     }
 
     public ArrayList<User> usersInEvent(Event event){
@@ -529,6 +538,7 @@ public class Database {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 notifs.add(document.toObject(Notif.class));
+                                Log.d("TAGGED", document.toObject(Notif.class).toString());
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
