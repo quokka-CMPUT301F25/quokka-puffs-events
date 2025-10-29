@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:gravity="center|top"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/border_shape_general"
+        android:padding="8dp"
+        >
+
+        <TextView
+            android:id="@+id/createAnEventHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Create An Event"
+            android:textSize="32dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:id="@+id/eventNameContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Name: "
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                />
+
+            <EditText
+                android:id="@+id/eventTitleInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter an Event Title"
+                android:padding="4dp"
+                android:background="@drawable/border_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/eventDateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter a Date: "
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="4" />
+
+            <EditText
+                android:id="@+id/eventDateInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:hint="Date"
+                android:padding="4dp"
+                android:background="@drawable/border_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/eventDescContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:layout_gravity="center"
+                android:layout_weight="8"
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+            <EditText
+                android:layout_marginTop="8dp"
+                android:id="@+id/eventDescInput"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/border_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/posterImageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Poster Image"
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/eventAddImagesBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/bluebtn"
+                android:text="Add Images">
+            </Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/EventswitchCointers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Switch
+                android:id="@+id/eventLimitParticipantsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:text="Limit Participants" />
+
+            <LinearLayout
+                android:id="@+id/limitParticipantsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Max Participants: "
+                    android:textColor="@color/greybtn"
+                    android:textSize="20dp"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="4" />
+
+                <EditText
+                    android:id="@+id/eventMaxParticipantsInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:hint="Participants"
+                    android:padding="4dp"
+                    android:background="@drawable/border_shape"/>
+            </LinearLayout>
+
+
+            <Switch
+                android:id="@+id/eventGeolocationSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:text="Show GeoLocation Of Participants" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancelEventCreationBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/redbtn"
+                android:text="Cancel">
+            </Button>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/confirmEventCreationBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/greenbtn"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:text="Create">
+            </Button>
+
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
