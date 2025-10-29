@@ -9,9 +9,6 @@ import java.util.Random;
 
 public class Event {
     private String id;
-
-
-
     private String name;
     private String org;
     private String description;
@@ -127,6 +124,11 @@ public class Event {
         this.eventUsers.put(userID, "Waiting");
     }
 
+    public void SetStatus (String userID, String newStatus) {
+        //Changing the status of a user
+        this.eventUsers.put(userID, newStatus);
+    }
+
     public ArrayList<String> drawUsers(Integer numCalled){
         /**
          * This randomly chooses numCalled people that are waiting for this event
@@ -157,7 +159,7 @@ public class Event {
             String chosenUser = waitingUsers.get(randInd); //Collect user id
             waitingUsers.remove(randInd); //Remove user from waiting so that they cannot be chosen again
 
-            this.eventUsers.put(chosenUser, "Invited"); //Update map to show that they have been invited
+            SetStatus(chosenUser, "Invited"); //Update map to show that they have been invited
         }
 
         return(chosen); //Return list of ids

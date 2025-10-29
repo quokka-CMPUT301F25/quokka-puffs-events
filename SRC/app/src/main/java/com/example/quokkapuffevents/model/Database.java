@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Database {
     private static volatile Database instance;
-    private Integer userID; //current id of the user of the app
+    private String userID; //current id of the user of the app
     private FirebaseFirestore db;
     private CollectionReference usersRef;
     private CollectionReference eventsRef;
@@ -47,11 +47,11 @@ public class Database {
         return instance;
     }
 
-    public void SetUserID(Integer userID) {
+    public void SetUserID(String userID) {
         this.userID = userID;
     }
 
-    public Integer GetCurrentUserID() {
+    public String GetCurrentUserID() {
         return userID;
     }
 
@@ -119,7 +119,7 @@ public class Database {
         eventsRef.document(id).set(newEvent);
         return newEvent;
     }
-    public Notif CreateNotification(Integer type, User recipient, Event originEvent, User originUser, String message){
+    public Notif CreateNotification(Integer type, String recipient, String originEvent, String originUser, String message){
         /**
          * Creates a new notification and saves the new notif data to the database
          * @param type
@@ -136,7 +136,7 @@ public class Database {
          * Returns the notification as a new Class. Ensures that the notification is saved to the cloud
          */
         String id = notifsRef.document().getId(); //Creates a document and returns the id
-        Notif newNotif = new Notif(id, type, recipient.getId(), originEvent.getId(), originUser.getId(), message);
+        Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message);
         notifsRef.document(id).set(newNotif);
         return(newNotif);
     }
