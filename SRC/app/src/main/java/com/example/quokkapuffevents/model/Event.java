@@ -9,14 +9,20 @@ import java.util.Random;
 
 public class Event {
     private String id;
+
+
+
+    private String name;
     private String org;
     private String description;
     private Integer toBeDrawn;
     private Integer maxNumWaitlist;
     //TODO
     //private QRCode qrCode;
+    //private Geo geo;????
     private Map<String, String> eventUsers; //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
+    private Date drawnDate;
     private Date endDate;
     private String imageID;
     //Add geo data?
@@ -25,17 +31,41 @@ public class Event {
     public Event(){
         this.id = "FAILURE";
     }
-    public Event(String id, String org, String description, Integer toBeDrawn, Optional<Integer> maxNumWaitlist, Date startDate, Date endDate){
-        Integer numWait = maxNumWaitlist.isPresent() ? maxNumWaitlist.get() : -1;
-
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+        this.name = name;
         this.id = id;
+        this.org = org;
         this.description = description;
         this.toBeDrawn = toBeDrawn;
-        this.maxNumWaitlist = numWait;
+        this.maxNumWaitlist = -1;
         this.startDate = startDate;
+        this.drawnDate = drawnDate;
         this.endDate = endDate;
         this.drawn = false;
         this.imageID = null;
+        this.eventUsers = null;
+    }
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+        this.name = name;
+        this.id = id;
+        this.org = org;
+        this.description = description;
+        this.toBeDrawn = toBeDrawn;
+        this.maxNumWaitlist = maxNumWaitlist;
+        this.startDate = startDate;
+        this.drawnDate = drawnDate;
+        this.endDate = endDate;
+        this.drawn = false;
+        this.imageID = null;
+        this.eventUsers = null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setDrawn(Boolean drawn) {
@@ -66,6 +96,10 @@ public class Event {
         return startDate;
     }
 
+    public Date getDrawnDate() {
+        return drawnDate;
+    }
+
     public Integer getMaxNumWaitlist() {
         return maxNumWaitlist;
     }
@@ -89,10 +123,18 @@ public class Event {
 
     //Actual methods
     public void addUser(String userID){
+        //Adding an entry to the map
         this.eventUsers.put(userID, "Waiting");
     }
 
     public ArrayList<String> drawUsers(Integer numCalled){
+        /**
+         * This randomly chooses numCalled people that are waiting for this event
+         * @param numCalled
+         * The number of people to draw
+         * @return
+         * Return the array list of all of the drawn users
+         */
         ArrayList<String> waitingUsers = new ArrayList<>(); //Create empty list to hold users that are still on the waiting list
         Random r= new Random(); //Random class for the draw
 
@@ -102,8 +144,7 @@ public class Event {
                 waitingUsers.add(entry.getKey());
             }
         }
-        //Ensure that no error
-        //TODO add authentication before here
+        //Ensure that no error. Easier to do here than anywhere else
         if (numCalled > waitingUsers.size()){
             numCalled = waitingUsers.size();
         }
