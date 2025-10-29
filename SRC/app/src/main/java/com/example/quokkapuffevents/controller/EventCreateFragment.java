@@ -49,7 +49,7 @@ public class EventCreateFragment extends Fragment {
 
         // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
-        String userID = String.valueOf(db.getUserID());
+        String userID = String.valueOf(db.GetUserID());
         currentUser = db.getUser(userID);
     }
     @Override
@@ -186,10 +186,10 @@ public class EventCreateFragment extends Fragment {
          * Day of the event
          */
         if (maxParts.isEmpty()){
-            db.createEvent(currentUser, desc, parts, startDate, endDate, eventDate);
+            db.CreateEvent(currentUser, desc, parts, startDate, endDate, eventDate);
         } else {
             int maxPar = Integer.parseInt(maxParts);
-            db.createEvent(currentUser, desc, parts, maxPar, startDate, endDate, eventDate);
+            db.CreateEvent(currentUser, desc, parts, maxPar, startDate, endDate, eventDate);
         }
     }
 
