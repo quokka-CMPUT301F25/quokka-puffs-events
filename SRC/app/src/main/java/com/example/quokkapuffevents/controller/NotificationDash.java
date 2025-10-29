@@ -33,6 +33,12 @@ public class NotificationDash extends AppCompatActivity {
             return insets;
         });
 
+        db.SetUserID("Y1Ysnx9E2DuI4ojqEwBd");
+        db.GetEvent("qOUgGLRbN23Ze4iQkwzM", event -> {
+            event.addUser("Y1Ysnx9E2DuI4ojqEwBd");
+            db.SaveEvent(event);
+        });
+
         //Setup
         ListView listView = findViewById(R.id.NotifList);
         NotificationArrayAdapter adapter = new NotificationArrayAdapter(this, new ArrayList<>());
