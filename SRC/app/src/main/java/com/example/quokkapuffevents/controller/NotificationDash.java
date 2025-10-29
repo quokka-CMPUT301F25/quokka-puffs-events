@@ -38,6 +38,7 @@ public class NotificationDash extends AppCompatActivity {
         NotificationArrayAdapter adapter = new NotificationArrayAdapter(this, new ArrayList<>());
         listView.setAdapter(adapter);
 
+        db.SetUserID("Y1Ysnx9E2DuI4ojqEwBd");
         //Getting the users notifications
         db.GetUser(db.GetCurrentUserID(), user -> {
             // refresh adapter

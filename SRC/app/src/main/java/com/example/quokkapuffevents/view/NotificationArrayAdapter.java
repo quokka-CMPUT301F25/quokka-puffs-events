@@ -93,7 +93,6 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         acceptButton.setOnClickListener(v -> {
             notification.setChoice(1);
             notification.setChosen(true);
-
             notifyDataSetChanged();
         });
 
@@ -102,11 +101,7 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
                 userText.setText(String.format("%s's: ", user.getUserName())));
 
         db.GetEvent(notification.getOriginEvent(), event -> {
-                eventText.setText(event.getName());
-                if (notification.getChoice() == 1)
-                    event.SetStatus(notification.getRecipient(), "Accepted");
-                else
-                    event.SetStatus(notification.getRecipient(), "Rejected");
+            eventText.setText(event.getName());
         });
 
         if (notification.getChosen()) {
