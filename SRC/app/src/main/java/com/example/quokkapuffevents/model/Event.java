@@ -9,6 +9,10 @@ import java.util.Random;
 
 public class Event {
     private String id;
+
+
+
+    private String name;
     private String org;
     private String description;
     private Integer toBeDrawn;
@@ -27,7 +31,8 @@ public class Event {
     public Event(){
         this.id = "FAILURE";
     }
-    public Event(String id, String org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+        this.name = name;
         this.id = id;
         this.org = org;
         this.description = description;
@@ -40,7 +45,8 @@ public class Event {
         this.imageID = null;
         this.eventUsers = null;
     }
-    public Event(String id, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+        this.name = name;
         this.id = id;
         this.org = org;
         this.description = description;
@@ -52,6 +58,14 @@ public class Event {
         this.drawn = false;
         this.imageID = null;
         this.eventUsers = null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setDrawn(Boolean drawn) {
