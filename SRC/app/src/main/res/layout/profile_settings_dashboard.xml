@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:padding="0dp">
+
+
+    <LinearLayout
+        android:id="@+id/userProfileInformationContainer"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/border_shape_general"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        >
+
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:id="@+id/accountNameAndEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/usernameText"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="{Username}"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:background="@drawable/border_shape_grey"
+                android:padding="6px"/>
+
+            <TextView
+                android:id="@+id/userFirstAndLastNameText"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="{First} {LastName}"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:background="@drawable/border_shape_grey"
+                android:padding="6px"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/userEmailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="{Email@gmail.com}"
+                android:textColor="@color/white"
+                android:background="@drawable/border_shape_grey"
+                android:padding="6px"
+                android:layout_weight="1"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="2" />
+
+            <TextView
+                android:id="@+id/userDateOfBirthText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="{DOB}"
+                android:textColor="@color/white"
+                android:background="@drawable/border_shape_grey"
+                android:padding="6px"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/signOutBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/redbtn"
+                android:text="Sign Out" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.5" />
+
+            <Button
+                android:id="@+id/editProfileBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/bluebtn"
+
+                android:text="Edit Profile" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pastEventsContainer"
+        android:layout_width="400dp"
+        android:layout_height="424dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/border_shape_general"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/changeDisplayHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileInformationContainer">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:text="Past Events"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="12dp"
+            android:background="@drawable/border_shape_grey"
+            android:padding="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/changeDisplayHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mainblue"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingBottom="24dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/headerBtnContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"/>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

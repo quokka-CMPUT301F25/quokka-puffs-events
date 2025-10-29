@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/border_shape">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+        <TextView
+            android:id="@+id/userText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="{User}'s "
+            android:layout_weight="1"
+            android:textAlignment="textEnd"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/pastEventText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="{Event name}"
+            android:textColor="@color/bluebtn"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/pastEventDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="On {Past Event Date}"
+        android:textSize="20sp"
+        android:layout_marginTop="4dp"/>
+
+
+
+
+    <Button
+        android:id="@+id/removeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:backgroundTint="@color/greybtn"
+        android:text="Details"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="4dp"/>
+
+
+
+
+
+</LinearLayout>
