@@ -421,6 +421,10 @@ public class Database {
                 });
     }
 
+    public void ToggleNotifsForUser(User user){
+        user.setSendNotifications(!(user.getSendNotifications()));
+        SaveUser(user);
+    }
 
 
 }

@@ -9,6 +9,7 @@ public class User {
     private String username;
     private ArrayList<String> events;
     private Integer accountType; //-'ve Admin, 0 for normal user, +'ve for organiser
+    private Boolean sendNotifications;
     //etc etc
 
 
@@ -22,6 +23,7 @@ public class User {
         this.username = username;
         this.events = new ArrayList<>();
         this.accountType = accountType;
+        this.sendNotifications = true;
     }
 
     public String getEmail() {
@@ -72,6 +74,19 @@ public class User {
         this.id = id;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public Boolean getSendNotifications() {
+        return sendNotifications;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setSendNotifications(Boolean sendNotifications) {
+        this.sendNotifications = sendNotifications;
+    }
 }
