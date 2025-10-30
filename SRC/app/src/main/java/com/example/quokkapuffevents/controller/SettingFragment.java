@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.controller;
 
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class SettingFragment extends Fragment {
     EditText contact;
     EditText name;
 
-    /* Buttons / Interactibles */
+    /* Buttons / Interactions */
 
     Switch allowNotifs;
     Button revertBtn;
@@ -94,6 +95,12 @@ public class SettingFragment extends Fragment {
         * */
 
 
+        db.GetUser(userID, user -> {
+
+
+
+        });
+
 
 
 
@@ -112,7 +119,7 @@ public class SettingFragment extends Fragment {
 
     public boolean checkInput() {
         /*
-        * TODO: Check all user input is in the correct format before confirm changess
+        * TODO: Check all user input is in the correct format before confirm changes
         *
         * */
             return true;
@@ -120,7 +127,7 @@ public class SettingFragment extends Fragment {
 
     public void confirmChanges() {
         /*
-        * TODO: Confirm the changes of the user input. Also send a confirmation notifications iwth it.
+        * TODO: Confirm the changes of the user input. Also send a confirmation notifications with it.
         *
         * */
     }
