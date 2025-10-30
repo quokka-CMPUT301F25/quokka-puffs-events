@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.User;
 
 public class SettingFragment extends Fragment {
 
@@ -25,10 +26,17 @@ public class SettingFragment extends Fragment {
     *   Name
     *   Phone Number // Optional
     *   Delete Account
+    *
+    * Additional: Provide visual updates to show changes:
+    *
+    *   TODO: Background of changed text or edited switch becomes orange.
+    *
     * */
+
 
     private Database db; // collection we want to access
     private User currentUser; //
+    String userID;
 
     /* Editable Text Inputs*/
     EditText email;
@@ -55,13 +63,14 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.change_profile_settings, container);
         initializeViews(view);
+        updateEditableUserInformation();
         setUpListeners(view);
         return view;
     }
     public void initializeViews(View v) {
-        /**
-         * Initializes all attributes for the fragment
-         * @param v
+        /*
+          Initializes all attributes for the fragment
+          @param v
          * View of the ChangeProfileSettings Fragment
          */
 
@@ -73,6 +82,55 @@ public class SettingFragment extends Fragment {
         revertBtn = v.findViewById(R.id.revertChangesBtn);
         confirmBtn = v.findViewById(R.id.confirmChangesBtn);
 
+        userID = db.GetCurrentUserID();
+
+
+    }
+
+    public void updateEditableUserInformation(){
+        /*
+        * TODO: Update the editable information with the current user information
+        *
+        * */
+
+
+
+
+
+    }
+    public void setUpListeners(View v) {
+
+
+    }
+
+    public void deleteUserAccount() {
+        /*
+        * TODO: Delete the user from the database. Also have a confirm button with it.
+        * */
+
+    }
+
+    public boolean checkInput() {
+        /*
+        * TODO: Check all user input is in the correct format before confirm changess
+        *
+        * */
+            return true;
+    }
+
+    public void confirmChanges() {
+        /*
+        * TODO: Confirm the changes of the user input. Also send a confirmation notifications iwth it.
+        *
+        * */
+    }
+
+    public void revertChanges() {
+        /*
+        *  TODO: Rever the the changes the users may have done.
+        *
+        *
+        * */
 
     }
 
