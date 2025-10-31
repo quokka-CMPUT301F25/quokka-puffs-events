@@ -86,19 +86,11 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         });
 
         rejectButton.setOnClickListener(v -> {
-            notification.setChoice(0);
-            notification.setChosen(true);
-            db.SaveNotif(notification);
-            UpdateEventStatus(notification);
-            notifyDataSetChanged();
+            InvitationButtonClicked(notification, 0);
         });
 
         acceptButton.setOnClickListener(v -> {
-            notification.setChoice(1);
-            notification.setChosen(true);
-            db.SaveNotif(notification);
-            UpdateEventStatus(notification);
-            notifyDataSetChanged();
+            InvitationButtonClicked(notification, 1);
         });
 
         // --- Async user/event UI Binding ---
@@ -127,5 +119,13 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
 
             db.SaveEvent(event);
         });
+    }
+
+    public void InvitationButtonClicked(Notif notification, int choice) {
+        notification.setChoice(choice);
+        notification.setChosen(true);
+        db.SaveNotif(notification);
+        UpdateEventStatus(notification);
+        notifyDataSetChanged();
     }
 }
