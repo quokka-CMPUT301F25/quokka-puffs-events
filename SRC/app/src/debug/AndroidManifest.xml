@@ -1,0 +1,14 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.quokkapuffevents">
+
+    <application>
+        <!-- Only exists in debug/test builds -->
+        <activity
+            android:name="com.example.quokkapuffevents.FragmentHostActivity"
+            android:exported="true"
+            android:label="Fragment Host Activity"
+            tools:ignore="MissingApplicationIcon" />
+    </application>
+
+</manifest>
