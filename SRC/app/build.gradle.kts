@@ -35,8 +35,13 @@ android {
 dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.0.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.0.1")
+    implementation(libs.ext.junit)
+    implementation(libs.espresso.core)
+    // These were changed from implementation to androidTestImplementation
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.runner)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
 
 
     implementation(libs.appcompat)
@@ -44,7 +49,12 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.firestore)
+
+    // For local unit tests (in src/test/java)
     testImplementation(libs.junit)
+
+    // For instrumented tests (in src/androidTest/java)
+    // You might have duplicates after the change, you can keep just one set
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
