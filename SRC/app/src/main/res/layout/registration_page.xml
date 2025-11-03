@@ -55,6 +55,19 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/register_date_of_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/border_shape_grey"
+            android:hint="Date Of Birth  (DD/MM/YYYY)"
+            android:inputType="date"
+            android:padding="6px"
+            android:textAlignment="center" />
+
+        <EditText
             android:id="@+id/register_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,19 +103,6 @@
             android:background="@drawable/border_shape_grey"
             android:hint="Last Name"
             android:inputType="textPersonName"
-            android:padding="6px"
-            android:textAlignment="center" />
-
-        <EditText
-            android:id="@+id/register_date_of_birth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:background="@drawable/border_shape_grey"
-            android:hint="Date Of Birth  (DD/MM/YYYY)"
-            android:inputType="date"
             android:padding="6px"
             android:textAlignment="center" />
 
