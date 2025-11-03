@@ -74,22 +74,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userProfileInformationContainer">
 
-        <TextView
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="12dp"
-            android:text="Dashboard"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="12dp"
-            android:background="@drawable/border_shape_grey"
-            android:padding="8dp" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -115,6 +104,7 @@
 
 
             <Button
+                android:id ="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -122,6 +112,7 @@
                 android:backgroundTint="@color/transparent"/>
 
             <Button
+                android:id ="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -129,6 +120,7 @@
                 android:backgroundTint="@color/transparent"/>
 
             <Button
+                android:id ="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -136,6 +128,7 @@
                 android:backgroundTint="@color/transparent"/>
 
             <Button
+                android:id ="@+id/button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -143,6 +136,7 @@
                 android:backgroundTint="@color/transparent"/>
 
             <Button
+                android:id ="@+id/button5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
