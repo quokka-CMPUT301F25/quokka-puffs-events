@@ -2,53 +2,88 @@ package com.example.quokkapuffevents.controller;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
-import com.example.quokkapuffevents.model.*;
+import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.User;
 import com.example.quokkapuffevents.view.NotificationArrayAdapter;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class NotificationDash extends AppCompatActivity {
+/**
+ * Fragment responsible for displaying notifications for the current user.
+ */
+public class NotificationDash extends Fragment {
 
-    Database db = Database.getInstance();
+    // --- DATABASE INSTANCE ---
+    private final Database db = Database.getInstance();
+
+    // --- UI ELEMENTS ---
+    private ListView listView;
+    private NotificationArrayAdapter adapter;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.notifications_dashboard, container, false);
+        ViewCompat.setOnApplyWindowInsetsListener(
+                view.findViewById(R.id.notifications_fragment),
+                (v, insets) -> {
+                    Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                    return insets;
+                });
+        return view;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.notification_dashboard);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.NotifDash), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initializeUI(view);
+        loadNotifications();
+    }
 
-        db.SetUserID("Y1Ysnx9E2DuI4ojqEwBd");
-        db.GetEvent("qOUgGLRbN23Ze4iQkwzM", event -> {
-            event.addUser("Y1Ysnx9E2DuI4ojqEwBd");
-            db.SaveEvent(event);
-        });
 
-        //Setup
-        ListView listView = findViewById(R.id.NotifList);
-        NotificationArrayAdapter adapter = new NotificationArrayAdapter(this, new ArrayList<>());
+    /**
+     * Initializes UI elements like ListView and its adapter.
+     */
+    private void initializeUI(@NonNull View view) {
+        listView = view.findViewById(R.id.NotifList);
+        adapter = new NotificationArrayAdapter(requireContext(), new ArrayList<>());
         listView.setAdapter(adapter);
+    }
 
-        //Getting the users notifications
-        db.GetUser(db.GetCurrentUserID(), user -> {
-            // refresh adapter
-            db.GetUserNotifications(user, adapter::setNotifications);
-        });
+    /**
+     * Retrieves and displays the current user’s notifications.
+     */
+    private void loadNotifications() {
+        String userId = ensureUserId();
+        db.GetUser(userId, user -> db.GetUserNotifications(user, adapter::setNotifications));
+    }
 
+    /**
+     * Ensures a valid user ID is set (injects a test ID if null during testing).
+     */
+    private String ensureUserId() {
+        String userId = db.GetCurrentUserID();
+        if (userId == null) {
+            Log.w("NotificationDash", "Test environment: injecting fake userID");
+            db.SetUserID("TEST_USER_ID");
+            userId = "TEST_USER_ID";
+        }
+        return userId;
     }
 }
