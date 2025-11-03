@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QuokkaPuffEvents">
+        <activity android:name=".controller.LoginActivity" />
         <activity
             android:name="com.example.quokkapuffevents.LoadingActivity"
             android:exported="true">
