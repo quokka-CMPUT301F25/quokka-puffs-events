@@ -63,7 +63,7 @@ public class Database {
          * @param email
          * This is the city to check
          * @param type
-         * This denotes the type of account the user is. -1 for admin, 0 for participent, and 1 for organizer
+         * This denotes the type of account the user is. -1 for admin, 0 for participant, and 1 for organizer
          * @param hashPass
          * This is the hashed password of the user
          * @param userName
