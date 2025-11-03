@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@color/black"
+    android:id="@+id/notifications_fragment">
 
 
     <TextView
@@ -28,7 +29,6 @@
         android:layout_height="500dp"
         android:background="@drawable/border_shape_general"
         android:padding="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/changeDisplayHeader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
@@ -36,71 +36,13 @@
         >
 
         <ListView
+            android:id="@+id/NotifList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/lightblue"
             android:padding="8dp"/>
 
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/changeDisplayHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/mainblue"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:paddingBottom="24dp"
-        >
-    <LinearLayout
-        android:id="@+id/headerBtnContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X"
-            android:layout_weight="1"
-            android:backgroundTint="@color/transparent"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X"
-            android:layout_weight="1"
-            android:backgroundTint="@color/transparent"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X"
-            android:layout_weight="1"
-            android:backgroundTint="@color/transparent"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X"
-            android:layout_weight="1"
-            android:backgroundTint="@color/transparent"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X"
-            android:layout_weight="1"
-            android:backgroundTint="@color/transparent"/>
-
-
-
-        </LinearLayout>
     </LinearLayout>
 
 
