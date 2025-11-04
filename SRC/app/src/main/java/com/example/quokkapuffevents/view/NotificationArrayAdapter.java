@@ -106,7 +106,7 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
                 userText.setText(String.format("%s's: ", user.getUserName())));
 
         db.GetEvent(notification.getOriginEvent(), event -> {
-                eventText.setText(event.getName());
+            eventText.setText(event.getName());
         });
 
         if (notification.getChosen()) {
