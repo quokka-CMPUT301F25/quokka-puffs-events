@@ -445,7 +445,7 @@ public class Database {
     }
 
     public void ValidateUserUsername(String username, String password, OnSuccessListener<ArrayList<User>> listener){
-        usersRef.whereEqualTo("username", userName)
+        usersRef.whereEqualTo("userName", username)
                 .whereEqualTo("hashPassword", password)
                 .get()
                 .addOnCompleteListener(task -> {
