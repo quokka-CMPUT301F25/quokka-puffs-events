@@ -6,38 +6,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.view.AdminEventFragAdapter;
-import com.example.quokkapuffevents.view.AdminPhotoFragAdapter;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class AdminPhotoFragment extends Fragment {
+public class AdminEventFragment extends Fragment {
 
     ListView listView;
-    private AdminPhotoFragAdapter adapter;
+    private AdminEventFragAdapter adapter;
     private Database db;
     private ArrayList<Event> eventList = new ArrayList<>();
 
-    public AdminPhotoFragment() {
+    public AdminEventFragment() {
 
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View imageFragmentView = inflater.inflate(R.layout.frag_admin_images, container, false);
+        View eventFragmentView = inflater.inflate(R.layout.frag_admin_events, container, false);
 
         db = Database.getInstance();
 
-        listView = imageFragmentView.findViewById(R.id.adminImagesListView);
+        listView = eventFragmentView.findViewById(R.id.adminEventsListView);
 
-        adapter = new AdminPhotoFragAdapter(getContext(), eventList);
+        adapter = new AdminEventFragAdapter(getContext(), eventList);
         listView.setAdapter(adapter);
 
         db.ListEvents( events -> {
@@ -47,8 +53,6 @@ public class AdminPhotoFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });
 
-        return imageFragmentView;
+        return eventFragmentView;
     }
-
-
 }

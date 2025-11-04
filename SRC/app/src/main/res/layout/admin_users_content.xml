@@ -19,13 +19,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/eventName"
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/inter"
-            android:text="{Event Name}"
+            android:text="User"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,16 +34,16 @@
         </TextView>
 
         <TextView
-            android:id="@+id/eventDate"
+            android:id="@+id/userEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="29dp"
             android:fontFamily="@font/inter"
-            android:text="Nov. 3 (XX days from now)"
+            android:text="test1@testing.com"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/eventName"
-            app:layout_constraintTop_toTopOf="@+id/eventName">
+            app:layout_constraintStart_toStartOf="@+id/username"
+            app:layout_constraintTop_toTopOf="@+id/username">
 
         </TextView>
 
