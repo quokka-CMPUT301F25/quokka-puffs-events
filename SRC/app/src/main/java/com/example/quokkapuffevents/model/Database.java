@@ -148,7 +148,7 @@ public class Database {
         event.setImageID(id);
 
         imagesRef.document(id).set(uri).addOnSuccessListener(task -> {
-                Log.e("Firestore", "Images uploaded successfully");
+            Log.e("Firestore", "Images uploaded successfully");
         });
         return event;
     }
@@ -445,7 +445,7 @@ public class Database {
     }
 
     public void ValidateUserUsername(String username, String password, OnSuccessListener<ArrayList<User>> listener){
-        usersRef.whereEqualTo("username", username)
+        usersRef.whereEqualTo("userName", username)
                 .whereEqualTo("hashPassword", password)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -463,12 +463,11 @@ public class Database {
 
     public void UserExists(String val, OnSuccessListener<Boolean> listener){
         usersRef.where(Filter.or(
-                Filter.equalTo("username", val),
-                Filter.equalTo("email", val)
+                        Filter.equalTo("username", val),
+                        Filter.equalTo("email", val)
                 ))
                 .get()
                 .addOnCompleteListener(task -> {
-                    ArrayList<User> user = new ArrayList<>();
                     if (task.isSuccessful()) {
                         listener.onSuccess(true);
                     } else {
