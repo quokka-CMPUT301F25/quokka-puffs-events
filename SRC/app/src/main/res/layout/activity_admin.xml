@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/blackbackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/adminTitle"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/mainblue"
+        android:fontFamily="@font/inter"
+        android:gravity="center"
+        android:text="All Users"
+        android:textColor="@color/white"
+        android:textSize="20pt"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/adminFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginBottom="115dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adminTitle"
+        app:layout_constraintVertical_bias="0.437">
+
+    </androidx.fragment.app.FragmentContainerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/mainblue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/imagesIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/images_icon"
+            android:scaleType="fitCenter"
+            android:background="@color/transparent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Go to images fragment">
+
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/eventsIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/events_icon"
+            android:scaleType="fitCenter"
+            android:background="@color/transparent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Go to events fragment">
+
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/usersIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/users_icon"
+            android:scaleType="fitCenter"
+            android:background="@color/transparent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Go to users fragment">
+
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/notificationsIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/notifications_icon"
+            android:scaleType="fitCenter"
+            android:background="@color/transparent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Go to notifications fragment">
+
+        </ImageButton>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

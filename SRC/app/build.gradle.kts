@@ -35,6 +35,7 @@ android {
 dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation(libs.firebase.database)
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.0.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.0.1")
 
