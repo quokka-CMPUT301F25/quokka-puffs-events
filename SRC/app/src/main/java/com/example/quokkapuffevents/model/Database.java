@@ -292,6 +292,48 @@ public class Database {
                 });
     }
 
+    public void ListUsers(OnSuccessListener<ArrayList<User>> listener){
+        /**
+         * This method provides a list of every event that is in the database
+         * @return
+         * Returns an ArrayList that holds all of the known events
+         */
+        //Collects the data for every user with an id in the above list
+        usersRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            users.add(doc.toObject(User.class));
+                        }
+                        listener.onSuccess(users);
+                    } else {
+                        Log.e("Firestore", "Error getting user list", task.getException());
+                    }
+                });
+    }
+
+    public void ListNotifs(OnSuccessListener<ArrayList<Notif>> listener){
+        /**
+         * This method provides a list of every notification that is in the database
+         * @return
+         * Returns an ArrayList that holds all of the known notifications
+         */
+        //Collects the data for every user with an id in the above list
+        notifsRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<Notif> notifs = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            notifs.add(doc.toObject(Notif.class));
+                        }
+                        listener.onSuccess(notifs);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
+                    }
+                });
+    }
+
     public void UsersInEvent(Event event, OnSuccessListener<ArrayList<User>> listener){
         /**
          * This method provides a list of every user that is signed up to an event
