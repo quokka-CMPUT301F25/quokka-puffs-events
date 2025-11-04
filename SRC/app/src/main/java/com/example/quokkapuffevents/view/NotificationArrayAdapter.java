@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,16 +86,11 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         });
 
         rejectButton.setOnClickListener(v -> {
-            notification.setChoice(0);
-            notification.setChosen(true);
-            notifyDataSetChanged();
+            InvitationButtonClicked(notification, 0);
         });
 
         acceptButton.setOnClickListener(v -> {
-            notification.setChoice(1);
-            notification.setChosen(true);
-
-            notifyDataSetChanged();
+            InvitationButtonClicked(notification, 1);
         });
 
         // --- Async user/event UI Binding ---
@@ -103,10 +99,6 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
 
         db.GetEvent(notification.getOriginEvent(), event -> {
                 eventText.setText(event.getName());
-                if (notification.getChoice() == 1)
-                    event.SetStatus(notification.getRecipient(), "Accepted");
-                else
-                    event.SetStatus(notification.getRecipient(), "Rejected");
         });
 
         if (notification.getChosen()) {
@@ -116,5 +108,24 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         }
 
         return view;
+    }
+
+    public void UpdateEventStatus(Notif notification) {
+        db.GetEvent(notification.getOriginEvent(), event -> {
+            if (notification.getChoice() == 1)
+                event.SetStatus(db.GetCurrentUserID(), "Accepted");
+            else
+                event.SetStatus(db.GetCurrentUserID(), "Rejected");
+
+            db.SaveEvent(event);
+        });
+    }
+
+    public void InvitationButtonClicked(Notif notification, int choice) {
+        notification.setChoice(choice);
+        notification.setChosen(true);
+        db.SaveNotif(notification);
+        UpdateEventStatus(notification);
+        notifyDataSetChanged();
     }
 }
