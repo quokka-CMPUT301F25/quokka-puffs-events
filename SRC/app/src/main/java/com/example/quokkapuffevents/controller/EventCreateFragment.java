@@ -185,10 +185,10 @@ public class EventCreateFragment extends Fragment {
          * Day of the event
          */
         if (maxParts.isEmpty()){
-            db.CreateEvent(title, currentUser, desc, parts, startDate, endDate, eventDate);
+            db.CreateEvent(title, currentUser.getId(), desc, parts, startDate, endDate, eventDate);
         } else {
             int maxPar = Integer.parseInt(maxParts);
-            db.CreateEvent(title, currentUser, desc, parts, maxPar, startDate, endDate, eventDate);
+            db.CreateEvent(title, currentUser.getId(), desc, parts, maxPar, startDate, endDate, eventDate);
         }
     }
 
