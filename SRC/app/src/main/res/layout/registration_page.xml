@@ -55,15 +55,15 @@
             android:textAlignment="center" />
 
         <EditText
-            android:id="@+id/register_username"
+            android:id="@+id/register_date_of_birth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
             android:background="@drawable/border_shape_grey"
-            android:hint="Username"
-            android:inputType="text"
+            android:hint="Date Of Birth  (DD/MM/YYYY)"
+            android:inputType="date"
             android:padding="6px"
             android:textAlignment="center" />
 
@@ -76,7 +76,7 @@
             android:layout_marginEnd="25dp"
             android:background="@drawable/border_shape_grey"
             android:hint="Password"
-            android:inputType="textPassword"
+            android:inputType="textVisiblePassword"
             android:padding="6px"
             android:textAlignment="center" />
 
@@ -125,7 +125,7 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/register_entrant_button"
+                android:id="@+id/register_user_button"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:text="Entrant"
@@ -152,7 +152,7 @@
         android:id="@+id/login_page_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
+        android:text="Sign In"
         android:textColor="@color/white"
         android:backgroundTint="@color/lightblue"
         app:layout_constraintTop_toBottomOf="@id/registration_information_container"

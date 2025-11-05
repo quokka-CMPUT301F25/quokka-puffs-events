@@ -7,11 +7,8 @@ public class User {
     private String email;
     private String hashPassword;
     private String username;
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
     private ArrayList<String> events;
-    private Integer accountType; //-1 Admin, 0 for entrant, +1 for organiser
+    private Integer accountType; //-'ve Admin, 0 for normal user, +'ve for organiser
     private Boolean sendNotifications;
     //etc etc
 
@@ -19,14 +16,11 @@ public class User {
     public User(){
         this.id = "FAILURE";
     }
-    public User(String id, String email, Integer accountType, String hashPassword, String username, String firstName, String lastName, String phoneNumber){
+    public User(String id, String email, Integer accountType, String hashPassword, String username){
         this.id = id;
         this.email = email;
         this.hashPassword = hashPassword;
         this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
         this.events = new ArrayList<>();
         this.accountType = accountType;
         this.sendNotifications = true;
@@ -86,29 +80,5 @@ public class User {
 
     public void setSendNotifications(Boolean sendNotifications) {
         this.sendNotifications = sendNotifications;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 }
