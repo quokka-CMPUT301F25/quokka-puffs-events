@@ -107,7 +107,7 @@
                 android:id ="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="X"
+                android:text="Home"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"/>
 
@@ -115,7 +115,7 @@
                 android:id ="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="X"
+                android:text="Events"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"/>
 
@@ -123,7 +123,7 @@
                 android:id ="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="X"
+                android:text="Add Event"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"/>
 
@@ -131,7 +131,7 @@
                 android:id ="@+id/button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="X"
+                android:text="Notifications"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"/>
 
@@ -139,7 +139,7 @@
                 android:id ="@+id/button5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="X"
+                android:text="Settings"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"/>
 
