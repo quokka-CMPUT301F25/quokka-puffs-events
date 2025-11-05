@@ -12,63 +12,62 @@
         android:id="@+id/userProfileInformationContainer"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="24dp"
         android:background="@drawable/border_shape_general"
+        android:orientation="vertical"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_marginTop="8dp"
             android:id="@+id/accountNameAndEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/usernameText"
-                android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/border_shape_grey"
+                android:padding="6px"
                 android:text="{Username}"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:background="@drawable/border_shape_grey"
-                android:padding="6px"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/userFirstAndLastNameText"
-                android:layout_marginTop="8dp"
-                android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_shape_grey"
+                android:padding="6px"
                 android:text="{First} {LastName}"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:background="@drawable/border_shape_grey"
-                android:padding="6px"
-                android:layout_weight="1"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/userEmailText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="{Email@gmail.com}"
-                android:textColor="@color/white"
+                android:layout_weight="1"
                 android:background="@drawable/border_shape_grey"
                 android:padding="6px"
-                android:layout_weight="1"/>
+                android:text="{Email@gmail.com}"
+                android:textColor="@color/white" />
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -78,20 +77,19 @@
                 android:id="@+id/userDateOfBirthText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="{DOB}"
-                android:textColor="@color/white"
+                android:layout_weight="1"
                 android:background="@drawable/border_shape_grey"
                 android:padding="6px"
-                android:layout_weight="1"
+                android:text="(XXX)-XXX-XXXX"
                 android:textAlignment="center"
-                />
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
             <Button
