@@ -148,7 +148,7 @@ public class Database {
         event.setImageID(id);
 
         imagesRef.document(id).set(uri).addOnSuccessListener(task -> {
-                Log.e("Firestore", "Images uploaded successfully");
+            Log.e("Firestore", "Images uploaded successfully");
         });
         return event;
     }
