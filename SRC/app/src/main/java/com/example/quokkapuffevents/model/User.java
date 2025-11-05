@@ -74,8 +74,16 @@ public class User {
         this.id = id;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public Boolean getSendNotifications() {
         return sendNotifications;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setSendNotifications(Boolean sendNotifications) {
