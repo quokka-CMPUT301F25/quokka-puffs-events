@@ -64,7 +64,7 @@ public class Database {
          * @param email
          * This is the city to check
          * @param type
-         * This denotes the type of account the user is. -1 for admin, 0 for participent, and 1 for organizer
+         * This denotes the type of account the user is. -1 for admin, 0 for participant, and 1 for organizer
          * @param hashPass
          * This is the hashed password of the user
          * @param userName
@@ -77,6 +77,7 @@ public class Database {
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
     }
+
     public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
         /**
          * Creates a new event and saves the new events data to the database
@@ -148,7 +149,7 @@ public class Database {
         event.setImageID(id);
 
         imagesRef.document(id).set(uri).addOnSuccessListener(task -> {
-                Log.e("Firestore", "Images uploaded successfully");
+            Log.e("Firestore", "Images uploaded successfully");
         });
         return event;
     }
@@ -287,6 +288,48 @@ public class Database {
                             events.add(doc.toObject(Event.class));
                         }
                         listener.onSuccess(events);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
+                    }
+                });
+    }
+
+    public void ListUsers(OnSuccessListener<ArrayList<User>> listener){
+        /**
+         * This method provides a list of every event that is in the database
+         * @return
+         * Returns an ArrayList that holds all of the known events
+         */
+        //Collects the data for every user with an id in the above list
+        usersRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            users.add(doc.toObject(User.class));
+                        }
+                        listener.onSuccess(users);
+                    } else {
+                        Log.e("Firestore", "Error getting user list", task.getException());
+                    }
+                });
+    }
+
+    public void ListNotifs(OnSuccessListener<ArrayList<Notif>> listener){
+        /**
+         * This method provides a list of every notification that is in the database
+         * @return
+         * Returns an ArrayList that holds all of the known notifications
+         */
+        //Collects the data for every user with an id in the above list
+        notifsRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<Notif> notifs = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            notifs.add(doc.toObject(Notif.class));
+                        }
+                        listener.onSuccess(notifs);
                     } else {
                         Log.e("Firestore", "Error getting notifications", task.getException());
                     }
@@ -476,5 +519,21 @@ public class Database {
                 });
     }
 
+    //Test Funcitons
+    public void CreateMockUser(String email, Integer type, String hashPass, String userName, Runnable onComplete) {
+        String id = usersRef.document().getId();
+        User newUser = new User(id, email, type, hashPass, userName);
+
+        usersRef.document(id)
+                .set(newUser)
+                .addOnSuccessListener(unused -> {
+                    Log.d("Database", "User created successfully: " + id);
+                    if (onComplete != null) onComplete.run();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Database", "Error creating user", e);
+                    if (onComplete != null) onComplete.run(); // still unblock latch to avoid hanging tests
+                });
+    }
 
 }
