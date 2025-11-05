@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_header"
-        app:layout_constraintBottom_toTopOf="@id/login_info_button">
+        app:layout_constraintBottom_toTopOf="@id/sign_in_button">
 
         <EditText
             android:id="@+id/login_email_address"
@@ -89,11 +89,11 @@
         android:backgroundTint="@color/lightblue"
         app:layout_constraintTop_toBottomOf="@id/login_information_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/login_info_button"
+        app:layout_constraintEnd_toStartOf="@id/sign_in_button"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
-        android:id="@+id/login_info_button"
+        android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign In"
