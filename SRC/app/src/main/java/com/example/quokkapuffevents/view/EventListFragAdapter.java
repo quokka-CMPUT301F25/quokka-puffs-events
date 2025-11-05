@@ -119,6 +119,44 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
         UIBinding();
 
+        if(type.equals("Waiting")) {
+            originUserText_waiting.setText(event.getOrg());
+            eventText_waiting.setText(event.getName());
+            eventDate_waiting.setText(event.getStartDate().toString());
+
+            cancelEventBtn_waiting.setOnClickListener(v -> {
+                leaveWaitingList(event);
+            });
+
+            detailsEventBtn_waiting.setOnClickListener(v -> {
+                seeDetails(event);
+            });
+        }
+
+        if(type.equals("Past")) {
+            originUserText_past.setText(event.getOrg());
+            eventText_past.setText(event.getName());
+            eventDate_past.setText(event.getStartDate().toString());
+
+            eventDetailsBtn_past.setOnClickListener(v -> {
+                seeDetails(event);
+            });
+        }
+
+        if (type.equals("all")) {
+            originUserText_all.setText(event.getOrg());
+            eventText_all.setText(event.getName());
+            eventDate_all.setText(event.getStartDate().toString());
+
+            eventDetailsBtn_all.setOnClickListener(v -> {
+                seeDetails(event);
+            });
+
+            eventRegisterBtn_all.setOnClickListener(v -> {
+                registerForEvent(event);
+            });
+        }
+
         return view;
     }
 
@@ -131,39 +169,19 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
             findEvents.setVisibility(View.GONE);
             waitingEvents.setVisibility(View.VISIBLE);
 
-//            db.GetEventsFromUser(user, events -> {
-//               for(Event e : events) {
-//                   Map<String, String> users = e.getEventUsers();
-//                   String status = users.get(user.getId());
-//
-//                   if(status.equals("Waiting")) {
-//                       eventsList.get().add(e);
-//                   }
-//               }
-//           });
         } else if(type.equals("Past")) {
 
             pastEvents.setVisibility(View.VISIBLE);
             findEvents.setVisibility(View.GONE);
             waitingEvents.setVisibility(View.GONE);
 
-//            db.GetEventsFromUser(user, Events ->{
-//                for(Event e : events) {
-//                   eventsList.get().add(e);
-//                }
-//            });
         } else if(type.equals("all")) {
 
             pastEvents.setVisibility(View.GONE);
             findEvents.setVisibility(View.VISIBLE);
             waitingEvents.setVisibility(View.GONE);
 
-//            db.ListEvents(events ->{
-//               eventsList.set(events);
-//            });
         }
-
-        //return eventsList.get();
     }
 
     public void setEvents(List<Event> newEvents) {
@@ -173,14 +191,14 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void registerForEvent(Event event) {
-
+        event.SetStatus(user.getId(), "Waiting");
     }
 
-    public void leaveWaitingList() {
-
+    public void leaveWaitingList(Event event) {
+        event.SetStatus(user.getId(), "Cancelled");
     }
 
-    public void seeDetails() {
-
+    public void seeDetails(Event event) {
+        //ERRRM idk what to do
     }
 }

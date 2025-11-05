@@ -370,6 +370,7 @@ public class Database {
          */
         //List of all users in the event
         List eventsOfUser = user.getEvents();
+        eventsOfUser.add("Dummy");
 
         //Collects the data for every user with an id in the above list
         eventsRef.whereIn("id", eventsOfUser).get()
