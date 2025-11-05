@@ -14,6 +14,7 @@
         <activity android:name=".controller.LoginActivity"/>
         <activity android:name=".controller.RegisterActivity"/>
         <activity android:name=".controller.DashboardActivity"/>
+        <activity android:name=".controller.AdminActivity"/>
         <activity
             android:name="com.example.quokkapuffevents.LoadingActivity"
             android:exported="true">

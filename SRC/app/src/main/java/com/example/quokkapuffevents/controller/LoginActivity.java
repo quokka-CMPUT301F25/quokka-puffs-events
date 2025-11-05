@@ -91,7 +91,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (!users.isEmpty()) {
                             //Set the current user in the database and change activity
                             db.SetUserID(users.get(0).getId());
-                            SwitchActivity(DashboardActivity.class);
+                            if(users.get(0).getAccountType() == -1)
+                                SwitchActivity(AdminActivity.class);
+                            else
+                                SwitchActivity(DashboardActivity.class);
                         }
                         //If password is wrong then we have an error
                         else {
@@ -105,7 +108,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (!users.isEmpty()) {
                             //Set the current user in the database and change activity
                             db.SetUserID(users.get(0).getId());
-                            SwitchActivity(DashboardActivity.class);
+                            if(users.get(0).getAccountType() == -1)
+                                SwitchActivity(AdminActivity.class);
+                            else
+                                SwitchActivity(DashboardActivity.class);
 
                         }
                         //If no user is found then we have an error
