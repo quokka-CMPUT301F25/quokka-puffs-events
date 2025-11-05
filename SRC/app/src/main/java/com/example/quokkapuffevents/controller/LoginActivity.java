@@ -14,6 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Database db;
@@ -82,7 +86,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Validates the information entered by the user
-    private void ValidateInformation(String uNameOrEmail,  String pass){
+    private void ValidateInformation(String uNameOrEmail,  String preHash){
+        //Hashing password
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] hashedPasswordByte = md.digest(preHash.getBytes(StandardCharsets.UTF_8));
+        String pass = new String(hashedPasswordByte);
+
         db.UserExists(uNameOrEmail, userExists -> {
             if(userExists) {
                 //If the user has typed in an email, check it
