@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -147,7 +148,7 @@ public class Database {
         event.setImageID(id);
 
         imagesRef.document(id).set(uri).addOnSuccessListener(task -> {
-                Log.e("Firestore", "Images uploaded successfully");
+            Log.e("Firestore", "Images uploaded successfully");
         });
         return event;
     }
@@ -463,6 +464,59 @@ public class Database {
                 });
     }
 
+    public void ToggleNotifsForUser(User user){
+        user.setSendNotifications(!(user.getSendNotifications()));
+        SaveUser(user);
+    }
+
+    public void ValidateUserEmail(String email, String password, OnSuccessListener<ArrayList<User>> listener){
+        usersRef.whereEqualTo("email", email)
+                .whereEqualTo("hashPassword", password)
+                .get()
+                .addOnCompleteListener(task -> {
+                    ArrayList<User> user = new ArrayList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            user.add(doc.toObject(User.class));
+                        }
+                        listener.onSuccess(user);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
+                    }
+                });
+    }
+
+    public void ValidateUserUsername(String username, String password, OnSuccessListener<ArrayList<User>> listener){
+        usersRef.whereEqualTo("userName", username)
+                .whereEqualTo("hashPassword", password)
+                .get()
+                .addOnCompleteListener(task -> {
+                    ArrayList<User> user = new ArrayList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            user.add(doc.toObject(User.class));
+                        }
+                        listener.onSuccess(user);
+                    } else {
+                        Log.e("Firestore", "Error getting notifications", task.getException());
+                    }
+                });
+    }
+
+    public void UserExists(String val, OnSuccessListener<Boolean> listener){
+        usersRef.where(Filter.or(
+                        Filter.equalTo("username", val),
+                        Filter.equalTo("email", val)
+                ))
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        listener.onSuccess(true);
+                    } else {
+                        listener.onSuccess(false);
+                    }
+                });
+    }
 
 
 }

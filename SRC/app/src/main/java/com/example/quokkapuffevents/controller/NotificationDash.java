@@ -56,7 +56,6 @@ public class NotificationDash extends Fragment {
         loadNotifications();
     }
 
-
     /**
      * Initializes UI elements like ListView and its adapter.
      */
