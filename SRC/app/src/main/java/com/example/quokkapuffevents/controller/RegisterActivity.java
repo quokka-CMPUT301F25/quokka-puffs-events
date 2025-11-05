@@ -15,6 +15,10 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.User;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private Database db;
@@ -106,13 +110,37 @@ public class RegisterActivity extends AppCompatActivity {
             else {
                 if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty()) {
                     if (entrant.isChecked()) {
-                        User newUser = db.CreateUser(email, 0, password, username, firstName, lastName, phone);
+
+                        //Hashing password
+                        MessageDigest md = null;
+                        try {
+                            md = MessageDigest.getInstance("SHA-512");
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new RuntimeException(e);
+                        }
+                        byte[] hashedPasswordByte = md.digest(password.getBytes(StandardCharsets.UTF_8));
+                        String hashedPassword = new String(hashedPasswordByte);
+
+                        //Creating User
+                        User newUser = db.CreateUser(email, 0, hashedPassword, username, firstName, lastName, phone);
                         db.SetUserID(newUser.getId());
 
                         SwitchActivity(DashboardActivity.class);
                     }
                     else if (organizer.isChecked()) {
-                        User newUser = db.CreateUser(email, 1, password, username, firstName, lastName, phone);
+
+                        //Hashing password
+                        MessageDigest md = null;
+                        try {
+                            md = MessageDigest.getInstance("SHA-512");
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new RuntimeException(e);
+                        }
+                        byte[] hashedPasswordByte = md.digest(password.getBytes(StandardCharsets.UTF_8));
+                        String hashedPassword = new String(hashedPasswordByte);
+
+                        //Creating User
+                        User newUser = db.CreateUser(email, 1, hashedPassword, username, firstName, lastName, phone);
                         db.SetUserID(newUser.getId());
 
                         SwitchActivity(DashboardActivity.class);
