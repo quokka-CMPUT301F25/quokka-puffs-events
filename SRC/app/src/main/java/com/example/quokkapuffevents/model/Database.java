@@ -1,20 +1,12 @@
 package com.example.quokkapuffevents.model;
 
-import static android.content.ContentValues.TAG;
-
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -58,22 +50,28 @@ public class Database {
     }
 
     //Base creation methods
-    public User CreateUser(String email, Integer type, String hashPass, String userName){
+    public User CreateUser(String email, Integer type, String hashPass, String userName, String firstName, String lastName, String phoneNumber){
         /**
          * Creates a new user and ensures that the user has a proper ID and is in the firebase database
          * @param email
-         * This is the city to check
+         * This is the email address that the user has chosen
          * @param type
-         * This denotes the type of account the user is. -1 for admin, 0 for participent, and 1 for organizer
+         * This denotes the type of account the user is. -1 for admin, 0 for participant, and 1 for organizer
          * @param hashPass
          * This is the hashed password of the user
          * @param userName
          * This is the username that the user has chosen
+         * @param firstName
+         * This is the first name of the user
+         * @param lastName
+         * This is the last name of the user
+         * @param phoneNumber
+         * This is the phone number that the user has chosen
          * @return
          * Returns the user as a new Class. Ensures that the user is saved to the cloud
          */
         String id = usersRef.document().getId(); //Creates a document and returns the id
-        User newUser = new User(id, email, type, hashPass, userName); //Creates new User class
+        User newUser = new User(id, email, type, hashPass, userName, firstName, lastName, phoneNumber); //Creates new User class
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
     }
@@ -470,7 +468,7 @@ public class Database {
         SaveUser(user);
     }
 
-    public void ValidateUserEmail(String email, String password, OnSuccessListener<ArrayList<User>> listener){
+    public void ValidatePasswordByEmail(String email, String password, OnSuccessListener<ArrayList<User>> listener){
         usersRef.whereEqualTo("email", email)
                 .whereEqualTo("hashPassword", password)
                 .get()
@@ -520,7 +518,7 @@ public class Database {
     }
 
     //Test Funcitons
-    public void CreateMockUser(String email, Integer type, String hashPass, String userName, Runnable onComplete) {
+    /*public void CreateMockUser(String email, Integer type, String hashPass, String userName, Runnable onComplete) {
         String id = usersRef.document().getId();
         User newUser = new User(id, email, type, hashPass, userName);
 
@@ -534,6 +532,6 @@ public class Database {
                     Log.e("Database", "Error creating user", e);
                     if (onComplete != null) onComplete.run(); // still unblock latch to avoid hanging tests
                 });
-    }
+    }*/
 
 }

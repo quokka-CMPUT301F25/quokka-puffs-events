@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
-import com.example.quokkapuffevents.model.User;
 import com.example.quokkapuffevents.view.NotificationArrayAdapter;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Fragment responsible for displaying notifications for the current user.
  */
-public class NotificationDash extends Fragment {
+public class NotificationFragment extends Fragment {
 
     // --- DATABASE INSTANCE ---
     private final Database db = Database.getInstance();
