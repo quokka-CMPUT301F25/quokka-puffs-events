@@ -38,7 +38,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     adminDashboard();
                 }
                 // Load initial fragment
-                replaceFragment(new InboxFragment());
+               // replaceFragment(new ());
             }
         });
     }

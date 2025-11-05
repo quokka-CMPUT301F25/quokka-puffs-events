@@ -1,9 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,13 +34,13 @@ public class DashboardActivity extends AppCompatActivity {
         db.GetUser(userID, new OnSuccessListener<User>() {
             @Override
             public void onSuccess(User user) {
-                if (user.getAccountType() == 1) {
+                if (user.getAccountType() == 0) {
                     entrantDashboard();
-                } else if (user.getAccountType() == 0) {
-                    organizerDashboard();
+                } else if (user.getAccountType() == 1) {
+                   //organizerDashboard();
                 }
                 // Load initial fragment
-                replaceFragment(new InboxFragment());
+                replaceFragment(new NotificationFragment());
             }
         });
     }
@@ -52,7 +50,7 @@ public class DashboardActivity extends AppCompatActivity {
         initializeViews();
 
         homeButton.setOnClickListener(View -> {
-            replaceFragment(new InboxFragment());
+            replaceFragment(new NotificationFragment());
         });
 
         viewEventsButton.setOnClickListener(View -> {
@@ -61,10 +59,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         addEventButton.setOnClickListener(View -> {
             replaceFragment(new QRCodeFragment());
-        });
-
-        notificationButton.setOnClickListener(View -> {
-            replaceFragment(new NotificationFragment());
         });
 
         settingsButton.setOnClickListener(View -> {
@@ -78,7 +72,7 @@ public class DashboardActivity extends AppCompatActivity {
         initializeViews();
 
         homeButton.setOnClickListener(View -> {
-            replaceFragment(new InboxFragment());
+            replaceFragment(new NotificationFragment());
         });
 
         viewEventsButton.setOnClickListener(View -> {
