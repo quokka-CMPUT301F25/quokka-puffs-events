@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -106,5 +107,13 @@ public class DashboardActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
+    }
+
+    public void goBackToLogin() {
+
+        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 }
