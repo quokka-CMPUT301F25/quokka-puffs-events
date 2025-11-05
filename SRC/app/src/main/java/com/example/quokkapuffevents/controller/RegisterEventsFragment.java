@@ -21,7 +21,7 @@ import com.example.quokkapuffevents.view.NotificationArrayAdapter;
 import java.util.ArrayList;
 
 public class RegisterEventsFragment extends Fragment {
-    // FILTER/REGISTER FOR EVENTS FOR DashboardActivity
+    /*// FILTER/REGISTER FOR EVENTS FOR DashboardActivity
     String userID; //current user id
     private Database db;
 
@@ -51,6 +51,6 @@ public class RegisterEventsFragment extends Fragment {
     private void LoadEvent(){
         String userID = db.GetCurrentUserID();
         db.GetUser(userID, user -> db.GetUserNotifications(user, ));
-    }
+    }*/
 
 }
