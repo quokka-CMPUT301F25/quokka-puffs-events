@@ -38,7 +38,7 @@ public class ChangeProfileSettings extends Fragment {
      *
      * */
 
-
+    DashboardActivity dashboardActivity;
     private Database db; // collection we want to access
     private User currentUser; //
     String userID;
@@ -230,11 +230,7 @@ public class ChangeProfileSettings extends Fragment {
          * TODO: Delete the user from the database. Also have a confirm button with it.
          * */
         db.DeleteUser(userID);
-
-        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
-        startActivity(intent);
-
-
+        dashboardActivity.goBackToLogin();
 //        Go back to login
 
     }

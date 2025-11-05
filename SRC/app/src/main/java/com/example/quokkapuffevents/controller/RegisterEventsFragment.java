@@ -50,7 +50,7 @@ public class RegisterEventsFragment extends Fragment {
 
     private void LoadEvent(){
         String userID = db.GetCurrentUserID();
-        db.GetUser(userID, user -> db.GetUserNotifications(user, ));
+//        db.GetUser(userID, user -> db.GetUserNotifications(user, ));
     }
 
 }
