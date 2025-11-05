@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -43,20 +44,17 @@ public class EventCreateFragment extends Fragment {
     Button createEvent; //button to initialize creating the event
     String userID; //current user id
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
-        // GET INSTANCE OF DATABASE AND CURRENT USER ID
-        db = Database.getInstance();
-        userID = String.valueOf(db.GetCurrentUserID());
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.create_events, container, false);
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.create_events, container);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         initializeViews(view);
         setUpListeners(view);
-        return view;
     }
 
     public void initializeViews(View view) {
@@ -81,36 +79,37 @@ public class EventCreateFragment extends Fragment {
             @Override
             public void onClick(View v){
                 // Getting input values
-                String title = eventTitle.getText().toString().trim();
-                String desc = eventDesc.getText().toString().trim();
-                int parts = Integer.parseInt(numbPar.getText().toString()); // number of wanted participants in event
+//                String title = eventTitle.getText().toString().trim();
+//                String desc = eventDesc.getText().toString().trim();
+                //int parts = Integer.parseInt(numbPar.getText().toString()); // number of wanted participants in event
                 String maxParts = "";
 
                 //TODO: change if we are adding a calendar widget
                 //Format that user type has to be yyyy-mm-dd in order for DateConverter to work
-                String startDateString = startDateDraw.getText().toString().trim();
-                String endDateString = endDateDraw.getText().toString().trim();
-                String eventDateString = dateOfEvent.getText().toString().trim();
+//                String startDateString = startDateDraw.getText().toString().trim();
+//                String endDateString = endDateDraw.getText().toString().trim();
+                //String eventDateString = dateOfEvent.getText().toString().trim();
 
                 boolean limitParts = limitPar.isChecked();
                 if (limitParts){
-                    maxParts = maxPar.getText().toString().trim();
+                    //maxParts = maxPar.getText().toString().trim();
                 }
 
                 boolean addGeolocate = addGeo.isChecked(); //TODO: IDK YET???
 
                 //Validating inputs
-                if (!validateInputs()) {
-                    return;
-                }
+//                if (!validateInputs()) {
+//                    return;
+//                }
 
-                //Creating Date Objects
-                Date startDate = dateConverter(startDateString);
-                Date endDate = dateConverter(endDateString);
-                Date eventDate = dateConverter(eventDateString);
+//                //Creating Date Objects
+//                Date startDate = new Date();
+//                Date endDate = new Date();
+//                Date eventDate = dateConverter(eventDateString);
 
                 //Create event in database
-                createEventObject(userID, desc, parts, maxParts, startDate, endDate, eventDate, title);
+                //createEventObject(userID, "Seitnd ", parts, maxParts, new Date(), new Date(), new Date(), "Seiotd");
+                db.CreateEvent("Name", "Name", "Name", 10, new Date(), new Date(), new Date());
             }
             //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });

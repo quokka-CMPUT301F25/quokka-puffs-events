@@ -9,70 +9,16 @@
 
 
     <LinearLayout
-        android:id="@+id/userProfileInformationContainer"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/border_shape_general"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="8dp"
-        >
-
-        <LinearLayout
-            android:layout_marginTop="8dp"
-            android:id="@+id/accountNameAndEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="8dp">
-
-            <TextView
-                android:id="@+id/usernameText"
-                android:textStyle="bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="{Username}"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:background="@drawable/border_shape_grey"
-                android:padding="6px"/>
-
-            <TextView
-                android:id="@+id/userFirstAndLastNameText"
-                android:layout_marginTop="8dp"
-                android:textStyle="bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="{First} {LastName}"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:background="@drawable/border_shape_grey"
-                android:padding="6px"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/dashboardEventsContainer"
         android:layout_width="400dp"
-        android:layout_height="525dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@drawable/border_shape_general"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/changeDisplayHeader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileInformationContainer">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container"

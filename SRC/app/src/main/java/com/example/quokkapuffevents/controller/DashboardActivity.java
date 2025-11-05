@@ -37,7 +37,7 @@ public class DashboardActivity extends AppCompatActivity {
                 if (user.getAccountType() == 0) {
                     entrantDashboard();
                 } else if (user.getAccountType() == 1) {
-                   //organizerDashboard();
+                   organizerDashboard();
                 }
                 // Load initial fragment
                 replaceFragment(new NotificationFragment());
