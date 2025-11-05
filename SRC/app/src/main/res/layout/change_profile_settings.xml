@@ -44,58 +44,56 @@
             android:layout_marginTop="12dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/usernameText"
+            <EditText
+                android:id="@+id/userFirstAndLastNameTextInput"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_shape_grey"
-                android:padding="6px"
-                android:text="{Username}"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                />
-
-            <TextView
-                android:id="@+id/userFirstAndLastNameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:autofillHints="Enter a First and Last name"
+                android:hint="Firstname Lastname"
+                android:inputType="text"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/border_shape_grey"
-                android:padding="6px"
-                android:text="{First} {LastName}"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:padding="6px"
+                />
 
         </LinearLayout>
 
-        <TextView
-            android:layout_marginTop="8dp"
-            android:id="@+id/userEmailText"
+
+        <EditText
+            android:id="@+id/userEmailTextInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:autofillHints="Enter a First and Last name"
+            android:hint="User Email"
+            android:inputType="text"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@drawable/border_shape_grey"
-            android:padding="6px"
-            android:text="{Email@gmail.com}"
+            android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20dp"
-            android:textAlignment="center"/>
+            android:padding="6px"
+            />
 
-        <TextView
-            android:textSize="20dp"
-            android:layout_marginTop="8dp"
-            android:id="@+id/userDateOfBirthText"
+        <EditText
+            android:id="@+id/userContactInformationInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:autofillHints="Enter a First and Last name"
+            android:hint="(XXX) XXX-XXX"
+            android:inputType="text"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@drawable/border_shape_grey"
-            android:padding="6px"
-            android:text="{DOB}"
             android:textAlignment="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:padding="6px"
+            />
 
         <TextView
             android:layout_width="match_parent"
