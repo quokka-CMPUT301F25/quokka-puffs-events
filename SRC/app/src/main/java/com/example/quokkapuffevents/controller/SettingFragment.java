@@ -49,6 +49,7 @@ public class SettingFragment extends Fragment {
     Switch allowNotifs;
     Button revertBtn;
     Button confirmBtn;
+    Button deleteBtn;
 
     //    Stole this from Seth -- HAHA SORRY! -Kyle.
     @Override
@@ -68,6 +69,7 @@ public class SettingFragment extends Fragment {
         setUpListeners(view);
         return view;
     }
+
     public void initializeViews(View v) {
         /*
           Initializes all attributes for the fragment
@@ -82,9 +84,9 @@ public class SettingFragment extends Fragment {
         allowNotifs = v.findViewById(R.id.enableNotificationsSwitchBtn);
         revertBtn = v.findViewById(R.id.revertChangesBtn);
         confirmBtn = v.findViewById(R.id.confirmChangesBtn);
+        deleteBtn = v.findViewById(R.id.deleteAccountBtn);
 
         userID = db.GetCurrentUserID();
-
 
     }
 
@@ -94,18 +96,47 @@ public class SettingFragment extends Fragment {
         *
         * */
 
-
         db.GetUser(userID, user -> {
 
+            email.setText(user.getEmail());
+            name.setText(user.getUserName());
 
-
+//            TODO: check if theres a phone number associated to the user
+            /*
+            *  if have a phone number
+            *
+            *       edit text and display phone number
+            * */
         });
-
-
-
 
     }
     public void setUpListeners(View v) {
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteUserAccount();
+            }
+        });
+
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(checkInput()) {
+                    confirmChanges();
+                }
+
+            }
+
+        });
+
+        revertBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revertChanges();
+            }
+        });
 
 
     }
@@ -114,6 +145,7 @@ public class SettingFragment extends Fragment {
         /*
         * TODO: Delete the user from the database. Also have a confirm button with it.
         * */
+        db.DeleteUser(userID);
 
     }
 
@@ -130,6 +162,9 @@ public class SettingFragment extends Fragment {
         * TODO: Confirm the changes of the user input. Also send a confirmation notifications with it.
         *
         * */
+
+
+
     }
 
     public void revertChanges() {
@@ -138,23 +173,6 @@ public class SettingFragment extends Fragment {
         *
         *
         * */
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
