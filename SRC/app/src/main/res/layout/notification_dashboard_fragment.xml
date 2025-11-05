@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="500dp"
+        android:background="@drawable/border_shape_general"
+        android:padding="12dp"
+        android:orientation="vertical"
+
+        >
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Notifications"
+            android:textSize="32dp"
+            android:background="@color/mainblue"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightblue"
+            android:padding="8dp"/>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,84 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:padding="0dp">
+    android:background="@color/black">
 
 
-    <LinearLayout
-        android:id="@+id/userProfileInformationContainer"
-        android:layout_width="400dp"
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:textAlignment="center"
+        android:text="Find Events"
+        android:textSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/border_shape_general"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="8dp"
-        >
+        android:background="@color/mainblue"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingVertical="12dp"/>
 
-        <LinearLayout
-            android:layout_marginTop="8dp"
-            android:id="@+id/accountNameAndEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="8dp">
-
-            <TextView
-                android:id="@+id/usernameText"
-                android:textStyle="bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="{Username}"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:background="@drawable/border_shape_grey"
-                android:padding="6px"/>
-
-            <TextView
-                android:id="@+id/userFirstAndLastNameText"
-                android:layout_marginTop="8dp"
-                android:textStyle="bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="{First} {LastName}"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:background="@drawable/border_shape_grey"
-                android:padding="6px"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/dashboardEventsContainer"
-        android:layout_width="400dp"
-        android:layout_height="525dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/border_shape_general"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/changeDisplayHeader"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:textSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileInformationContainer">
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:backgroundTint="@color/bluebtn"
+        android:layout_marginVertical="24dp"
+        android:paddingHorizontal="50dp"/>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragment_container"
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="500dp"
+        android:background="@drawable/border_shape_general"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button"
+
+        >
+
+        <ListView
+            android:id="@+id/findEventsListView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:background="@color/lightblue"
+            android:padding="8dp" />
+
 
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -95,7 +70,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:paddingBottom="24dp"
         >
-
         <LinearLayout
             android:id="@+id/headerBtnContainer"
             android:layout_width="match_parent"
@@ -104,7 +78,6 @@
 
 
             <Button
-                android:id ="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -112,7 +85,6 @@
                 android:backgroundTint="@color/transparent"/>
 
             <Button
-                android:id ="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -120,7 +92,6 @@
                 android:backgroundTint="@color/transparent"/>
 
             <Button
-                android:id ="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -128,7 +99,6 @@
                 android:backgroundTint="@color/transparent"/>
 
             <Button
-                android:id ="@+id/button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -136,7 +106,6 @@
                 android:backgroundTint="@color/transparent"/>
 
             <Button
-                android:id ="@+id/button5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="X"
@@ -146,7 +115,10 @@
 
 
         </LinearLayout>
-
     </LinearLayout>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
