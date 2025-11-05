@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  * These run on an emulator/device because they involve Android UI.
  */
 @RunWith(AndroidJUnit4.class)
-public class NotificationDashTest {
+public class NotificationFragmentTest {
 
     @Test
     public void testFragmentLaunchesAndListViewExists() {

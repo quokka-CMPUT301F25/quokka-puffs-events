@@ -28,7 +28,6 @@ public class EventCreateFragment extends Fragment {
     private Database db;
 
     // EVENT INFORMATION
-    private User currentUser; //current user of app
     EditText eventTitle; //title of event
     EditText startDateDraw; //not in views yet, start of registration period
     EditText endDateDraw; //not in views yet, end of registration period
@@ -42,14 +41,15 @@ public class EventCreateFragment extends Fragment {
     Switch addGeo; //TODO: idek???
     Button cancelEvent; //button to cancel event
     Button createEvent; //button to initialize creating the event
+    String userID; //current user id
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        // GET INSTANCE OF DATABASE AND CURRENT USER INFO
+        // GET INSTANCE OF DATABASE AND CURRENT USER ID
         db = Database.getInstance();
-        String userID = String.valueOf(db.GetCurrentUserID());
+        userID = String.valueOf(db.GetCurrentUserID());
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,7 +110,7 @@ public class EventCreateFragment extends Fragment {
                 Date eventDate = dateConverter(eventDateString);
 
                 //Create event in database
-                createEventObject(currentUser, desc, parts, maxParts, startDate, endDate, eventDate, title);
+                createEventObject(userID, desc, parts, maxParts, startDate, endDate, eventDate, title);
             }
             //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });
@@ -144,7 +144,7 @@ public class EventCreateFragment extends Fragment {
 
     public boolean validateInputs(){
         /**
-         * Checks if user inputed into these specific required fields
+         * Checks if user inputted into these specific required fields
          * @return
          * Returns a boolean value (false if one of the fields is blank, true if all fields are filled)
          */
@@ -164,12 +164,12 @@ public class EventCreateFragment extends Fragment {
         return true;
     }
 
-    public void createEventObject(User user, String desc, int parts, String maxParts,
+    public void createEventObject(String id, String desc, int parts, String maxParts,
                                   Date startDate, Date endDate, Date eventDate, String title){
         /**
          * Method to create the event itself (easier for testing)
-         * @param User
-         * Current user using the app (automatic that they are an organizer)
+         * @param id
+         * Current user ID using the app (automatic that they are an organizer)
          * @param desc
          * Description of event
          * @param parts
@@ -183,12 +183,14 @@ public class EventCreateFragment extends Fragment {
          * End of when entrants are allowed to join waiting list
          * @param eventDate
          * Day of the event
+         * @param title
+         * Title of event
          */
         if (maxParts.isEmpty()){
-            db.CreateEvent(title, currentUser.getId(), desc, parts, startDate, endDate, eventDate);
+            db.CreateEvent(title, id, desc, parts, startDate, endDate, eventDate);
         } else {
             int maxPar = Integer.parseInt(maxParts);
-            db.CreateEvent(title, currentUser.getId(), desc, parts, maxPar, startDate, endDate, eventDate);
+            db.CreateEvent(title, id, desc, parts, maxPar, startDate, endDate, eventDate);
         }
     }
 
