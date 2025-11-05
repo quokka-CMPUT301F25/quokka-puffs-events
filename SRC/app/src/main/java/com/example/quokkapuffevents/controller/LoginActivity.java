@@ -2,7 +2,6 @@ package com.example.quokkapuffevents.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -15,11 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Database db;
     private SharedPreferences.Editor loginPrefsEditor;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText username = findViewById(R.id.login_email_address);
         EditText password = findViewById(R.id.login_password);
         CheckBox rememberMe = findViewById(R.id.remember_me_button);
+        Button signUpButton = findViewById(R.id.register_page_button);
         Button signInButton = findViewById(R.id.sign_in_button);
 
         //Setting up login preferences for "remember me" option
@@ -46,6 +49,10 @@ public class LoginActivity extends AppCompatActivity {
             password.setText(loginPreferences.getString("password", ""));
             rememberMe.setChecked(true);
         }
+
+        signUpButton.setOnClickListener(v -> {
+            SwitchActivity(RegisterActivity.class);
+        });
 
         signInButton.setOnClickListener(v -> {
             ValidateInformation(username.getText().toString(), password.getText().toString());
@@ -75,20 +82,33 @@ public class LoginActivity extends AppCompatActivity {
 
     //Display's if the Username or password is incorrect
     private void DisplayErrorMsg(){
-        Toast.makeText(this, "Username or Password is incorrect", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Email Address / Username or Password is incorrect", Toast.LENGTH_SHORT).show();
     }
 
     //Validates the information entered by the user
-    private void ValidateInformation(String uNameOrEmail,  String pass){
+    private void ValidateInformation(String uNameOrEmail,  String preHash){
+        //Hashing password
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] hashedPasswordByte = md.digest(preHash.getBytes(StandardCharsets.UTF_8));
+        String pass = new String(hashedPasswordByte);
+
         db.UserExists(uNameOrEmail, userExists -> {
             if(userExists) {
                 //If the user has typed in an email, check it
                 if(uNameOrEmail.contains("@")){
-                    db.ValidateUserEmail(uNameOrEmail, pass, users -> {
+                    db.ValidatePasswordByEmail(uNameOrEmail, pass, users -> {
                         if (!users.isEmpty()) {
                             //Set the current user in the database and change activity
                             db.SetUserID(users.get(0).getId());
-                            SwitchActivity(DashboardActivity.class);
+                            if(users.get(0).getAccountType() == -1)
+                                SwitchActivity(AdminActivity.class);
+                            else
+                                SwitchActivity(DashboardActivity.class);
                         }
                         //If password is wrong then we have an error
                         else {
@@ -102,7 +122,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (!users.isEmpty()) {
                             //Set the current user in the database and change activity
                             db.SetUserID(users.get(0).getId());
-                            SwitchActivity(DashboardActivity.class);
+                            if(users.get(0).getAccountType() == -1)
+                                SwitchActivity(AdminActivity.class);
+                            else
+                                SwitchActivity(DashboardActivity.class);
 
                         }
                         //If no user is found then we have an error
@@ -112,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
                 }
             }
+            // If no
             else {
                 DisplayErrorMsg();
             }
