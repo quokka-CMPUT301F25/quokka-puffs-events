@@ -19,13 +19,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/eventName"
+            android:id="@+id/notifTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/inter"
-            android:text="{Event Name}"
+            android:text="{Notification Title}"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,16 +34,30 @@
         </TextView>
 
         <TextView
-            android:id="@+id/eventDate"
+            android:id="@+id/notifSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="29dp"
             android:fontFamily="@font/inter"
-            android:text="Nov. 3 (XX days from now)"
-            android:textSize="20sp"
+            android:text="{Notification Subtitle}"
+            android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/eventName"
-            app:layout_constraintTop_toTopOf="@+id/eventName">
+            app:layout_constraintStart_toStartOf="@+id/notifTitle"
+            app:layout_constraintTop_toTopOf="@+id/notifTitle">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/notifSubtitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:text="{}"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/notifSubtitle"
+            app:layout_constraintStart_toEndOf="@+id/notifSubtitle"
+            app:layout_constraintTop_toTopOf="@+id/notifSubtitle">
 
         </TextView>
 
