@@ -12,43 +12,42 @@ import androidx.fragment.app.Fragment;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
+import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.view.AdminEventFragAdapter;
-import com.example.quokkapuffevents.view.AdminPhotoFragAdapter;
+import com.example.quokkapuffevents.view.AdminNotifFragAdapter;
 
 import java.util.ArrayList;
 
-public class AdminPhotoFragment extends Fragment {
+public class AdminNotificationFragment extends Fragment {
 
     ListView listView;
-    private AdminPhotoFragAdapter adapter;
+    private AdminNotifFragAdapter adapter;
     private Database db;
-    private ArrayList<Event> eventList = new ArrayList<>();
+    private ArrayList<Notif> notifList = new ArrayList<>();
 
-    public AdminPhotoFragment() {
+    public AdminNotificationFragment() {
 
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View imageFragmentView = inflater.inflate(R.layout.frag_admin_images, container, false);
+        View notifFragmentView = inflater.inflate(R.layout.frag_admin_notifications, container, false);
 
         db = Database.getInstance();
 
-        listView = imageFragmentView.findViewById(R.id.adminImagesListView);
+        listView = notifFragmentView.findViewById(R.id.adminNotificationsListView);
 
-        adapter = new AdminPhotoFragAdapter(getContext(), eventList);
+        adapter = new AdminNotifFragAdapter(getContext(), notifList);
         listView.setAdapter(adapter);
 
-        db.ListEvents( events -> {
+        db.ListNotifs( notifs -> {
             // refresh adapter
-            eventList.clear();
-            eventList.addAll(events);
+            notifList.clear();
+            notifList.addAll(notifs);
             adapter.notifyDataSetChanged();
         });
 
-        return imageFragmentView;
+        return notifFragmentView;
     }
-
-
 }

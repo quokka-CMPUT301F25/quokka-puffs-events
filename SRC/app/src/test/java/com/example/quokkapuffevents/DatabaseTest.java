@@ -1,19 +1,19 @@
 package com.example.quokkapuffevents;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.example.quokkapuffevents.model.Database;
-import com.example.quokkapuffevents.model.Event;
-import com.example.quokkapuffevents.model.Notif;
-import com.example.quokkapuffevents.model.User;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Optional;
+//import org.junit.Assert;
+//import org.junit.jupiter.api.Test;
+//
+//import static org.junit.Assert.assertNotNull;
+//import static org.junit.jupiter.api.Assertions.assertEquals;
+//
+//import com.example.quokkapuffevents.model.Database;
+//import com.example.quokkapuffevents.model.Event;
+//import com.example.quokkapuffevents.model.Notif;
+//import com.example.quokkapuffevents.model.User;
+//
+//import java.time.Instant;
+//import java.util.ArrayList;
+//import java.util.Date;
+//import java.util.Optional;
 
 public class DatabaseTest {
     /*
