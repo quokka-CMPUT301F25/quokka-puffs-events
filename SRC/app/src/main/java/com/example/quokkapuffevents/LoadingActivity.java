@@ -30,8 +30,5 @@ public class LoadingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }, 5000);
-
-        //TESTING THE CREATE EVENTS COMMENT OUT WHEN NOT NEEDED
-        db = new Database();
     }
 }
