@@ -15,4 +15,6 @@ public class DashboardActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.main_dashboard);
     }
+
+    
 }

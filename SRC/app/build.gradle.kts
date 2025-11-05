@@ -37,6 +37,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation(libs.ext.junit)
     implementation(libs.espresso.core)
+    implementation(libs.firebase.database)
     // These were changed from implementation to androidTestImplementation
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.runner)
