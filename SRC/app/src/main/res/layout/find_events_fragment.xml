@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="600dp"
+        android:background="@drawable/border_shape_general"
+        android:padding="12dp"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:id="@+id/filterEventsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter"
+            android:textSize="32dp"
+            android:backgroundTint="@color/bluebtn"
+            android:layout_marginVertical="12dp"
+            android:paddingHorizontal="50dp"
+            android:layout_gravity="center"/>
+
+        <ListView
+            android:id="@+id/findEventsListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightblue"
+            android:padding="8dp" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

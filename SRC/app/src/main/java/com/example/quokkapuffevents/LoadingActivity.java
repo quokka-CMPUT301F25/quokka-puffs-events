@@ -11,9 +11,6 @@ import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
 
 public class LoadingActivity extends AppCompatActivity {
-
-    private Database db;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,5 +27,6 @@ public class LoadingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }, 5000);
+
     }
 }
