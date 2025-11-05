@@ -44,7 +44,7 @@ public class RegisterEventsFragment extends Fragment {
 
     private void initializeUI(@NonNull View view) {
         listView = view.findViewById(R.id.findEventsListView);
-        adapter = new EventListFragAdapter(requireContext(), new ArrayList<>(), Type);
+        adapter = new EventListFragAdapter(requireContext(), new ArrayList<>(), new String());
         listView.setAdapter(adapter);
     }
 
