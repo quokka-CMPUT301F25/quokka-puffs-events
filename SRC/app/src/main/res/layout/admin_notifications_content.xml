@@ -61,5 +61,24 @@
 
         </TextView>
 
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginStart="96dp"
+            android:layout_marginEnd="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/border_shape_general"
+            android:backgroundTint="@color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/trash_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </ImageButton>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
