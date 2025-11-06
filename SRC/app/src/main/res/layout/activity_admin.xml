@@ -12,10 +12,13 @@
         android:id="@+id/adminTitle"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/mainblue"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/border_shape_general"
         android:fontFamily="@font/inter"
         android:gravity="center"
-        android:text="All Users"
+        android:text="All Events"
         android:textColor="@color/white"
         android:textSize="20pt"
         android:textStyle="bold"
@@ -27,8 +30,7 @@
         android:id="@+id/adminFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_marginBottom="115dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,72 +40,88 @@
     </androidx.fragment.app.FragmentContainerView>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
+        android:layout_height="85dp"
         android:background="@color/mainblue"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/imagesIcon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/images_icon"
-            android:scaleType="fitCenter"
-            android:background="@color/transparent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:background="@color/transparent"
             android:clickable="true"
+            android:contentDescription="Go to images fragment"
             android:focusable="true"
-            android:contentDescription="Go to images fragment">
+            android:scaleType="fitCenter"
+            android:src="@drawable/images_icon">
 
         </ImageButton>
 
         <ImageButton
             android:id="@+id/eventsIcon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/events_icon"
-            android:scaleType="fitCenter"
-            android:background="@color/transparent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:background="@color/transparent"
             android:clickable="true"
+            android:contentDescription="Go to events fragment"
             android:focusable="true"
-            android:contentDescription="Go to events fragment">
+            android:scaleType="fitCenter"
+            android:src="@drawable/events_icon">
 
         </ImageButton>
 
         <ImageButton
             android:id="@+id/usersIcon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/users_icon"
-            android:scaleType="fitCenter"
-            android:background="@color/transparent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:background="@color/transparent"
             android:clickable="true"
+            android:contentDescription="Go to users fragment"
             android:focusable="true"
-            android:contentDescription="Go to users fragment">
+            android:scaleType="fitCenter"
+            android:src="@drawable/users_icon">
 
         </ImageButton>
 
         <ImageButton
             android:id="@+id/notificationsIcon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/notifications_icon"
-            android:scaleType="fitCenter"
-            android:background="@color/transparent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:background="@color/transparent"
             android:clickable="true"
+            android:contentDescription="Go to notifications fragment"
             android:focusable="true"
-            android:contentDescription="Go to notifications fragment">
+            android:scaleType="fitCenter"
+            android:src="@drawable/notifications_icon">
+
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/settingsIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:contentDescription="Go to notifications fragment"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/settings_icon">
 
         </ImageButton>
 

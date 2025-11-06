@@ -53,6 +53,8 @@ public class AdminEventFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });
 
+
+
         return eventFragmentView;
     }
 }
