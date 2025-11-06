@@ -58,11 +58,6 @@ public class ChangeProfileSettings extends Fragment {
     Button confirmBtn;
     Button deleteBtn;
 
-    String currFirstName;
-    String currLastName;
-    String currEmail;
-    String currContact;
-
 
     //    Stole this from Seth -- HAHA SORRY! -Kyle.
     @Override
@@ -103,7 +98,6 @@ public class ChangeProfileSettings extends Fragment {
         deleteBtn = v.findViewById(R.id.deleteAccountBtn);
 
         userID = db.GetCurrentUserID();
-
     }
 
     public void updateEditableUserInformation(){
@@ -112,32 +106,17 @@ public class ChangeProfileSettings extends Fragment {
          *
          * */
 
-        db.GetUser(userID, user -> {
+        String prevEmail = currentUser.getEmail();
+        String prevFirstName = currentUser.getFirstName();
+        String prevLastName = currentUser.getLastName();
+        String prevContact = currentUser.getPhoneNumber();
+        Boolean prevAllowNotifs = currentUser.getSendNotifications();
 
-            String prevEmail = user.getEmail();
-            String prevFirstName = user.getFirstName();
-            String prevLastName = user.getLastName();
-            String prevContact = user.getPhoneNumber();
-
-            email.setText(prevEmail);
-            firstName.setText(prevFirstName);
-            lastName.setText(prevLastName);
-            contact.setText(prevContact);
-
-
-
-//            TODO: check if theres a phone number associated to the user
-            /*
-             *  if have a phone number
-             *
-             *       edit text and display phone number
-             * */
-        });
-
-        currFirstName = firstName.getText().toString();
-        currEmail = email.getText().toString();
-        currContact = contact.getText().toString();
-
+        email.setText(prevEmail);
+        firstName.setText(prevFirstName);
+        lastName.setText(prevLastName);
+        contact.setText(prevContact);
+        allowNotifs.setChecked(prevAllowNotifs);
 
     }
     public void setUpListeners(View v) {
@@ -154,13 +133,10 @@ public class ChangeProfileSettings extends Fragment {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(checkInput()) {
                     confirmChanges();
                 }
-
             }
-
         });
 
         revertBtn.setOnClickListener(new View.OnClickListener() {
@@ -261,34 +237,24 @@ public class ChangeProfileSettings extends Fragment {
 
     public void deleteUserAccount() {
         db.DeleteUser(userID);
-        String userID = db.GetCurrentUserID();
-        db.GetUser(userID, user -> {
-            ((DashboardActivity) getActivity()).goBackToLogin();
-        });
-
+        ((DashboardActivity) getActivity()).goBackToLogin();
     }
 
     public void confirmChanges() {
-        db.GetUser(userID, user -> {
-            if (user != null) {
-                String newEmail = email.getText().toString().trim();
-                String newFirstName = firstName.getText().toString().trim();
-                String newLastName = lastName.getText().toString().trim();
-                String newContact = contact.getText().toString().trim();
+        String newEmail = email.getText().toString().trim();
+        String newFirstName = firstName.getText().toString().trim();
+        String newLastName = lastName.getText().toString().trim();
+        String newContact = contact.getText().toString().trim();
+        Boolean newAllowNotifs = allowNotifs.getShowText();
 
-                user.setEmail(newEmail);
-                user.setFirstName(newFirstName);
-                user.setLastName(newLastName);
-                user.setPhoneNumber(newContact);
+        currentUser.setEmail(newEmail);
+        currentUser.setFirstName(newFirstName);
+        currentUser.setLastName(newLastName);
+        currentUser.setPhoneNumber(newContact);
+        currentUser.setSendNotifications(newAllowNotifs);
 
-                db.SaveUser(user);
-            } else {
-                Log.e("Firestore", "User not found: " + userID);
-            }
-        });
-
+        db.SaveUser(currentUser);
         leaveProfileSettings();
-
     }
 
     public boolean checkInput() {
@@ -310,9 +276,6 @@ public class ChangeProfileSettings extends Fragment {
 //        if (!(newContact.length() < )) {
 //            return false;
 //        }
-
-
-
         return true;
     }
 
@@ -321,10 +284,10 @@ public class ChangeProfileSettings extends Fragment {
     }
 
     public void leaveProfileSettings() {
-        String userID = db.GetCurrentUserID();
-        db.GetUser(userID, user -> {
-            ((DashboardActivity) getActivity()).replaceFragment(new SettingFragment());
-        });
+        SettingFragment settingFragment = new SettingFragment();
+        settingFragment.setCurrUser(currentUser);
+        ((DashboardActivity) getActivity()).replaceFragment(settingFragment);
     }
 
+    public void setUser(User user) {this.currentUser = user;}
 }

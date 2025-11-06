@@ -39,6 +39,7 @@ public class SettingFragment extends Fragment {
     DashboardActivity dashboardActivity;
     AdminActivity adminActivity;
     private Database db; // collection we want to access
+    private User currUser;
 
 
     Button editProfile;
@@ -53,10 +54,8 @@ public class SettingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
         // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
-        String userID = String.valueOf(db.GetCurrentUserID());
     }
 
     @Override
@@ -74,6 +73,8 @@ public class SettingFragment extends Fragment {
         displayInfo();
     }
 
+    public void setCurrUser(User currUser) {this.currUser = currUser;}
+
     public void initializeViews(View v) {
         /*
           Initializes all attributes for the fragment
@@ -87,26 +88,19 @@ public class SettingFragment extends Fragment {
         firstAndLastNameText = v.findViewById(R.id.userFirstAndLastNameText);
         emailText = v.findViewById(R.id.userEmailText);
         userPhoneNumber = v.findViewById(R.id.userPhoneNumber);
-
-
     }
 
     public void displayInfo() {
         String userId = db.GetCurrentUserID();
-        db.GetUser(userId, user -> {
-            if (user != null) {
-                usernameText.setText(user.getUserName());
-                String formatName = user.getFirstName() + " " + user.getLastName();
-                firstAndLastNameText.setText(formatName);
-                emailText.setText(user.getEmail());
-                userPhoneNumber.setText(user.getPhoneNumber());
-
-
-            } else {
-                Log.e("Firestore", "User not found: " + userId);
-            }
-
-        });
+        if (currUser != null) {
+            usernameText.setText(currUser.getUserName());
+            String formatName = currUser.getFirstName() + " " + currUser.getLastName();
+            firstAndLastNameText.setText(formatName);
+            emailText.setText(currUser.getEmail());
+            userPhoneNumber.setText(currUser.getPhoneNumber());
+        } else {
+            Log.e("Firestore", "User not found: " + userId);
+        }
 
     }
 
@@ -114,22 +108,20 @@ public class SettingFragment extends Fragment {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID = db.GetCurrentUserID();
-                db.GetUser(userID, user -> {
-                    ((DashboardActivity) getActivity()).goBackToLogin();
-                });
+                db.SetUserID(null);
+                ((DashboardActivity) getActivity()).goBackToLogin();
             }
         });
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID = db.GetCurrentUserID();
-                db.GetUser(userID, user -> {
-                    ((DashboardActivity) getActivity()).goToUserProfileSettings();
-                });
+                ChangeProfileSettings editFragment = new ChangeProfileSettings();
+                editFragment.setUser(currUser);
+                ((DashboardActivity) getActivity()).replaceFragment(editFragment);
             }
         });
+
 }
 
 
