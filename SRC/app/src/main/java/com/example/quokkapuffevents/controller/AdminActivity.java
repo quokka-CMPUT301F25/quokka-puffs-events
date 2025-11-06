@@ -12,9 +12,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.quokkapuffevents.R;
+import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.User;
 
 public class AdminActivity extends AppCompatActivity {
 
+    Database db = Database.getInstance();
     TextView title;
     ImageButton imagesIcon;
     ImageButton eventsIcon;
@@ -78,7 +81,11 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 title.setText("Settings");
-                replaceFragment(fragmentManager, new SettingFragment());
+                db.GetUser(db.GetCurrentUserID(), user -> {
+                    SettingFragment settingFragment = new SettingFragment();
+                    settingFragment.setCurrUser(user);
+                    replaceFragment(fragmentManager, settingFragment);
+                });
             }
         });
 
@@ -98,14 +105,18 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
-    public void changeProfile() {
+    public void changeProfile(User user) {
+        ChangeProfileSettings editFragment = new ChangeProfileSettings();
+        editFragment.setUser(user);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        replaceFragment(fragmentManager, new ChangeProfileSettings());
+        replaceFragment(fragmentManager, editFragment);
     }
 
-    public void goSettingFragment () {
+    public void goSettingFragment (User user) {
+        SettingFragment settingFragment = new SettingFragment();
+        settingFragment.setCurrUser(user);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        replaceFragment(fragmentManager, new SettingFragment());
+        replaceFragment(fragmentManager, settingFragment);
     }
 
 

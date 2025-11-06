@@ -109,16 +109,27 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 db.SetUserID(null);
-                ((DashboardActivity) getActivity()).goBackToLogin();
+                if (currUser.getAccountType() == -1){
+                    ((AdminActivity) getActivity()).goBackToLogin();
+                }
+                else {
+                    ((DashboardActivity) getActivity()).goBackToLogin();
+                }
+
             }
         });
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChangeProfileSettings editFragment = new ChangeProfileSettings();
-                editFragment.setUser(currUser);
-                ((DashboardActivity) getActivity()).replaceFragment(editFragment);
+                if (currUser.getAccountType() == -1){
+                    ((AdminActivity) getActivity()).changeProfile(currUser);
+                }
+                else {
+                    ChangeProfileSettings editFragment = new ChangeProfileSettings();
+                    editFragment.setUser(currUser);
+                    ((DashboardActivity) getActivity()).replaceFragment(editFragment);
+                }
             }
         });
 

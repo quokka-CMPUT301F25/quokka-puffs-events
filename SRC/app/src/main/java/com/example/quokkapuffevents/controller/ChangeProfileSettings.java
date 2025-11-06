@@ -284,9 +284,14 @@ public class ChangeProfileSettings extends Fragment {
     }
 
     public void leaveProfileSettings() {
-        SettingFragment settingFragment = new SettingFragment();
-        settingFragment.setCurrUser(currentUser);
-        ((DashboardActivity) getActivity()).replaceFragment(settingFragment);
+        if (currentUser.getAccountType() == -1){
+            ((AdminActivity) getActivity()).goSettingFragment(currentUser);
+        }
+        else {
+            SettingFragment settingFragment = new SettingFragment();
+            settingFragment.setCurrUser(currentUser);
+            ((DashboardActivity) getActivity()).replaceFragment(settingFragment);
+        }
     }
 
     public void setUser(User user) {this.currentUser = user;}
