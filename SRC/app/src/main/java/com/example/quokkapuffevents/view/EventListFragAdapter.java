@@ -134,7 +134,7 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
         }
 
         if(type.equals("Past")) {
-            originUserText_past.setText(event.getOrg());
+            //originUserText_past.setText(event.getOrg());
             eventText_past.setText(event.getName());
             eventDate_past.setText(event.getStartDate().toString());
 
@@ -144,7 +144,7 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
         }
 
         if (type.equals("all")) {
-            originUserText_all.setText(event.getOrg());
+            //originUserText_all.setText(event.getOrg());
             eventText_all.setText(event.getName());
             eventDate_all.setText(event.getStartDate().toString());
 
@@ -191,11 +191,16 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void registerForEvent(Event event) {
-        event.SetStatus(user.getId(), "Waiting");
+        event.addUser(user.getId());
+        db.SaveEvent(event);
+        user.addEvent(event.getId());
+        db.SaveUser(user);
+
     }
 
     public void leaveWaitingList(Event event) {
         event.SetStatus(user.getId(), "Cancelled");
+        db.SaveEvent(event);
     }
 
     public void seeDetails(Event event) {
