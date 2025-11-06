@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/adminEventsListView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_marginBottom="80dp"
         android:background="@drawable/content_border"
-        android:backgroundTint="@color/mainblue"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:listSelector="@android:color/transparent">
+        android:backgroundTint="@color/mainblue">
 
-    </ListView>
+        <ListView
+            android:id="@+id/adminEventsListView"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/content_border"
+            android:backgroundTint="@color/mainblue"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:gravity="center_horizontal"
+            android:listSelector="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </ListView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>
