@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,8 @@ public class DashboardActivity extends AppCompatActivity {
     Button addEventButton;
     Button notificationButton;
     Button settingsButton;
+    TextView usernameText;
+    TextView userFirstAndLastNameText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -38,6 +41,9 @@ public class DashboardActivity extends AppCompatActivity {
             public void onSuccess(User user) {
                 if (user.getAccountType() == 0) {
                     entrantDashboard();
+                    usernameText.setText(user.getUserName());
+                    String temp = user.getFirstName() + " " + user.getLastName();
+                    userFirstAndLastNameText.setText(temp);
                 } else if (user.getAccountType() == 1) {
                    //organizerDashboard();
                 }
@@ -111,6 +117,8 @@ public class DashboardActivity extends AppCompatActivity {
         addEventButton = findViewById(R.id.button3);
         notificationButton = findViewById(R.id.button4);
         settingsButton = findViewById(R.id.button5);
+        usernameText = findViewById(R.id.usernameText);
+        userFirstAndLastNameText = findViewById(R.id.userFirstAndLastNameText);
     }
 
     public void replaceFragment(Fragment fragment) {
