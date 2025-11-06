@@ -125,7 +125,7 @@ public class EventCreateFragment extends Fragment {
                 }
 
 
-                ((DashboardActivity) getActivity()).replaceFragment(new AdminEventFragment());
+                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
             //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });

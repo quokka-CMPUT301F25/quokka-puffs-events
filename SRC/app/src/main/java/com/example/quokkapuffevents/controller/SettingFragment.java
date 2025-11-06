@@ -27,6 +27,10 @@ public class SettingFragment extends Fragment {
     Database db;
     String userID;
 
+    EventListFragAdapter adapter;
+    ListView listView;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -41,7 +45,8 @@ public class SettingFragment extends Fragment {
 
         db = Database.getInstance();
         userID = String.valueOf(db.GetCurrentUserID());
-        db.CreateEvent("Name", "Name", "Name", 10, new Date(), new Date());
+
+        listView = view.findViewById(R.id.past_events_listview);
 
         DisplayPastEvents(view);
     }
@@ -51,13 +56,21 @@ public class SettingFragment extends Fragment {
     }
 
     public void DisplayPastEvents(View view) {
-        ListView pastEvents = view.findViewById(R.id.past_events_listview);
-        ArrayList<Event> pastEventsList = new ArrayList();
-        EventListFragAdapter adapter = new EventListFragAdapter(requireContext(), pastEventsList, "Past");
-        pastEvents.setAdapter(adapter);
+        ArrayList<Event> finalEvents = new ArrayList<>();
 
-        db.GetUser(db.GetCurrentUserID(), user -> {
-            db.GetEventsFromUser(user, adapter::setEvents);
+
+        db.GetUser(userID, user -> {
+            db.GetEventsFromUser(user, events -> {
+                for (Event event : events) {
+                    if (event.getEventDate().before(new Date())) {
+                        finalEvents.add(event);
+                    }
+                }
+                adapter = new EventListFragAdapter(requireContext(), finalEvents, "Past");
+                listView.setAdapter(adapter);
+                adapter.setEvents(finalEvents);
+            });
+
         });
     }
 

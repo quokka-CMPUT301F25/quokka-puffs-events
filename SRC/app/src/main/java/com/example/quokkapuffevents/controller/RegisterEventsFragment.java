@@ -51,21 +51,19 @@ public class RegisterEventsFragment extends Fragment {
     private void LoadEvent(){
         db.ListEvents(events -> {
             ArrayList<Event> finalEvents = new ArrayList<>();
-            AtomicReference<ArrayList<Event>> userEvents = new AtomicReference<>(new ArrayList<>(events));
-            db.GetUser(userID, user -> {db.GetEventsFromUser(user, userEvents::set);});
-
-            for (Event event : events) {
-                if (!userEvents.get().contains(event)) {
-                    finalEvents.add(event);
+            db.GetUser(userID, user -> {
+                ArrayList<String> userEvents = user.getEvents();
+                for (Event event : events) {
+                    if (!userEvents.contains(event.getId())) {
+                        finalEvents.add(event);
+                    }
                 }
-            }
-            adapter = new EventListFragAdapter(requireContext(), finalEvents, "all");
-            listView.setAdapter(adapter);
-            adapter.setEvents(finalEvents);
+                adapter = new EventListFragAdapter(requireContext(), finalEvents, "all");
+                listView.setAdapter(adapter);
+                adapter.setEvents(finalEvents);
+            });
+
         });
-
-
-
     }
 
 }
