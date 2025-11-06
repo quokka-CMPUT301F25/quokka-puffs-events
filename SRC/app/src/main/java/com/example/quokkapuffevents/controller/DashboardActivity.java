@@ -64,7 +64,12 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         settingsButton.setOnClickListener(View -> {
-            replaceFragment(new SettingFragment());
+            //TODO Add a loading screen here
+            db.GetUser(userID, user -> {
+                SettingFragment settingFragment = new SettingFragment();
+                settingFragment.setCurrUser(user);
+                replaceFragment(settingFragment);
+            });
         });
 
     }
@@ -90,7 +95,12 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         settingsButton.setOnClickListener(View -> {
-            replaceFragment(new SettingFragment());
+            //TODO Add a loading screen here
+            db.GetUser(userID, user -> {
+                SettingFragment settingFragment = new SettingFragment();
+                settingFragment.setCurrUser(user);
+                replaceFragment(settingFragment);
+            });
         });
 
     }
@@ -111,19 +121,9 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void goBackToLogin() {
-
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
-
-    }
-
-    public void goToUserProfileSettings() {
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new ChangeProfileSettings());
-        fragmentTransaction.commit();
 
     }
 }
