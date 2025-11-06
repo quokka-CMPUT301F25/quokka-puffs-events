@@ -19,6 +19,7 @@ import com.example.quokkapuffevents.model.*;
 import com.example.quokkapuffevents.view.EventListFragAdapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 public class SettingFragment extends Fragment {
@@ -31,7 +32,7 @@ public class SettingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.profile_settings_dashboard, container, false);
+        return inflater.inflate(R.layout.profile_settings_fragment, container, false);
     }
 
     @Override
@@ -40,6 +41,7 @@ public class SettingFragment extends Fragment {
 
         db = Database.getInstance();
         userID = String.valueOf(db.GetCurrentUserID());
+        db.CreateEvent("Name", "Name", "Name", 10, new Date(), new Date());
 
         DisplayPastEvents(view);
     }

@@ -131,7 +131,7 @@ public class ChangeProfileSettings extends Fragment {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteUserAccount();
+                //deleteUserAccount();
             }
         });
 
@@ -225,19 +225,19 @@ public class ChangeProfileSettings extends Fragment {
 
     }
 
-    public void deleteUserAccount() {
-        /*
-         * TODO: Delete the user from the database. Also have a confirm button with it.
-         * */
-        db.DeleteUser(userID);
-
-        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
-        startActivity(intent);
-
-
-//        Go back to login
-
-    }
+//    public void deleteUserAccount() {
+//        /*
+//         * TODO: Delete the user from the database. Also have a confirm button with it.
+//         * */
+//        db.DeleteUser(userID);
+//
+//        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+//        startActivity(intent);
+//
+//
+////        Go back to login
+//
+//    }
 
     public boolean checkInput() {
         /*

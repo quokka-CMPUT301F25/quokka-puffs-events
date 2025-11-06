@@ -40,7 +40,7 @@ public class DashboardActivity extends AppCompatActivity {
                    organizerDashboard();
                 }
                 // Load initial fragment
-                replaceFragment(new NotificationFragment());
+                replaceFragment(new HomeFragment());
             }
         });
     }
@@ -50,7 +50,7 @@ public class DashboardActivity extends AppCompatActivity {
         initializeViews();
 
         homeButton.setOnClickListener(View -> {
-            replaceFragment(new NotificationFragment());
+            replaceFragment(new HomeFragment());
         });
 
         viewEventsButton.setOnClickListener(View -> {
@@ -65,6 +65,10 @@ public class DashboardActivity extends AppCompatActivity {
             replaceFragment(new SettingFragment());
         });
 
+        notificationButton.setOnClickListener(View -> {
+            replaceFragment(new NotificationFragment());
+        });
+
     }
 
     public void organizerDashboard() {
@@ -72,7 +76,7 @@ public class DashboardActivity extends AppCompatActivity {
         initializeViews();
 
         homeButton.setOnClickListener(View -> {
-            replaceFragment(new NotificationFragment());
+            replaceFragment(new HomeFragment());
         });
 
         viewEventsButton.setOnClickListener(View -> {
@@ -101,7 +105,7 @@ public class DashboardActivity extends AppCompatActivity {
         settingsButton = findViewById(R.id.button5);
     }
 
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
