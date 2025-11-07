@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +37,6 @@ public class OrganizerEventDetails extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initialize(view);
-
-        runLottoButton.setOnClickListener(v -> {
-            event.drawUsers(event.getToBeDrawn());
-            event.setDrawn(true);
-            db.SaveEvent(event);
-        });
     }
 
     private void initialize(View view) {
@@ -51,6 +46,12 @@ public class OrganizerEventDetails extends Fragment {
         runLottoButton = view.findViewById(R.id.orgRunLotteryBtn);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
+
+        runLottoButton.setOnClickListener(v -> {
+            event.drawUsers(-1);
+            event.setDrawn(true);
+            db.SaveEvent(event);
+        });
     }
 
     public void SetEvent(Event event) {this.event = event; }

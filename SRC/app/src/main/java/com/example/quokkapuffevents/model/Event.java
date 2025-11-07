@@ -1,5 +1,7 @@
 package com.example.quokkapuffevents.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -119,13 +121,15 @@ public class Event {
     //Actual methods
     public void addUser(String userID){
         //Adding an entry to the map
-        this.eventUsers.put(userID, "Waiting");
+        eventUsers.put(userID, "Waiting");
     }
 
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
-        if(eventUsers.size() < maxNumWaitlist)
-            this.eventUsers.put(userID, newStatus);
+        if(eventUsers.size() <= maxNumWaitlist)
+        {
+            eventUsers.put(userID, newStatus);
+        }
     }
 
     public ArrayList<String> drawUsers(Integer numCalled){
@@ -141,9 +145,9 @@ public class Event {
         Database db = Database.getInstance();
 
         //Collect all users from the eventUsers Map that is still waiting
-        for (Map.Entry<String, String> entry : this.eventUsers.entrySet()) {
-            if (Objects.equals(entry.getValue(), "Waiting")) {
-                waitingUsers.add(entry.getKey());
+        for (String entry : eventUsers.keySet()) {
+            if (eventUsers.get(entry).equals("Waiting")) {
+                waitingUsers.add(entry);
             }
         }
         //Ensure that no error. Easier to do here than anywhere else
@@ -158,11 +162,13 @@ public class Event {
         ArrayList<String> chosen = new ArrayList<>();
         //Draw however many are needed
         for (int i = 0; i < numCalled; i++){
-            Integer randInd = r.nextInt(waitingUsers.size()); //Get random index
+            int randInd = r.nextInt(waitingUsers.size()); //Get random index
             String chosenUser = waitingUsers.get(randInd); //Collect user id
-            waitingUsers.remove(randInd); //Remove user from waiting so that they cannot be chosen again
+            chosen.add(chosenUser);
+            waitingUsers.remove(chosenUser); //Remove user from waiting so that they cannot be chosen again
 
             SetStatus(chosenUser, "Invited"); //Update map to show that they have been invited
+
             db.CreateNotification(1, chosenUser, id, org, "You have been drawn for this event.");
         }
         for (String user : waitingUsers){

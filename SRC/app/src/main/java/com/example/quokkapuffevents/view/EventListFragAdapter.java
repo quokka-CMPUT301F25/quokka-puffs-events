@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     private final List<Event> events;   // adapter owns the list
     private final Database db = Database.getInstance();
     private String type;
-    //private Class<?> activity;
     private DashboardActivity activity;
     private User user;
 
@@ -208,14 +208,14 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
     public void seeDetails(Event event) {
         if (user.getAccountType() == 0){
-            EntrantEventDetails entrantFrag = new EntrantEventDetails;
-            entrantFrag.SetEvent(event);
-            activity.replaceFragment(EntrantEventDetails);
+//            EntrantEventDetails entrantFrag = new EntrantEventDetails;
+//            entrantFrag.SetEvent(event);
+//            activity.replaceFragment(EntrantEventDetails);
         }
         else { //Organizer
-            OrganizerEventDetails orgFrag = new OrganizerEventDetails;
+            OrganizerEventDetails orgFrag = new OrganizerEventDetails();
             orgFrag.SetEvent(event);
-            activity.replaceFragment(new OrganizerEventDetails());
+            activity.replaceFragment(orgFrag);
         }
     }
 
