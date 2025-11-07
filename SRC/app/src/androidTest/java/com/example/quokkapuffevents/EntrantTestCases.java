@@ -3,15 +3,19 @@ package com.example.quokkapuffevents;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static com.google.firebase.database.core.RepoManager.clear;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -24,11 +28,15 @@ import android.widget.AdapterView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
+import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
 
 import org.junit.Rule;
@@ -46,6 +54,24 @@ import java.util.Date;
 @RunWith(AndroidJUnit4.class)
 public class EntrantTestCases {
     Database db = Database.getInstance();
+
+    public void ClearDatabase(){
+        db.ListNotifs(notifs -> {
+            for (Notif notif : notifs){
+                db.DeleteNotification(notif);
+            }
+        });
+        db.ListUsers(users -> {
+            for (User user : users){
+                db.DeleteUser(user);
+            }
+        });
+        db.ListEvents(events -> {
+            for (Event event : events){
+                db.DeleteEvent(event);
+            }
+        });
+    }
 
     /**
      * Creates an entrant account for testing user stories.
@@ -103,8 +129,22 @@ public class EntrantTestCases {
         return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
     }
 
+    public static void assertDoesNotExist(ViewInteraction viewInteraction) {
+        try {
+            viewInteraction.check((view, noViewFoundException) -> {
+                if (view != null) {
+                    throw new AssertionError("View still exists in hierarchy: " + view);
+                }
+            });
+        } catch (NoMatchingViewException e) {
+        }
+    }
+
     @Test
     public void TestJoinWaitingList() {
+        //User Story: US 01.01.01
+
+
         Database db = Database.getInstance();
 
         // Create Organizer
@@ -279,6 +319,7 @@ public class EntrantTestCases {
             db.DeleteUser(userId);
 
         } catch (InterruptedException e) {
+            ClearDatabase();
             throw new RuntimeException(e);
         }
     }
@@ -294,28 +335,43 @@ public class EntrantTestCases {
     }
 
     @Test public void UpdateEntrantInfo() {
+        //User Story: US 01.02.02
+
+
         accessEntrantDashboard();
         try {
             onView(withId(R.id.settings_button)).perform(click());
             Thread.sleep(1500);
             onView(withId(R.id.editProfileBtn)).perform(click());
-            Thread.sleep(1500);
-            onView(withId(R.id.userFirstNameTextInput)).perform(typeText("Changed"));
-            onView(withId(R.id.userLastNameTextInput)).perform(typeText("Changed"));
-            onView(withId(R.id.userEmailTextInput)).perform(typeText("Changed"));
-            onView(withId(R.id.userContactInformationInput)).perform(typeText("Changed"));
-            onView(withId(R.id.confirmChangesBtn)).perform(click()); Thread.sleep(1500);
+            Thread.sleep(2000);
 
-            onView(withId(R.id.usernameText)).check(matches(withText("Changed")));
+            onView(withId(R.id.userFirstNameTextInput)).perform(clearText());
+            onView(withId(R.id.userFirstNameTextInput)).perform(typeText("Changed"));
+
+            onView(withId(R.id.userLastNameTextInput)).perform(clearText());
+            onView(withId(R.id.userLastNameTextInput)).perform(typeText("Changed"));
+
+            onView(withId(R.id.userEmailTextInput)).perform(clearText());
+            onView(withId(R.id.userEmailTextInput)).perform(typeText("Changed"));
+
+            onView(withId(R.id.userContactInformationInput)).perform(clearText());
+            onView(withId(R.id.userContactInformationInput)).perform(typeText("Changed"));
+            closeSoftKeyboard();
+
+            onView(withId(R.id.confirmChangesBtn)).perform(click());
+            Thread.sleep(800);
+
+
+
             onView(withId(R.id.userFirstAndLastNameText)).check(matches(
-                    withText("Changed" + " " + "Changed")));
+                    withText("Changed Changed")));
             onView(withId(R.id.userEmailText)).check(matches(withText("Changed")));
             onView(withId(R.id.userPhoneNumber)).check(matches(withText("Changed")));
         } catch (InterruptedException e) {
-            db.DeleteUser(db.GetCurrentUserID());
+            ClearDatabase();
             throw new RuntimeException(e);
         } finally {
-            db.DeleteUser(db.GetCurrentUserID());
+            ClearDatabase();
         }
     }
 
@@ -341,8 +397,10 @@ public class EntrantTestCases {
             Thread.sleep(4000);
 
         } catch (InterruptedException e) {
-            db.DeleteUser(dummyID);
+            ClearDatabase();
             throw new RuntimeException(e);
+        } finally {
+            ClearDatabase();
         }
     }
 
@@ -382,12 +440,168 @@ public class EntrantTestCases {
             Thread.sleep(1500);
 
         } catch (InterruptedException e) {
-            db.DeleteUser(mockEntrant);
+            ClearDatabase();
             throw new RuntimeException(e);
         } finally {
-            db.DeleteUser(mockEntrant);
+            ClearDatabase();
         }
     }
 
-    
+    @Test public void TestChosenInDrawNotif() {
+        //User Story: US 01.04.01
+        User mockOrg = null;
+        Event event = null;
+        try {
+            User mockEntrant = accessEntrantDashboard();
+
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(1500);
+
+
+            event.addUser(mockEntrant.getId());
+
+            //Check no notification exists
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            assertDoesNotExist(onView(withText(R.string.winner_header)));
+            onView(withId(R.id.home_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(1500);
+
+            //Go back to notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+
+
+        } catch (InterruptedException e) {
+            ClearDatabase();
+        } finally {
+            ClearDatabase();
+        }
+    }
+
+    @Test public void TestNotChosenInDrawNotif() {
+        //User Story: US 01.04.02
+        User mockOrg = null;
+        Event event = null;
+        try {
+            User mockEntrant = accessEntrantDashboard();
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(1500);
+            event.addUser(mockEntrant.getId());
+            //Check no notification exists
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+            assertDoesNotExist(onView(withText(R.string.not_picked)));
+            onView(withId(R.id.home_button)).perform(click());
+            Thread.sleep(1500);
+            //Draw User
+            event.drawUsers(0);
+            Thread.sleep(1500);
+            //Go back to notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+            //Testing to see if notification has appeared
+            onView(withText(R.string.not_picked)).check(matches(isDisplayed()));
+
+
+        } catch (InterruptedException e) {
+            ClearDatabase();
+            throw new RuntimeException(e);
+        } finally {
+            ClearDatabase();
+        }
+    }
+
+    @Test
+    public void TestAcceptInviteToEvent() {
+        //User Story: US 01.05.02
+
+        User mockOrg = null;
+        Event event = null;
+        try {
+            User mockEntrant = accessEntrantDashboard();
+
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(1500);
+
+            event.addUser(mockEntrant.getId());
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(1500);
+
+
+            //Go notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+            onView(allOf(withId(R.id.acceptBtn), hasSibling(withText("X")))).perform(click());
+
+            //Get updated event info
+            db.GetEvent(event.getId(), updatedEvent -> {
+                assertEquals(updatedEvent.getEventUsers().get(mockEntrant.getId()), "Accepted");
+            });
+            Thread.sleep(1500);
+
+
+        } catch (InterruptedException e) {
+            ClearDatabase();
+        } finally {
+            ClearDatabase();
+        }
+    }
+
+    @Test public void TestDeclineInviteToEvent() {
+        //User Story: US 01.05.03
+
+        User mockOrg = null;
+        Event event = null;
+        try {
+            User mockEntrant = accessEntrantDashboard();
+
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(1500);
+
+            event.addUser(mockEntrant.getId());
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(1500);
+
+
+            //Go notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+            onView(allOf(withId(R.id.rejectBtn), hasSibling(withText("X")))).perform(click());
+
+            //Get updated Event info
+            db.GetEvent(event.getId(), updatedEvent -> {
+                assertEquals(updatedEvent.getEventUsers().get(mockEntrant.getId()), "Rejected");
+            });
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            ClearDatabase();
+        } finally {
+            ClearDatabase();
+        }
+    }
 }
