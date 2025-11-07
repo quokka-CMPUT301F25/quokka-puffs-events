@@ -7,6 +7,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.widget.ListView;
 
@@ -128,4 +129,29 @@ public class EntrantTestCases {
     public void TestReceivingLostNotification() {
         accessEntrantDashboard();
     }
+
+    @Test public void UpdateEntrantInfo() {
+        accessEntrantDashboard();
+        try {
+            onView(withId(R.id.settings_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.editProfileBtn)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.userFirstNameTextInput)).perform(typeText("Changed"));
+            onView(withId(R.id.userLastNameTextInput)).perform(typeText("Changed"));
+            onView(withId(R.id.userEmailTextInput)).perform(typeText("Changed"));
+            onView(withId(R.id.userContactInformationInput)).perform(typeText("Changed"));
+            onView(withId(R.id.confirmChangesBtn)).perform(click()); Thread.sleep(1500);
+
+            onView(withId(R.id.usernameText)).check(matches(withText("Changed")));
+            onView(withId(R.id.userFirstAndLastNameText)).check(matches(
+                    withText("Changed" + " " + "Changed")));
+            onView(withId(R.id.userEmailText)).check(matches(withText("Changed")));
+            onView(withId(R.id.userPhoneNumber)).check(matches(withText("Changed")));
+        } catch (InterruptedException e) {
+            db.DeleteUser(db.GetCurrentUserID());
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(db.GetCurrentUserID()); } } }
+
 }
