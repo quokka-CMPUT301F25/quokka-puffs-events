@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RegisterEventsFragment extends Fragment {
-    // FILTER/REGISTER FOR EVENTS FOR DashboardActivity
+    /*// FILTER/REGISTER FOR EVENTS FOR DashboardActivity
     String userID; //current user id
     private Database db;
 

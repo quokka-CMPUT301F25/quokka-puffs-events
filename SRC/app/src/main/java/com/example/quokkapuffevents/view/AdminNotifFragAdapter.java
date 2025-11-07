@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 
 import java.util.ArrayList;
@@ -50,6 +52,17 @@ public class AdminNotifFragAdapter extends ArrayAdapter<Notif> {
         TextView notifSubtitles2 = (TextView) listItem.findViewById(R.id.notifSubtitle2);
         db.GetUser(currentNotif.getRecipient(), user ->
                 notifSubtitles2.setText(String.format("%s", user.getUserName())));
+
+        ImageButton deleteButton = listItem.findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Notif notif = getItem(position);
+                db.DeleteNotification(notif);
+                notifList.remove(notif);
+                notifyDataSetChanged();
+            }
+        });
 
         return listItem;
     }

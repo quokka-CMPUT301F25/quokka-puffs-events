@@ -45,20 +45,34 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/userFirstAndLastNameTextInput"
+                android:id="@+id/userFirstNameTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:autofillHints="Enter a First and Last name"
-                android:hint="Firstname Lastname"
-                android:inputType="text"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
+                android:autofillHints="Enter a First name"
                 android:background="@drawable/border_shape_grey"
+                android:hint="First name"
+                android:inputType="text"
+                android:padding="6px"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="20dp"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/userLastNameTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:autofillHints="Enter a Last name"
+                android:background="@drawable/border_shape_grey"
+                android:hint="Last name"
+                android:inputType="text"
                 android:padding="6px"
-                />
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
 
         </LinearLayout>
 
@@ -102,7 +116,7 @@
             android:text="Other Settings"
             android:textAlignment="textStart"
             android:textSize="24dp"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="16dp"/>
 
         <Switch
             android:id="@+id/enableNotificationsSwitchBtn"
@@ -111,7 +125,7 @@
             android:text="Notifactions Enabled"
             android:textSize="20dp"
             android:textColor="@color/white"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/border_shape_grey"
             android:padding="4dp"/>
 
