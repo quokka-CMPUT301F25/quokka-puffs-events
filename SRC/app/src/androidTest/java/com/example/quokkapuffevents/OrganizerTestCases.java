@@ -27,4 +27,30 @@ import java.security.NoSuchAlgorithmException;
 @RunWith(AndroidJUnit4.class)
 public class OrganizerTestCases {
 
+    Database db = Database.getInstance();
+
+
+    public User createTestOrganizer() {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] hashedPasswordByte = md.digest("password".getBytes(StandardCharsets.UTF_8));
+        String hashedPassword = new String(hashedPasswordByte);
+        User user = db.CreateUser("testorganizer@example.com", 1, hashedPassword,
+                "TestOrganizer", "FirstOrganizer", "LastOrganizer",
+                "5870011122");
+        return user;
+    }
+
+//    US 02.03.01 As an organizer I want to OPTIONALLY limit the number of entrants who can join my waiting list. (In-progress KYLE)
+    @Test
+    public void OptLimitParticipants() {
+        User testOrganizer = createTestOrganizer();
+
+
+    }
+
 }
