@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents;
 
 import static android.app.PendingIntent.getActivity;
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -10,18 +11,21 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import android.widget.ListView;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -68,6 +72,7 @@ public class EntrantTestCases {
 
             onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant.getEmail()));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -244,6 +249,65 @@ public class EntrantTestCases {
             throw new RuntimeException(e);
         } finally {
             db.DeleteUser(db.GetCurrentUserID());
+        }
+    }
+
+    @Test public void TestDeleteProfile() {
+        accessEntrantDashboard();
+        String dummyID = db.GetCurrentUserID();
+        try {
+            onView(withId(R.id.settings_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.editProfileBtn)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.deleteAccountBtn)).perform(click());
+            Thread.sleep(1500);
+
+            // Testing if returned back to
+            onView(withId(R.id.sign_in_button)).check(matches(isDisplayed()));
+            assertEquals(db.GetCurrentUserID(), null);
+            db.ListUsers(users -> {
+                for (User user : users){
+                    assertNotEquals(dummyID, user.getId());
+                }
+            });
+            Thread.sleep(4000);
+             
+        } catch (InterruptedException e) {
+            db.DeleteUser(dummyID);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test public void TestRememberMe() {
+        //User Story: US 01.07.01
+        User mockEntrant = createMockEntrant();
+        try (ActivityScenario<LoadingActivity> scenario = ActivityScenario.launch(LoadingActivity.class)) {
+            Thread.sleep(1500);
+            //Filling in info
+            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant.getEmail()));
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+
+            //Check Remember me
+            onView(withId(R.id.remember_me_button)).perform(click());
+            onView(withId(R.id.sign_in_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Close and reopen
+            ActivityScenario.launch(LoadingActivity.class);
+            Thread.sleep(1500);
+            onView(withId(R.id.login_email_address)).check(matches(withText(mockEntrant.getEmail())));
+            onView(withId(R.id.login_password)).check(matches(withText("password")));
+            onView(withId(R.id.remember_me_button)).check(matches(isDisplayed()));
+            Thread.sleep(1500);
+
+            onView(withId(R.id.remember_me_button)).perform(click());
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockEntrant);
         }
     }
 }
