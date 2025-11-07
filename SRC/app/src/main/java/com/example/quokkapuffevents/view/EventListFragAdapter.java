@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.controller.DashboardActivity;
 import com.example.quokkapuffevents.controller.HomeFragment;
+import com.example.quokkapuffevents.controller.OrganizerEventDetails;
 import com.example.quokkapuffevents.model.*;
 
 import java.util.ArrayList;
@@ -207,14 +208,14 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
     public void seeDetails(Event event) {
         if (user.getAccountType() == 0){
-            EntrantEventDetails orgFrag = new EntrantEventDetails;
-            orgFrag.SetEvent = event;
+            EntrantEventDetails entrantFrag = new EntrantEventDetails;
+            entrantFrag.SetEvent(event);
             activity.replaceFragment(EntrantEventDetails);
         }
         else { //Organizer
-            OrginzerEventDetails orgFrag = new OrginzerEventDetails;
-            orgFrag.SetEvent = event;
-            activity.replaceFragment(OrginzerEventDetails);
+            OrganizerEventDetails orgFrag = new OrganizerEventDetails;
+            orgFrag.SetEvent(event);
+            activity.replaceFragment(new OrganizerEventDetails());
         }
     }
 
