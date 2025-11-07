@@ -10,6 +10,7 @@ constraintlayout = "2.2.1"
 firebaseFirestore = "26.0.2"
 runner = "1.7.0"
 firebaseDatabase = "22.0.1"
+espressoIntents = "3.7.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -22,6 +23,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -102,7 +102,6 @@ public class AdminActivity extends AppCompatActivity {
         Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
-
     }
 
     public void changeProfile(User user) {
@@ -118,7 +117,5 @@ public class AdminActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         replaceFragment(fragmentManager, settingFragment);
     }
-
-
 
 }
