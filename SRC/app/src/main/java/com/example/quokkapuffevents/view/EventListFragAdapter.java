@@ -164,8 +164,6 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void UIBinding(){
-        AtomicReference<ArrayList<Event>> eventsList = new AtomicReference<>(new ArrayList<>());
-
         if(type.equals("Waiting")) {
 
             pastEvents.setVisibility(View.GONE);
@@ -194,11 +192,12 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void registerForEvent(Event event) {
-        event.addUser(user.getId());
-        db.SaveEvent(event);
-        user.addEvent(event.getId());
-        db.SaveUser(user);
-
+        if(event.getEventUsers().size() < event.getMaxNumWaitlist()) {
+            event.addUser(user.getId());
+            db.SaveEvent(event);
+            user.addEvent(event.getId());
+            db.SaveUser(user);
+        }
     }
 
     public void leaveWaitingList(Event event) {
