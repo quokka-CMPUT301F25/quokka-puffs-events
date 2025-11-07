@@ -18,6 +18,8 @@ import static org.junit.Assert.assertTrue;
 
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -96,6 +98,17 @@ public class EntrantTestCases {
      */
     public Event createMockEvent(Date eventDate) {
         return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
+    }
+
+    public static void assertDoesNotExist(ViewInteraction viewInteraction) {
+        try {
+            viewInteraction.check((view, noViewFoundException) -> {
+                if (view != null) {
+                    throw new AssertionError("View still exists in hierarchy: " + view);
+                }
+            });
+        } catch (NoMatchingViewException e) {
+        }
     }
 
     @Test
@@ -352,5 +365,49 @@ public class EntrantTestCases {
         }
     }
 
-    
+    @Test public void TestChosenInDrawNotif() {
+        User mockOrg = null;
+        Event event = null;
+        try {
+            User mockEntrant = accessEntrantDashboard();
+
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(1500);
+
+
+            event.addUser(mockEntrant.getId());
+
+            //Check no notification exists
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            assertDoesNotExist(onView(withText("TestDraw")));
+            onView(withId(R.id.home_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(1500);
+
+            //Go back to notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText("You've been Selected!")).check(matches(isDisplayed()));
+
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockOrg.getId());
+            db.DeleteUser(db.GetCurrentUserID());
+            db.DeleteEvent(event);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockOrg.getId());
+            db.DeleteUser(db.GetCurrentUserID());
+            db.DeleteEvent(event);
+        }
+    }
 }
