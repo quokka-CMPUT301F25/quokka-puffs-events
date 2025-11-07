@@ -12,8 +12,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.*;
 
-import android.util.Log;
-
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
@@ -257,6 +255,9 @@ public class AdminTest {
         User mockAdmin = createMockAdmin();
         User testUser = createTestUser();
 
+
+
+
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
 
@@ -301,9 +302,16 @@ public class AdminTest {
 
     @Test
     public void deleteEvent() throws InterruptedException {
+
         User mockAdmin = createMockAdmin();
-        User organizer = createTestOrganizer();
-        db.SetUserID(organizer.getId());
+
+        db.ListEvents(events -> {
+            if(!events.isEmpty())
+            {
+                for(Event e: events)
+                    db.DeleteEvent(e);
+            }
+        });
 
         Event mockEvent = createMockEvent(new Date());
         Thread.sleep(1500);
@@ -311,31 +319,42 @@ public class AdminTest {
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
 
-            onView(withId(R.id.login_email_address)).perform(typeText(mockAdmin.getEmail()));
+            onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
             closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
-            onView(withId(R.id.eventsIcon)).perform(click());
+
+            onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
+
+
+//            Go to the events dashboard
+            onView(withId(R.id.eventsIcon)).perform((click()));
             Thread.sleep(1500);
 
-            // NOW it will be visible
+
             onView(withText("Mock Event")).check(matches(isDisplayed()));
 
+
+//            Click the delete button
             onView(allOf(withId(R.id.deleteButton),
                     hasSibling(withText("Mock Event"))))
                     .perform(click());
 
             Thread.sleep(1500);
+
             assertDoesNotExist(onView(withText("Mock Event")));
+
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         deleteMockAdmin(mockAdmin);
-        deleteMockAdmin(organizer);
         deleteMockEvent(mockEvent);
-    }
 
+    }
 
     @Test
     public void deleteOrganizer() {
