@@ -191,7 +191,13 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void registerForEvent(Event event) {
-        if(event.getEventUsers().size() < event.getMaxNumWaitlist()) {
+        if(event.getMaxNumWaitlist() != null && event.getEventUsers().size() < event.getMaxNumWaitlist()) {
+            event.addUser(user.getId());
+            db.SaveEvent(event);
+            user.addEvent(event.getId());
+            db.SaveUser(user);
+        }
+        else{
             event.addUser(user.getId());
             db.SaveEvent(event);
             user.addEvent(event.getId());
@@ -206,20 +212,17 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
     public void seeDetails(Event event) {
         if(user == null) {
-
             System.out.println("USER IS NULL");
-
         } else {
-
             if (user.getAccountType() == 0){
                 EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
                 entrantFrag.setEvent(event);
                 activity.replaceFragment(entrantFrag);
             }
             else { //Organizer
-//            OrganizerEventDetails orgFrag = new OrganizerEventDetails;
-//            orgFrag.SetEvent(event);
-//            activity.replaceFragment(new OrganizerEventDetails());
+                OrganizerEventDetails orgFrag = new OrganizerEventDetails();
+                orgFrag.SetEvent(event);
+                activity.replaceFragment(orgFrag);
             }
 
         }
