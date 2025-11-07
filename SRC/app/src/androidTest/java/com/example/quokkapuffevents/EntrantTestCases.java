@@ -45,13 +45,14 @@ public class EntrantTestCases {
         return user;
     }
 
+    @Test
     public void accessEntrantDashboard() {
         User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
 
-            onView(withId(R.id.login_email_address)).perform(typeText("TestingEntrant"));
-            onView(withId(R.id.login_password)).perform(typeText("password"));
+            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant.getEmail()));
+            onView(withId(R.id.login_password)).perform(typeText(mockEntrant.getHashPassword()));
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -71,6 +72,12 @@ public class EntrantTestCases {
         ListView allEventsList = .findViewById(R.id.all_events_list);
 
         assert(event.getEventUsers().get("TestingEntrant") == null);
+
+    }
+
+    public void TestViewingEvents() {
+        accessEntrantDashboard();
+
 
     }
 }
