@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+
 
 public class Database {
     private static volatile Database instance;
@@ -541,6 +543,20 @@ public class Database {
                 listener.onSuccess(waitingEvents);
             });
 
+        }
+    }
+
+    public void BlockThreadUntilCompleted(CollectionReference ref, String id, Object obj) {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        ref.document(id).set(obj)
+                .addOnSuccessListener(unused -> latch.countDown())
+                .addOnFailureListener(e -> latch.countDown());
+
+        try {
+            latch.await();
+        } catch (InterruptedException e){
+            throw new RuntimeException(e);
         }
     }
 

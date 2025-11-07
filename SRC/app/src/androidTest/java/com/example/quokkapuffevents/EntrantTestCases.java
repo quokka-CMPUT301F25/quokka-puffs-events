@@ -51,7 +51,9 @@ public class EntrantTestCases {
                      ActivityScenario.launch(LoginActivity.class)) {
 
             onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant.getEmail()));
+            Thread.sleep(1500);
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            Thread.sleep(1500);
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -61,22 +63,44 @@ public class EntrantTestCases {
         }
     }
 
-    @Test
-    public void TestJoinWaitingList() {
-        accessEntrantDashboard();
-
-        Event event = db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), new Date());
-
-        onView(withId(R.id.all_events_button)).perform(click());
-        ListView allEventsList = .findViewById(R.id.all_events_list);
-
-        assert(event.getEventUsers().get("TestingEntrant") == null);
-
+    public Event createMockEvent(Date eventDate) {
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
     }
 
-    public void TestViewingEvents() {
+    @Test
+    public void TestJoinWaitingList() throws InterruptedException {
         accessEntrantDashboard();
+        Event mockEvent = createMockEvent(new Date());
+        Thread.sleep(3000);
+        onView(withId(R.id.all_events_button)).perform(click());
 
+        try (ActivityScenario<LoginActivity> scenario =
+                     ActivityScenario.launch(LoginActivity.class)) {
 
+            scenario.onActivity(activity -> {
+                ListView allEventsList = activity.findViewById(R.id.findEventsListView);
+
+                // Assert that the list view is visible on screen
+                onView(withId(R.id.findEventsListView)).check(matches(isDisplayed()));
+
+                // Assert that the event we created is actually in the adapter data
+                boolean found = false;
+                for (int i = 0; i < allEventsList.getAdapter().getCount(); i++) {
+                    Object item = allEventsList.getAdapter().getItem(i);
+                    if (item instanceof Event) {
+                        Event e = (Event) item;
+                        if (e.getName().equals("Mock Event")) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                assert(found); // assert the event appears in the list
+            });
+
+        }
+
+        db.DeleteEvent(mockEvent);
     }
 }
