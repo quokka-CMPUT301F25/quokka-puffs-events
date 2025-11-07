@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -114,9 +115,10 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(4000);
+            Thread.sleep(1500);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
         } catch (InterruptedException e) {
@@ -135,6 +137,7 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -167,6 +170,7 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -194,6 +198,7 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -223,6 +228,7 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -257,16 +263,17 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(200);
+            Thread.sleep(1500);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
 
 //            Go to the users dashboard
             onView(withId(R.id.usersIcon)).perform((click()));
-            Thread.sleep(30000);
+            Thread.sleep(1500);
 
 
             onView(withText("testuser@example.com")).check(matches(isDisplayed()));
@@ -277,7 +284,7 @@ public class AdminTest {
                     hasSibling(withText("testuser@example.com"))))
                     .perform(click());
 
-            Thread.sleep(10000);
+            Thread.sleep(1500);
 
             assertDoesNotExist(onView(withText("testuser@example.com")));
 
@@ -294,36 +301,37 @@ public class AdminTest {
 //  US 03.02.01 As an administrator, I want to be able to remove profiles. (In-Progress - KYLE)
 
     @Test
-    public void deleteEvent() {
+    public void deleteEvent() throws InterruptedException {
 
         User mockAdmin = createMockAdmin();
 
         db.ListEvents(events -> {
-
-            for(Event e: events) {
-                db.DeleteEvent(e);
+            if(!events.isEmpty())
+            {
+                for(Event e: events)
+                    db.DeleteEvent(e);
             }
         });
 
-
         Event mockEvent = createMockEvent(new Date());
-
+        Thread.sleep(1500);
 
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(2000);
+            Thread.sleep(1500);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
 
-//            Go to the users dashboard
+//            Go to the events dashboard
             onView(withId(R.id.eventsIcon)).perform((click()));
-            Thread.sleep(30000);
+            Thread.sleep(1500);
 
 
             onView(withText("Mock Event")).check(matches(isDisplayed()));
@@ -334,7 +342,7 @@ public class AdminTest {
                     hasSibling(withText("Mock Event"))))
                     .perform(click());
 
-            Thread.sleep(10000);
+            Thread.sleep(1500);
 
             assertDoesNotExist(onView(withText("Mock Event")));
 
@@ -360,16 +368,17 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(2000);
+            Thread.sleep(1500);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
 
 //            Go to the users dashboard
             onView(withId(R.id.usersIcon)).perform((click()));
-            Thread.sleep(15000);
+            Thread.sleep(1500);
 
 
             onView(withText("testorganizer@example.com")).check(matches(isDisplayed()));
@@ -380,7 +389,7 @@ public class AdminTest {
                     hasSibling(withText("testorganizer@example.com"))))
                     .perform(click());
 
-            Thread.sleep(10000);
+            Thread.sleep(1500);
 
             assertDoesNotExist(onView(withText("testorganizer@example.com")));
 
