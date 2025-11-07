@@ -74,11 +74,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        viewEventsButton = findViewById(R.id.button1);
-        viewNotifsButton = findViewById(R.id.button2);
-        viewProfilesButton = findViewById(R.id.button3);
-        viewImagesButton = findViewById(R.id.button4);
-        settingsButton = findViewById(R.id.button5);
+        viewEventsButton = findViewById(R.id.home_button);
+        viewNotifsButton = findViewById(R.id.all_events_button);
+        viewProfilesButton = findViewById(R.id.add_events_button);
+        viewImagesButton = findViewById(R.id.notifs_button);
+        settingsButton = findViewById(R.id.settings_button);
     }
 
     private void replaceFragment(Fragment fragment) {
