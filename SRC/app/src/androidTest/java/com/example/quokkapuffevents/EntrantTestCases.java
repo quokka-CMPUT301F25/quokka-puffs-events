@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents;
 
-import static android.app.PendingIntent.getActivity;
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -8,7 +9,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-import android.widget.ListView;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -26,6 +26,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(AndroidJUnit4.class)
 public class EntrantTestCases {
     Database db = Database.getInstance();
@@ -33,8 +37,7 @@ public class EntrantTestCases {
     /**
      * Creates an entrant account for testing user stories.
      *
-     * @return
-     * A mock entrant user account
+     * @return A mock entrant user account
      */
     public User createMockEntrant() {
         MessageDigest md = null;
@@ -54,13 +57,15 @@ public class EntrantTestCases {
     /**
      * For automating accessing the entrant user main dashboard
      */
-    public void accessEntrantDashboard() {
+    public User accessEntrantDashboard() {
         User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
 
             onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant.getEmail()));
+            closeSoftKeyboard();
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -68,6 +73,8 @@ public class EntrantTestCases {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        
+        return mockEntrant;
     }
 
     public Event createMockEvent(Date eventDate) {
@@ -75,40 +82,67 @@ public class EntrantTestCases {
     }
 
     @Test
-    public void TestJoinWaitingList() throws InterruptedException {
-        accessEntrantDashboard();
-        Event mockEvent = createMockEvent(new Date());
-        Thread.sleep(3000);
-        onView(withId(R.id.all_events_button)).perform(click());
+    public void TestJoinWaitingList() {
+        Database db = Database.getInstance();
 
-        try (ActivityScenario<LoginActivity> scenario =
-                     ActivityScenario.launch(LoginActivity.class)) {
+        // Create Organizer 
+        User organizer = db.CreateUser("Organizer@Test.ca", 1, "pass",
+                "OrgUser", "Org", "User", "1111111111");
+        db.SetUserID(organizer.getId());
 
-            scenario.onActivity(activity -> {
-                ListView allEventsList = activity.findViewById(R.id.findEventsListView);
+        // Create Event 
+        Event testEvent = createMockEvent(new Date());
 
-                // Assert that the list view is visible on screen
-                onView(withId(R.id.findEventsListView)).check(matches(isDisplayed()));
+        //  Create Entrant 
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
 
-                // Assert that the event we created is actually in the adapter data
-                boolean found = false;
-                for (int i = 0; i < allEventsList.getAdapter().getCount(); i++) {
-                    Object item = allEventsList.getAdapter().getItem(i);
-                    if (item instanceof Event) {
-                        Event e = (Event) item;
-                        if (e.getName().equals("Mock Event")) {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
+        try {
+            Thread.sleep(2000);
 
-                assert(found); // assert the event appears in the list
-            });
+            //  Open Event List 
+            onView(withId(R.id.all_events_button))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            // Click Register Button 
+            onData(anything())
+                    .inAdapterView(withId(R.id.findEventsListView))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.event_register_btn_all))
+                    .perform(click());
+
+            Thread.sleep(2000);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        db.DeleteEvent(mockEvent);
-    }
 
+        // Verify Entrant Was Added Correctly 
+        final boolean[] verified = {false};
+
+        db.GetEvent(testEvent.getId(), event -> {
+            assertTrue("User is not added to waitlist.", event.getEventUsers().containsKey(entrant.getId()));
+            assertEquals("Waiting", event.getEventUsers().get(entrant.getId()));
+
+            db.GetUser(entrant.getId(), user -> {
+                assertTrue("Event did not appear in entrant event list.", user.getEvents().contains(testEvent.getId()));
+                verified[0] = true;
+            });
+        });
+
+        try { Thread.sleep(2000); } catch (Exception ignored) {}
+
+        assertTrue("Verification never completed.", verified[0]);
+
+        // Cleanup 
+        db.DeleteEvent(testEvent.getId());
+        db.DeleteUser(entrant.getId());
+        db.DeleteUser(organizer.getId());
+    }
+    
     @Test
     public void TestViewingEvents() {
         accessEntrantDashboard();
