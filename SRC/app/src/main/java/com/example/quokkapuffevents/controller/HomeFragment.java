@@ -45,13 +45,6 @@ public class HomeFragment extends Fragment {
                             adapter.setEvents(events);
                             adapter.setActivity((DashboardActivity) getActivity());
                 });
-//                db.GetEventsFromUser(user, events -> {
-//                            EventListFragAdapter adapter = new EventListFragAdapter(requireContext(), events, "Waiting");
-//                            waitingEvents.setAdapter(adapter);
-//                            adapter.setEvents(events);
-//                        });
-//                EventListFragAdapter adapter = new EventListFragAdapter(requireContext(), events, "Waiting");
-//                waitingEvents.setAdapter(adapter);
 
             }
             else{
