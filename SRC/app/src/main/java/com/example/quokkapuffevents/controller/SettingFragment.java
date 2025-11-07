@@ -133,6 +133,7 @@ public class SettingFragment extends Fragment {
                 adapter = new EventListFragAdapter(requireContext(), finalEvents, "Past");
                 listView.setAdapter(adapter);
                 adapter.setEvents(finalEvents);
+                adapter.setActivity((DashboardActivity) getActivity());
             });
 
         } else {

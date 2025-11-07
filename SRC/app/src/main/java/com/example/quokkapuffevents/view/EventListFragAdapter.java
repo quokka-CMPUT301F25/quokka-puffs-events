@@ -13,19 +13,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
+import com.example.quokkapuffevents.controller.DashboardActivity;
+import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
+import com.example.quokkapuffevents.controller.OrganizerEventDetails;
 import com.example.quokkapuffevents.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class EventListFragAdapter extends ArrayAdapter<Event> {
 
     private final List<Event> events;   // adapter owns the list
     private final Database db = Database.getInstance();
     private String type;
-
+    //private Class<?> activity;
+    private DashboardActivity activity;
     private User user;
 
     //region --Waiting UI Elements--
@@ -161,8 +163,6 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void UIBinding(){
-        AtomicReference<ArrayList<Event>> eventsList = new AtomicReference<>(new ArrayList<>());
-
         if(type.equals("Waiting")) {
 
             pastEvents.setVisibility(View.GONE);
@@ -191,11 +191,12 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void registerForEvent(Event event) {
-        event.addUser(user.getId());
-        db.SaveEvent(event);
-        user.addEvent(event.getId());
-        db.SaveUser(user);
-
+        if(event.getEventUsers().size() < event.getMaxNumWaitlist()) {
+            event.addUser(user.getId());
+            db.SaveEvent(event);
+            user.addEvent(event.getId());
+            db.SaveUser(user);
+        }
     }
 
     public void leaveWaitingList(Event event) {
@@ -204,6 +205,26 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void seeDetails(Event event) {
-        //ERRRM idk what to do
+        if(user == null) {
+
+            System.out.println("USER IS NULL");
+
+        } else {
+
+            if (user.getAccountType() == 0){
+                EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
+                entrantFrag.setEvent(event);
+                activity.replaceFragment(entrantFrag);
+            }
+            else { //Organizer
+//            OrganizerEventDetails orgFrag = new OrganizerEventDetails;
+//            orgFrag.SetEvent(event);
+//            activity.replaceFragment(new OrganizerEventDetails());
+            }
+
+        }
+
     }
+
+    public void setActivity(DashboardActivity activity) {this.activity = activity;}
 }
