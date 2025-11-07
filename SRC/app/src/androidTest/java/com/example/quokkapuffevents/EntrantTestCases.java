@@ -568,4 +568,57 @@ public class EntrantTestCases {
             ClearDatabase();
         }
     }
+
+    @Test public void TestSendNotifToAllSelected() {
+        //User Story: US 02.07.02
+        User mockOrg = null;
+        Event event = null;
+        User temp = accessEntrantDashboard();
+        try {
+            User mockEntrant1 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest1", "John", "Test", "0");
+            User mockEntrant2 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest2", "John", "Test", "0");
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date());
+            Thread.sleep(1500);
+
+            event.addUser(mockEntrant1.getId());
+            event.addUser(mockEntrant2.getId());
+
+            event.drawUsers(-1);
+            Thread.sleep(1500);
+
+            ActivityScenario.launch(LoginActivity.class);
+            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant1.getUserName()));
+            closeSoftKeyboard();
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+
+            ActivityScenario.launch(LoginActivity.class);
+            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant2.getUserName()));
+            closeSoftKeyboard();
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+
+
+        } catch (InterruptedException e) {
+            ClearDatabase();
+        } finally {
+            ClearDatabase();
+        }
+    }
 }
