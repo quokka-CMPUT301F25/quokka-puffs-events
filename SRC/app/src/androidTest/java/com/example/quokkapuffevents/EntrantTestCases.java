@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents;
 
+import static android.app.PendingIntent.getActivity;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -7,11 +8,14 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import android.widget.ListView;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 
 import org.junit.Test;
@@ -20,6 +24,7 @@ import org.junit.runner.RunWith;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 /**
  * For testing any Entrant related User Stories
@@ -68,11 +73,43 @@ public class EntrantTestCases {
         }
     }
 
+    public Event createMockEvent(Date eventDate) {
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
+    }
+
     @Test
-    public void TestJoinWaitingList() {
+    public void TestJoinWaitingList() throws InterruptedException {
         accessEntrantDashboard();
+        Event mockEvent = createMockEvent(new Date());
+        Thread.sleep(3000);
+        onView(withId(R.id.all_events_button)).perform(click());
 
+        try (ActivityScenario<LoginActivity> scenario =
+                     ActivityScenario.launch(LoginActivity.class)) {
 
+            scenario.onActivity(activity -> {
+                ListView allEventsList = activity.findViewById(R.id.findEventsListView);
+
+                // Assert that the list view is visible on screen
+                onView(withId(R.id.findEventsListView)).check(matches(isDisplayed()));
+
+                // Assert that the event we created is actually in the adapter data
+                boolean found = false;
+                for (int i = 0; i < allEventsList.getAdapter().getCount(); i++) {
+                    Object item = allEventsList.getAdapter().getItem(i);
+                    if (item instanceof Event) {
+                        Event e = (Event) item;
+                        if (e.getName().equals("Mock Event")) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                assert(found); // assert the event appears in the list
+            });
+        }
+        db.DeleteEvent(mockEvent);
     }
 
     @Test

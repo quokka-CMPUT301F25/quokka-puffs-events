@@ -1,5 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
+import static android.view.View.INVISIBLE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,8 +102,10 @@ public class EntrantEventDetailsFragment extends Fragment {
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
 
-
-
+        //Removing button if after end of event
+        if (event.getEventDate().before(new Date())){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+        }
 
     }
 
