@@ -12,6 +12,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 
 import org.junit.Test;
