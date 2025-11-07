@@ -1,5 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
+import static android.view.View.INVISIBLE;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
+
+import java.util.Date;
 
 public class OrganizerEventDetails extends Fragment {
 
@@ -47,11 +51,17 @@ public class OrganizerEventDetails extends Fragment {
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
 
-        runLottoButton.setOnClickListener(v -> {
-            event.drawUsers(-1);
-            event.setDrawn(true);
-            db.SaveEvent(event);
-        });
+        //Removing button if after end of event
+        if (event.getEventDate().after(new Date())){
+            runLottoButton.setOnClickListener(v -> {
+                event.drawUsers(-1);
+                event.setDrawn(true);
+                db.SaveEvent(event);
+            });
+        }
+        else {
+            runLottoButton.setVisibility(INVISIBLE);
+        }
     }
 
     public void SetEvent(Event event) {this.event = event; }
