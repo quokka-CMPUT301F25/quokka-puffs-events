@@ -9,6 +9,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import android.widget.ListView;
 
 import androidx.test.core.app.ActivityScenario;
@@ -27,6 +30,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+/**
+ * For testing any Entrant related User Stories
+ */
 @RunWith(AndroidJUnit4.class)
 public class EntrantTestCases {
     Database db = Database.getInstance();
@@ -53,7 +59,7 @@ public class EntrantTestCases {
     }
 
     /**
-     * For automating accessing the entrant user main dashboard
+     * For automating accessing the entrant user main dashboard.
      */
     public void accessEntrantDashboard() {
         User mockEntrant = createMockEntrant();
@@ -71,6 +77,15 @@ public class EntrantTestCases {
         }
     }
 
+    /**
+     * Creates an event for testing user stories.
+     *
+     * @param eventDate
+     * A hardcoded date for setting an event into the past, present, or future
+     *
+     * @return
+     * A mock event for entrants to register for
+     */
     public Event createMockEvent(Date eventDate) {
         return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
     }
@@ -113,11 +128,87 @@ public class EntrantTestCases {
     @Test
     public void TestViewingEvents() {
         accessEntrantDashboard();
+
     }
 
     @Test
     public void TestRegistering() {
+        // Switches the activity to the RegisterActivity
+        try (ActivityScenario<LoginActivity> scenario =
+                     ActivityScenario.launch(LoginActivity.class)) {
 
+            onView(withId(R.id.register_page_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Inputting information into text boxes with phone number
+            onView(withId(R.id.register_email)).perform(typeText("RegisterTest@Email.com"));
+            onView(withId(R.id.register_username)).perform(typeText("RegisterEntrant"));
+            onView(withId(R.id.register_password)).perform(typeText("password"));
+            onView(withId(R.id.register_first_name)).perform(typeText("Register"));
+            onView(withId(R.id.register_last_name)).perform(typeText("Entrant"));
+            onView(withId(R.id.register_phone_number)).perform(typeText("1234567890"));
+            onView(withId(R.id.register_entrant_button)).perform(click());
+
+            // Signing into newly created account
+            onView(withId(R.id.register_info_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Testing if registration completed successfully using UI elements
+            onView(withId(R.id.settings_button)).check(matches(isDisplayed()));
+
+            // Testing if userId exists
+            String userId = db.GetCurrentUserID();
+            assertNotNull("User Id should not be null", userId);
+
+            // Switching to Settings Fragment
+            onView(withId(R.id.settings_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Signing out of the current entrant account
+            onView(withId(R.id.signOutBtn)).perform(click());
+
+            db.DeleteUser(userId); // Deletes mock entrant from database
+
+            onView(withId(R.id.register_page_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Inputting information into text boxes without phone number
+            onView(withId(R.id.register_email)).perform(typeText("RegisterTest@Email.com"));
+            onView(withId(R.id.register_username)).perform(typeText("RegisterEntrant"));
+            onView(withId(R.id.register_password)).perform(typeText("password"));
+            onView(withId(R.id.register_first_name)).perform(typeText("Register"));
+            onView(withId(R.id.register_last_name)).perform(typeText("Entrant"));
+            onView(withId(R.id.register_entrant_button)).perform(click());
+
+            // Signing into newly created account
+            onView(withId(R.id.register_info_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Testing if registration completed successfully using UI elements
+            onView(withId(R.id.settings_button)).check(matches(isDisplayed()));
+
+            // Testing if userId exists
+            String newUserId = db.GetCurrentUserID();
+            assertNotNull("User Id should not be null", newUserId);
+
+            // Switching to Settings Fragment
+            onView(withId(R.id.settings_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Signing out of the current entrant account
+            onView(withId(R.id.signOutBtn)).perform(click());
+
+            db.DeleteUser(userId); // Deletes mock entrant from database
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

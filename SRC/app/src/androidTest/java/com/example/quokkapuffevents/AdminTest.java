@@ -24,6 +24,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * For testing any Admin related User Stories
+ */
 @RunWith(AndroidJUnit4.class)
 public class AdminTest {
 
