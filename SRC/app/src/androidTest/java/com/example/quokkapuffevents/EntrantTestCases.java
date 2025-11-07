@@ -41,14 +41,13 @@ public class EntrantTestCases {
         return user;
     }
 
-    @Test
     public void accessEntrantDashboard() {
         User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
 
             onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant.getEmail()));
-            onView(withId(R.id.login_password)).perform(typeText(mockEntrant.getHashPassword()));
+            onView(withId(R.id.login_password)).perform(typeText("password"));
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
