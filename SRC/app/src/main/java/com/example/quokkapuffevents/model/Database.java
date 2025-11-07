@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+
 
 public class Database {
     private static volatile Database instance;
@@ -544,21 +546,18 @@ public class Database {
         }
     }
 
-    //Test Funcitons
-    /*public void CreateMockUser(String email, Integer type, String hashPass, String userName, Runnable onComplete) {
-        String id = usersRef.document().getId();
-        User newUser = new User(id, email, type, hashPass, userName);
+    public void BlockThreadUntilCompleted(CollectionReference ref, String id, Object obj) {
+        CountDownLatch latch = new CountDownLatch(1);
 
-        usersRef.document(id)
-                .set(newUser)
-                .addOnSuccessListener(unused -> {
-                    Log.d("Database", "User created successfully: " + id);
-                    if (onComplete != null) onComplete.run();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Database", "Error creating user", e);
-                    if (onComplete != null) onComplete.run(); // still unblock latch to avoid hanging tests
-                });
-    }*/
+        ref.document(id).set(obj)
+                .addOnSuccessListener(unused -> latch.countDown())
+                .addOnFailureListener(e -> latch.countDown());
+
+        try {
+            latch.await();
+        } catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+    }
 
 }

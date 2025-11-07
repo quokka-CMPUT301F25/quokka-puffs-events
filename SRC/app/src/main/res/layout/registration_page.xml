@@ -114,7 +114,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
             android:background="@drawable/border_shape_grey"
-            android:hint="Phone Number"
+            android:hint="Phone Number (Optional)"
             android:inputType="phone"
             android:padding="6px"
             android:textAlignment="center" />

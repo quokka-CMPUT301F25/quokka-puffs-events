@@ -108,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                 DisplayInUseErrorMsg();
             }
             else {
-                if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty()) {
+                if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty()) {
                     if (entrant.isChecked()) {
 
                         //Hashing password
