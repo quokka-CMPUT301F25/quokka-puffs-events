@@ -61,6 +61,7 @@ public class RegisterEventsFragment extends Fragment {
                 adapter = new EventListFragAdapter(requireContext(), finalEvents, "all");
                 listView.setAdapter(adapter);
                 adapter.setEvents(finalEvents);
+                adapter.setActivity((DashboardActivity) getActivity());
             });
 
         });
