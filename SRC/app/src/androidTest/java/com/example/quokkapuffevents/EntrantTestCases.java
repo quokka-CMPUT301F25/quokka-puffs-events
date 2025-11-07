@@ -30,6 +30,12 @@ import java.util.Date;
 public class EntrantTestCases {
     Database db = Database.getInstance();
 
+    /**
+     * Creates an entrant account for testing user stories.
+     *
+     * @return
+     * A mock entrant user account
+     */
     public User createMockEntrant() {
         MessageDigest md = null;
         try {
@@ -45,15 +51,16 @@ public class EntrantTestCases {
         return user;
     }
 
+    /**
+     * For automating accessing the entrant user main dashboard
+     */
     public void accessEntrantDashboard() {
         User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
 
             onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant.getEmail()));
-            Thread.sleep(1500);
             onView(withId(R.id.login_password)).perform(typeText("password"));
-            Thread.sleep(1500);
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -98,9 +105,27 @@ public class EntrantTestCases {
 
                 assert(found); // assert the event appears in the list
             });
-
         }
-
         db.DeleteEvent(mockEvent);
+    }
+
+    @Test
+    public void TestViewingEvents() {
+        accessEntrantDashboard();
+    }
+
+    @Test
+    public void TestRegistering() {
+
+    }
+
+    @Test
+    public void TestViewingPastEvents() {
+        accessEntrantDashboard();
+    }
+
+    @Test
+    public void TestReceivingLostNotification() {
+        accessEntrantDashboard();
     }
 }
