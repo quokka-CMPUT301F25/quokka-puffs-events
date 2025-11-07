@@ -72,7 +72,7 @@ public class EventCreateFragment extends Fragment {
         dateOfEvent = view.findViewById(R.id.eventDateInput);
         drawDate = view.findViewById(R.id.drawDateInput);
         eventDesc = view.findViewById(R.id.eventDescInput);
-        addImagesBtn = view.findViewById(R.id.addPhotosBtn);
+        //addImagesBtn = view.findViewById(R.id.addPhotosBtn);
         limitPar = view.findViewById(R.id.eventLimitParticipantsSwitch);
         maxPar = view.findViewById(R.id.eventMaxParticipantsInput);
         addGeo = view.findViewById(R.id.eventGeolocationSwitch);
