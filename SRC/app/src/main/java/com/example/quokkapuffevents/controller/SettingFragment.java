@@ -12,17 +12,17 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
-import com.example.quokkapuffevents.model.*;
+import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
+import com.example.quokkapuffevents.model.User;
 import com.example.quokkapuffevents.view.EventListFragAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 public class SettingFragment extends Fragment {
 
@@ -54,37 +54,38 @@ public class SettingFragment extends Fragment {
     TextView firstAndLastNameText;
     TextView emailText;
     TextView userPhoneNumber;
+    ListView listView;
+    EventListFragAdapter adapter;
 
 
-    @Nullable
+    //    Stole this from Seth -- HAHA SORRY! -Kyle.
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.profile_settings_fragment, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    public void onCreate(@Nullable Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
-        userID = String.valueOf(db.GetCurrentUserID());
-
-        listView = view.findViewById(R.id.past_events_listview);
-
-        DisplayPastEvents(view);
     }
 
-    public void DisplayUserInfo() {
-        //Displays the info at the top
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.profile_settings_fragment, container, false);
+        initializeViews(view);
+        //DisplayPastEvents();
+        displayInfo();
+        setUpListeners(view);
+        return view;
     }
 
-    public void DisplayPastEvents(View view) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        displayInfo();
+    }
+
+    public void setCurrUser(User currUser) {this.currUser = currUser;}
+    public void DisplayPastEvents() {
         ArrayList<Event> finalEvents = new ArrayList<>();
-
-
-        db.GetUser(userID, user -> {
+        db.GetUser(db.GetCurrentUserID(), user -> {
             db.GetEventsFromUser(user, events -> {
                 for (Event event : events) {
                     if (event.getEventDate().before(new Date())) {
@@ -95,11 +96,81 @@ public class SettingFragment extends Fragment {
                 listView.setAdapter(adapter);
                 adapter.setEvents(finalEvents);
             });
-
         });
     }
+    public void initializeViews(View v) {
+        /*
+          Initializes all attributes for the fragment
+          @param v
+         * View of the ChangeProfileSettings Fragment
+         */
 
-    public void EditProfileClicked() {
+        signOut = v.findViewById(R.id.signOutBtn);
+        editProfile = v.findViewById(R.id.editProfileBtn);
+        usernameText = v.findViewById(R.id.usernameText);
+        firstAndLastNameText = v.findViewById(R.id.userFirstAndLastNameText);
+        emailText = v.findViewById(R.id.userEmailText);
+        userPhoneNumber = v.findViewById(R.id.userPhoneNumber);
+        listView = v.findViewById(R.id.past_events_listview);
+    }
+
+    public void displayInfo() {
+        String userId = db.GetCurrentUserID();
+        ArrayList<Event> finalEvents = new ArrayList<>();
+        if (currUser != null) {
+            usernameText.setText(currUser.getUserName());
+            String formatName = currUser.getFirstName() + " " + currUser.getLastName();
+            firstAndLastNameText.setText(formatName);
+            emailText.setText(currUser.getEmail());
+            userPhoneNumber.setText(currUser.getPhoneNumber());
+
+            db.GetEventsFromUser(currUser, events -> {
+                for (Event event : events) {
+                    if (event.getEventDate().before(new Date())) {
+                        finalEvents.add(event);
+                    }
+                }
+                adapter = new EventListFragAdapter(requireContext(), finalEvents, "Past");
+                listView.setAdapter(adapter);
+                adapter.setEvents(finalEvents);
+            });
+
+        } else {
+            Log.e("Firestore", "User not found: " + userId);
+        }
 
     }
+
+    public void setUpListeners(View v) {
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.SetUserID(null);
+                if (currUser.getAccountType() == -1){
+                    ((AdminActivity) getActivity()).goBackToLogin();
+                }
+                else {
+                    ((DashboardActivity) getActivity()).goBackToLogin();
+                }
+
+            }
+        });
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currUser.getAccountType() == -1){
+                    ((AdminActivity) getActivity()).changeProfile(currUser);
+                }
+                else {
+                    ChangeProfileSettings editFragment = new ChangeProfileSettings();
+                    editFragment.setUser(currUser);
+                    ((DashboardActivity) getActivity()).replaceFragment(editFragment);
+                }
+            }
+        });
+
+    }
+
+
 }

@@ -36,20 +36,14 @@ public class DashboardActivity extends AppCompatActivity {
         db = Database.getInstance();
         userID = String.valueOf(db.GetCurrentUserID());
 
-        db.GetUser(userID, new OnSuccessListener<User>() {
-            @Override
-            public void onSuccess(User user) {
-                if (user.getAccountType() == 0) {
-                    entrantDashboard();
-                    usernameText.setText(user.getUserName());
-                    String temp = user.getFirstName() + " " + user.getLastName();
-                    userFirstAndLastNameText.setText(temp);
-                } else if (user.getAccountType() == 1) {
-                   organizerDashboard();
-                }
-                // Load initial fragment
-                replaceFragment(new HomeFragment());
+        db.GetUser(userID, user ->  {
+            if (user.getAccountType() == 0) {
+                entrantDashboard();
+            } else if (user.getAccountType() == 1) {
+                organizerDashboard();
             }
+            // Load initial fragment
+            replaceFragment(new HomeFragment());
         });
     }
 
