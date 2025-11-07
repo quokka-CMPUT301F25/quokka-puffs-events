@@ -235,6 +235,7 @@ public class EntrantTestCases {
             db.DeleteEvent(testEvent);
 
         } catch (InterruptedException e) {
+            ClearDatabase();
             throw new RuntimeException(e);
         }
     }
