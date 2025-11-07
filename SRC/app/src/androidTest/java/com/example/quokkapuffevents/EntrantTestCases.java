@@ -4,8 +4,10 @@ import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -17,9 +19,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
+import android.widget.AdapterView;
+
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
@@ -160,12 +165,43 @@ public class EntrantTestCases {
         db.DeleteUser(organizer.getId());
     }
 
+    /**
+     * User Story US 01.01.03 test case
+     */
     @Test
     public void TestViewingEvents() {
-        accessEntrantDashboard();
+        // Create and Login Entrant
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
 
+        // Create Event
+        Event testEvent = createMockEvent(new Date());
+
+        try {
+            Thread.sleep(3000);
+
+            // Open Events List
+            onView(withId(R.id.all_events_button)).check(matches(isDisplayed())).perform(click());
+
+            Thread.sleep(1500);
+
+            // Test if event appears in the list
+            onView(withText(testEvent.getName())).perform(scrollTo()).check(matches(isDisplayed()));
+
+            Thread.sleep(1500);
+
+            //Clean Up
+            db.DeleteUser(entrant);
+            db.DeleteEvent(testEvent);
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * User Story US 01.02.01 test case
+     */
     @Test
     public void TestRegistering() {
         // Switches the activity to the RegisterActivity
@@ -239,7 +275,8 @@ public class EntrantTestCases {
             // Signing out of the current entrant account
             onView(withId(R.id.signOutBtn)).perform(click());
 
-            db.DeleteUser(userId); // Deletes mock entrant from database
+            // Clean Up
+            db.DeleteUser(userId);
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
