@@ -34,18 +34,18 @@ public class EntrantTestCases {
         }
         byte[] hashedPasswordByte = md.digest("password".getBytes(StandardCharsets.UTF_8));
         String hashedPassword = new String(hashedPasswordByte);
-        User user = db.CreateUser("TestingAdmin@Admin.ca", 0, hashedPassword,
-                "TestingAdmin", "FirstAdmin", "LastAdmin",
+        User user = db.CreateUser("TestingEntrant@Entrant.ca", 0, hashedPassword,
+                "TestingEntrant", "FirstEntrant", "LastEntrant",
                 "5871234567");
         return user;
     }
 
     public void accessEntrantDashboard() {
-        User mockAdmin = createMockEntrant();
+        User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
 
-            onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
+            onView(withId(R.id.login_email_address)).perform(typeText("TestingEntrant"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
             onView(withId(R.id.sign_in_button)).perform(click());
 
@@ -55,6 +55,6 @@ public class EntrantTestCases {
             throw new RuntimeException(e);
         }
 
-        deleteMockAdmin(mockAdmin);
+        db.DeleteUser(mockEntrant);
 
 }
