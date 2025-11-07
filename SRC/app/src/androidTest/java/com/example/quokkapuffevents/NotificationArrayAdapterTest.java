@@ -32,7 +32,7 @@ public class NotificationArrayAdapterTest {
 
     @Before
     public void setUp() {
-        // Initialize database and mock user
+        //Initialize database and mock user
         db = Database.getInstance();
         User mockUser = db.CreateUser("Email", 0, "HashPass", "UserName");
         db.SetUserID(mockUser.getId());
