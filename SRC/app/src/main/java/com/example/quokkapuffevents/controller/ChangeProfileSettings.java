@@ -1,17 +1,16 @@
 package com.example.quokkapuffevents.controller;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +19,8 @@ import androidx.fragment.app.Fragment;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.User;
-import androidx.core.content.ContextCompat;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChangeProfileSettings extends Fragment {
 
@@ -135,6 +135,12 @@ public class ChangeProfileSettings extends Fragment {
             public void onClick(View v) {
                 if(checkInput()) {
                     confirmChanges();
+                } else {
+                    CharSequence message = "One of your input is already taken.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(getContext(), message, duration);
+                    toast.show();
                 }
             }
         });
@@ -260,6 +266,8 @@ public class ChangeProfileSettings extends Fragment {
 
     public boolean checkInput() {
 
+        AtomicBoolean valid = new AtomicBoolean(true);
+
         String newEmail = email.getText().toString().trim();
         String newFirstName = firstName.getText().toString().trim();
         String newLastName = lastName.getText().toString().trim();
@@ -277,7 +285,38 @@ public class ChangeProfileSettings extends Fragment {
 //        if (!(newContact.length() < )) {
 //            return false;
 //        }
-        return true;
+
+        db.ListUsers(users -> {
+
+//            Check all inputs
+
+            for(User u: users) {
+
+
+                if(u.getEmail().equals(newEmail)) {
+                    valid.set(false);
+                }
+
+                if(u.getFirstName().equals(newFirstName)) {
+                    valid.set(false);
+                }
+
+                if(u.getLastName().equals(newLastName)) {
+                    valid.set(false);
+                }
+
+                if(u.getPhoneNumber().equals(newContact)) {
+                    valid.set(false);
+                }
+
+
+            }
+
+
+
+        });
+
+        return valid.get();
     }
 
     public void revertChanges() {
