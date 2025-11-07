@@ -54,7 +54,12 @@ public class EntrantTestCases {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        db.DeleteUser(mockEntrant);
+    @Test
+    public void TestJoinWaitingList() {
+        accessEntrantDashboard();
+
+
     }
 }
