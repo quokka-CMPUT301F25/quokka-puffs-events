@@ -45,12 +45,23 @@ public class OrganizerTestCases {
         return user;
     }
 
+    public void deleteMockUser(User user) {
+        db.DeleteUser(user);
+    }
+
 //    US 02.03.01 As an organizer I want to OPTIONALLY limit the number of entrants who can join my waiting list. (In-progress KYLE)
     @Test
     public void OptLimitParticipants() {
         User testOrganizer = createTestOrganizer();
+        Try() {
 
+        }catch {
+
+        } finally {
+
+        }
 
     }
+
 
 }
