@@ -7,11 +7,13 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static com.google.firebase.database.core.RepoManager.clear;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -134,6 +136,9 @@ public class EntrantTestCases {
 
     @Test
     public void TestJoinWaitingList() {
+        //User Story: US 01.01.01
+
+
         Database db = Database.getInstance();
 
         // Create Organizer
@@ -202,6 +207,8 @@ public class EntrantTestCases {
 
     @Test
     public void TestRegistering() {
+        //User Story: US 01.02.01
+
         // Switches the activity to the RegisterActivity
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
@@ -292,6 +299,9 @@ public class EntrantTestCases {
     }
 
     @Test public void UpdateEntrantInfo() {
+        //User Story: US 01.02.02
+
+
         accessEntrantDashboard();
         try {
             onView(withId(R.id.settings_button)).perform(click());
@@ -473,6 +483,87 @@ public class EntrantTestCases {
         } catch (InterruptedException e) {
             ClearDatabase();
             throw new RuntimeException(e);
+        } finally {
+            ClearDatabase();
+        }
+    }
+
+    @Test
+    public void TestAcceptInviteToEvent() {
+        //User Story: US 01.05.02
+
+        User mockOrg = null;
+        Event event = null;
+        try {
+            User mockEntrant = accessEntrantDashboard();
+
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(1500);
+
+            event.addUser(mockEntrant.getId());
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(1500);
+
+
+            //Go notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+            onView(allOf(withId(R.id.acceptBtn), hasSibling(withText("X")))).perform(click());
+
+            //Get updated event info
+            db.GetEvent(event.getId(), updatedEvent -> {
+                assertEquals(updatedEvent.getEventUsers().get(mockEntrant.getId()), "Accepted");
+            });
+            Thread.sleep(1500);
+
+
+        } catch (InterruptedException e) {
+            ClearDatabase();
+        } finally {
+            ClearDatabase();
+        }
+    }
+
+    @Test public void TestDeclineInviteToEvent() {
+        //User Story: US 01.05.03
+
+        User mockOrg = null;
+        Event event = null;
+        try {
+            User mockEntrant = accessEntrantDashboard();
+
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(1500);
+
+            event.addUser(mockEntrant.getId());
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(1500);
+
+
+            //Go notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+            onView(allOf(withId(R.id.rejectBtn), hasSibling(withText("X")))).perform(click());
+
+            //Get updated Event info
+            db.GetEvent(event.getId(), updatedEvent -> {
+                assertEquals(updatedEvent.getEventUsers().get(mockEntrant.getId()), "Rejected");
+            });
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            ClearDatabase();
         } finally {
             ClearDatabase();
         }
