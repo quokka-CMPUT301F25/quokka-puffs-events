@@ -1,6 +1,9 @@
 package com.example.quokkapuffevents.controller;
 
 
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -56,6 +60,7 @@ public class SettingFragment extends Fragment {
     TextView userPhoneNumber;
     ListView listView;
     EventListFragAdapter adapter;
+    LinearLayout pastEventsContainer;
 
 
     //    Stole this from Seth -- HAHA SORRY! -Kyle.
@@ -112,6 +117,7 @@ public class SettingFragment extends Fragment {
         emailText = v.findViewById(R.id.userEmailText);
         userPhoneNumber = v.findViewById(R.id.userPhoneNumber);
         listView = v.findViewById(R.id.past_events_listview);
+        pastEventsContainer = v.findViewById(R.id.pastEventsContainer);
     }
 
     public void displayInfo() {
@@ -124,16 +130,22 @@ public class SettingFragment extends Fragment {
             emailText.setText(currUser.getEmail());
             userPhoneNumber.setText(currUser.getPhoneNumber());
 
-            db.GetEventsFromUser(currUser, events -> {
-                for (Event event : events) {
-                    if (event.getEventDate().before(new Date())) {
-                        finalEvents.add(event);
+            if (currUser.getAccountType() != -1){
+                db.GetEventsFromUser(currUser, events -> {
+                    for (Event event : events) {
+                        if (event.getEventDate().before(new Date())) {
+                            finalEvents.add(event);
+                        }
                     }
-                }
-                adapter = new EventListFragAdapter(requireContext(), finalEvents, "Past");
-                listView.setAdapter(adapter);
-                adapter.setEvents(finalEvents);
-            });
+                    adapter = new EventListFragAdapter(requireContext(), finalEvents, "Past");
+                    listView.setAdapter(adapter);
+                    adapter.setEvents(finalEvents);
+                    adapter.setActivity((DashboardActivity) getActivity());
+                });
+            }
+            else{
+                pastEventsContainer.setVisibility(GONE);
+            }
 
         } else {
             Log.e("Firestore", "User not found: " + userId);
