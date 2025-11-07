@@ -83,7 +83,30 @@ public class EntrantTestCases {
 
     @Test
     public void TestRegistering() {
+        // Switches the activity to the RegisterActivity
+        try (ActivityScenario<LoginActivity> scenario =
+                     ActivityScenario.launch(LoginActivity.class)) {
 
+            onView(withId(R.id.register_page_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Inputting information into text boxes
+            onView(withId(R.id.register_email)).perform(typeText("RegisterTest@Email.com"));
+            onView(withId(R.id.register_username)).perform(typeText("RegisterEntrant"));
+            onView(withId(R.id.register_password)).perform(typeText("password"));
+            onView(withId(R.id.register_first_name)).perform(typeText("Register"));
+            onView(withId(R.id.register_last_name)).perform(typeText("Entrant"));
+            onView(withId(R.id.register_phone_number)).perform(typeText("1234567890"));
+
+            // Signing into newly created account
+            onView(withId(R.id.register_info_button)).perform(click());
+
+            Thread.sleep(1500);
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
