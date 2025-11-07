@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -16,7 +17,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.example.quokkapuffevents.view.EventListFragAdapter;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class SettingFragment extends Fragment {
 
@@ -48,6 +54,8 @@ public class SettingFragment extends Fragment {
     TextView firstAndLastNameText;
     TextView emailText;
     TextView userPhoneNumber;
+    ListView listView;
+    EventListFragAdapter adapter;
 
 
     //    Stole this from Seth -- HAHA SORRY! -Kyle.
@@ -62,6 +70,7 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_settings_fragment, container, false);
         initializeViews(view);
+        //DisplayPastEvents();
         displayInfo();
         setUpListeners(view);
         return view;
@@ -74,7 +83,21 @@ public class SettingFragment extends Fragment {
     }
 
     public void setCurrUser(User currUser) {this.currUser = currUser;}
-
+    public void DisplayPastEvents() {
+        ArrayList<Event> finalEvents = new ArrayList<>();
+        db.GetUser(db.GetCurrentUserID(), user -> {
+            db.GetEventsFromUser(user, events -> {
+                for (Event event : events) {
+                    if (event.getEventDate().before(new Date())) {
+                        finalEvents.add(event);
+                    }
+                }
+                adapter = new EventListFragAdapter(requireContext(), finalEvents, "Past");
+                listView.setAdapter(adapter);
+                adapter.setEvents(finalEvents);
+            });
+        });
+    }
     public void initializeViews(View v) {
         /*
           Initializes all attributes for the fragment
@@ -88,16 +111,30 @@ public class SettingFragment extends Fragment {
         firstAndLastNameText = v.findViewById(R.id.userFirstAndLastNameText);
         emailText = v.findViewById(R.id.userEmailText);
         userPhoneNumber = v.findViewById(R.id.userPhoneNumber);
+        listView = v.findViewById(R.id.past_events_listview);
     }
 
     public void displayInfo() {
         String userId = db.GetCurrentUserID();
+        ArrayList<Event> finalEvents = new ArrayList<>();
         if (currUser != null) {
             usernameText.setText(currUser.getUserName());
             String formatName = currUser.getFirstName() + " " + currUser.getLastName();
             firstAndLastNameText.setText(formatName);
             emailText.setText(currUser.getEmail());
             userPhoneNumber.setText(currUser.getPhoneNumber());
+
+            db.GetEventsFromUser(currUser, events -> {
+                for (Event event : events) {
+                    if (event.getEventDate().before(new Date())) {
+                        finalEvents.add(event);
+                    }
+                }
+                adapter = new EventListFragAdapter(requireContext(), finalEvents, "Past");
+                listView.setAdapter(adapter);
+                adapter.setEvents(finalEvents);
+            });
+
         } else {
             Log.e("Firestore", "User not found: " + userId);
         }
@@ -133,22 +170,7 @@ public class SettingFragment extends Fragment {
             }
         });
 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 }

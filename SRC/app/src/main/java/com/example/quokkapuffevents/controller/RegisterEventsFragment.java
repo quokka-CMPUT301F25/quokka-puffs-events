@@ -8,20 +8,18 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.view.EventListFragAdapter;
-import com.example.quokkapuffevents.view.NotificationArrayAdapter;
+import com.example.quokkapuffevents.model.*;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class RegisterEventsFragment extends Fragment {
-    /*// FILTER/REGISTER FOR EVENTS FOR DashboardActivity
+    // FILTER/REGISTER FOR EVENTS FOR DashboardActivity
     String userID; //current user id
     private Database db;
 
@@ -40,17 +38,32 @@ public class RegisterEventsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initializeUI(view);
+        db = Database.getInstance();
+        userID = db.GetCurrentUserID();
+        LoadEvent();
     }
 
     private void initializeUI(@NonNull View view) {
         listView = view.findViewById(R.id.findEventsListView);
-        adapter = new EventListFragAdapter(requireContext(), new ArrayList<>(), new String());
-        listView.setAdapter(adapter);
     }
 
     private void LoadEvent(){
-        String userID = db.GetCurrentUserID();
-        db.GetUser(userID, user -> db.GetUserNotifications(user, ));
-    }*/
+        db.ListEvents(events -> {
+            ArrayList<Event> finalEvents = new ArrayList<>();
+            db.GetUser(userID, user -> {
+                ArrayList<String> userEvents = user.getEvents();
+                for (Event event : events) {
+                    if (!userEvents.contains(event.getId())) {
+                        finalEvents.add(event);
+                    }
+                }
+                adapter = new EventListFragAdapter(requireContext(), finalEvents, "all");
+                listView.setAdapter(adapter);
+                adapter.setEvents(finalEvents);
+            });
+
+        });
+    }
 
 }

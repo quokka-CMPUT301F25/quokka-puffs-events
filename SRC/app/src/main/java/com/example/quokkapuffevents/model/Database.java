@@ -12,6 +12,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Database {
     private static volatile Database instance;
@@ -76,7 +77,7 @@ public class Database {
         return(newUser);
     }
 
-    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date endDate){
         /**
          * Creates a new event and saves the new events data to the database
          * @param org
@@ -95,11 +96,16 @@ public class Database {
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org, description, toBeDrawn, maxNumWaitlist, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, maxNumWaitlist, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
+
+        GetUser(userID, user -> {
+            user.addEvent(id);
+            SaveUser(user);
+        });
         return(newEvent);
     }
-    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date endDate){
         /**
          * Same as the other create event but does not construct it with the optional cap on number of participants
          * @param org
@@ -115,9 +121,15 @@ public class Database {
          * @return
          * Returns the event as a new Class. Ensures that the event is saved to the cloud
          */
+        Log.d("Test", "Testing something");
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org, description, toBeDrawn, startDate, drawnDate, endDate); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
+
+        GetUser(userID, user -> {
+            user.addEvent(id);
+            SaveUser(user);
+        });
         return newEvent;
     }
     public Notif CreateNotification(Integer type, String recipient, String originEvent, String originUser, String message){
@@ -370,6 +382,7 @@ public class Database {
          */
         //List of all users in the event
         List eventsOfUser = user.getEvents();
+        eventsOfUser.add("Dummy");
 
         //Collects the data for every user with an id in the above list
         eventsRef.whereIn("id", eventsOfUser).get()
@@ -517,22 +530,35 @@ public class Database {
                 });
     }
 
-    //Test Functions
-//    public void CreateMockUser(String email, Integer type, String hashPass, String userName,
-//                               String firstName, String lastName, String phoneNumber, Runnable onComplete) {
-//        String id = usersRef.document().getId();
-//        User newUser = new User(email, type, hashPass, userName, firstName, lastName, phoneNumber);
-//
-//        usersRef.document(id)
-//                .set(newUser)
-//                .addOnSuccessListener(unused -> {
-//                    Log.d("Database", "User created successfully: " + id);
-//                    if (onComplete != null) onComplete.run();
-//                })
-//                .addOnFailureListener(e -> {
-//                    Log.e("Database", "Error creating user", e);
-//                    if (onComplete != null) onComplete.run(); // still unblock latch to avoid hanging tests
-//                });
-//    }
+    public void FilteredEventsForUser(User user, String status, OnSuccessListener<ArrayList<Event>> listener){
+        ArrayList<Event> waitingEvents = new ArrayList<>(); //Create empty list to hold users that are still on the waiting list
+        //Collect all users from the eventUsers Map that is still waiting
+        for (String e : user.getEvents()) {
+            GetEvent(e, event -> {
+                if (Objects.equals(event.getEventUsers().get(user.getId()), status)) {
+                    waitingEvents.add(event);
+                }
+                listener.onSuccess(waitingEvents);
+            });
+
+        }
+    }
+
+    //Test Funcitons
+    /*public void CreateMockUser(String email, Integer type, String hashPass, String userName, Runnable onComplete) {
+        String id = usersRef.document().getId();
+        User newUser = new User(id, email, type, hashPass, userName);
+
+        usersRef.document(id)
+                .set(newUser)
+                .addOnSuccessListener(unused -> {
+                    Log.d("Database", "User created successfully: " + id);
+                    if (onComplete != null) onComplete.run();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Database", "Error creating user", e);
+                    if (onComplete != null) onComplete.run(); // still unblock latch to avoid hanging tests
+                });
+    }*/
 
 }

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 
 public class Event {
@@ -21,7 +20,7 @@ public class Event {
     private Map<String, String> eventUsers = new HashMap<>(); //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
     private Date drawnDate;
-    private Date endDate;
+    private Date eventDate;
     private String imageID;
     //Add geo data?
     private Boolean drawn;
@@ -29,29 +28,29 @@ public class Event {
     public Event(){
         this.id = "FAILURE";
     }
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date startDate, Date drawnDate, Date endDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate){
         this.name = name;
         this.id = id;
         this.org = org;
         this.description = description;
         this.toBeDrawn = toBeDrawn;
         this.maxNumWaitlist = -1;
-        this.startDate = startDate;
+        this.startDate = new Date();
         this.drawnDate = drawnDate;
-        this.endDate = endDate;
+        this.eventDate = eventDate;
         this.drawn = false;
         this.imageID = null;
     }
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date startDate, Date drawnDate, Date endDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate){
         this.name = name;
         this.id = id;
         this.org = org;
         this.description = description;
         this.toBeDrawn = toBeDrawn;
         this.maxNumWaitlist = maxNumWaitlist;
-        this.startDate = startDate;
+        this.startDate =  new Date();
         this.drawnDate = drawnDate;
-        this.endDate = endDate;
+        this.eventDate = eventDate;
         this.drawn = false;
         this.imageID = null;
     }
@@ -84,8 +83,8 @@ public class Event {
         return id;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getEventDate() {
+        return eventDate;
     }
 
     public Date getStartDate() {
@@ -163,4 +162,5 @@ public class Event {
 
         return(chosen); //Return list of ids
     }
+
 }
