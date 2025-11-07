@@ -40,6 +40,7 @@ public class EntrantTestCases {
         return user;
     }
 
+    @Test
     public void accessEntrantDashboard() {
         User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoginActivity> scenario =
@@ -65,5 +66,7 @@ public class EntrantTestCases {
 
     public void TestViewingEvents() {
         accessEntrantDashboard();
+
+
     }
 }
