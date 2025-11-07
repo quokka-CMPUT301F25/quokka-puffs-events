@@ -25,6 +25,12 @@ import java.security.NoSuchAlgorithmException;
 public class EntrantTestCases {
     Database db = Database.getInstance();
 
+    /**
+     * Creates an entrant account for testing user stories.
+     *
+     * @return
+     * A mock entrant user account
+     */
     public User createMockEntrant() {
         MessageDigest md = null;
         try {
@@ -40,6 +46,9 @@ public class EntrantTestCases {
         return user;
     }
 
+    /**
+     * For automating accessing the entrant user main dashboard
+     */
     public void accessEntrantDashboard() {
         User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoginActivity> scenario =
@@ -63,9 +72,25 @@ public class EntrantTestCases {
 
     }
 
+    @Test
     public void TestViewingEvents() {
         accessEntrantDashboard();
 
 
+    }
+
+    @Test
+    public void TestRegistering() {
+
+    }
+
+    @Test
+    public void TestViewingPastEvents() {
+        accessEntrantDashboard();
+    }
+
+    @Test
+    public void TestReceivingLostNotification() {
+        accessEntrantDashboard();
     }
 }
