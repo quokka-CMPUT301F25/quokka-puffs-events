@@ -380,6 +380,7 @@ public class EntrantTestCases {
     }
 
     @Test public void TestChosenInDrawNotif() {
+        //User Story: US 01.04.01
         User mockOrg = null;
         Event event = null;
         try {
@@ -397,7 +398,7 @@ public class EntrantTestCases {
             onView(withId(R.id.notifs_button)).perform(click());
             Thread.sleep(1500);
 
-            assertDoesNotExist(onView(withText("TestDraw")));
+            assertDoesNotExist(onView(withText(R.string.winner_header)));
             onView(withId(R.id.home_button)).perform(click());
             Thread.sleep(1500);
 
@@ -410,7 +411,46 @@ public class EntrantTestCases {
             Thread.sleep(1500);
 
             //Testing to see if notification has appeared
-            onView(withText("You've been Selected!")).check(matches(isDisplayed()));
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockOrg.getId());
+            db.DeleteUser(db.GetCurrentUserID());
+            db.DeleteEvent(event);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockOrg.getId());
+            db.DeleteUser(db.GetCurrentUserID());
+            db.DeleteEvent(event);
+        }
+    }
+
+    @Test public void TestNotChosenInDrawNotif() {
+        //User Story: US 01.04.02
+        User mockOrg = null;
+        Event event = null;
+        try {
+            User mockEntrant = accessEntrantDashboard();
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(1500);
+            event.addUser(mockEntrant.getId());
+            //Check no notification exists
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+            assertDoesNotExist(onView(withText(R.string.not_picked)));
+            onView(withId(R.id.home_button)).perform(click());
+            Thread.sleep(1500);
+            //Draw User
+            event.drawUsers(0);
+            Thread.sleep(1500);
+            //Go back to notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+            //Testing to see if notification has appeared
+            onView(withText(R.string.not_picked)).check(matches(isDisplayed()));
 
 
         } catch (InterruptedException e) {
