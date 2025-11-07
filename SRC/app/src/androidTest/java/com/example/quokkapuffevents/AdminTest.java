@@ -213,6 +213,8 @@ public class AdminTest {
         deleteMockAdmin(mockAdmin);
     }
 
+
+
     @Test
     public void accessAdminImages() {
         User mockAdmin = createMockAdmin();
@@ -257,14 +259,14 @@ public class AdminTest {
             onView(withId(R.id.login_password)).perform(typeText("password"));
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(10000);
+            Thread.sleep(200);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
 
 //            Go to the users dashboard
             onView(withId(R.id.usersIcon)).perform((click()));
-            Thread.sleep(10000);
+            Thread.sleep(30000);
 
 
             onView(withText("testuser@example.com")).check(matches(isDisplayed()));
@@ -314,14 +316,14 @@ public class AdminTest {
             onView(withId(R.id.login_password)).perform(typeText("password"));
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(10000);
+            Thread.sleep(2000);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
 
 //            Go to the users dashboard
             onView(withId(R.id.eventsIcon)).perform((click()));
-            Thread.sleep(10000);
+            Thread.sleep(30000);
 
 
             onView(withText("Mock Event")).check(matches(isDisplayed()));
@@ -360,14 +362,14 @@ public class AdminTest {
             onView(withId(R.id.login_password)).perform(typeText("password"));
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(10000);
+            Thread.sleep(2000);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
 
 //            Go to the users dashboard
             onView(withId(R.id.usersIcon)).perform((click()));
-            Thread.sleep(10000);
+            Thread.sleep(15000);
 
 
             onView(withText("testorganizer@example.com")).check(matches(isDisplayed()));
