@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents;
 
+import static android.app.PendingIntent.getActivity;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -7,11 +8,14 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import android.widget.ListView;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 
 import org.junit.Test;
@@ -20,6 +24,7 @@ import org.junit.runner.RunWith;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 @RunWith(AndroidJUnit4.class)
 public class EntrantTestCases {
@@ -60,6 +65,12 @@ public class EntrantTestCases {
     public void TestJoinWaitingList() {
         accessEntrantDashboard();
 
+        Event event = db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), new Date());
+
+        onView(withId(R.id.all_events_button)).perform(click());
+        ListView allEventsList = .findViewById(R.id.all_events_list);
+
+        assert(event.getEventUsers().get("TestingEntrant") == null);
 
     }
 }
