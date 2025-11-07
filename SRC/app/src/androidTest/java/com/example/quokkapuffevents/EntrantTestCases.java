@@ -56,5 +56,5 @@ public class EntrantTestCases {
         }
 
         db.DeleteUser(mockEntrant);
-
+    }
 }
