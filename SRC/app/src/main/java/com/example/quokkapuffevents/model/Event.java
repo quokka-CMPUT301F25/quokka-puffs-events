@@ -124,7 +124,8 @@ public class Event {
 
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
-        this.eventUsers.put(userID, newStatus);
+        if(eventUsers.size() < maxNumWaitlist)
+            this.eventUsers.put(userID, newStatus);
     }
 
     public ArrayList<String> drawUsers(Integer numCalled){

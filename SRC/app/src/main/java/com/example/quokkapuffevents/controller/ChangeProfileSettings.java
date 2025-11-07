@@ -126,7 +126,7 @@ public class ChangeProfileSettings extends Fragment {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //deleteUserAccount();
+                deleteUserAccount();
             }
         });
 
@@ -237,6 +237,7 @@ public class ChangeProfileSettings extends Fragment {
 
     public void deleteUserAccount() {
         db.DeleteUser(userID);
+        db.SetUserID(null);
         ((DashboardActivity) getActivity()).goBackToLogin();
     }
 
