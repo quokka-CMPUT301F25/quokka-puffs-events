@@ -1,6 +1,9 @@
 package com.example.quokkapuffevents.model;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 
 public class User {
     private String id;
@@ -110,5 +113,9 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void addEvent(String eventID){
+        this.events.add(eventID);
     }
 }
