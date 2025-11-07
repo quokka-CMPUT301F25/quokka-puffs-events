@@ -55,6 +55,9 @@ public class OrganizerEventDetails extends Fragment {
     }
 
     public void SetEvent(Event event) {this.event = event; }
+
+    public static class EntrantEventDetailsFragment extends Fragment {
+    }
 }
 
 
