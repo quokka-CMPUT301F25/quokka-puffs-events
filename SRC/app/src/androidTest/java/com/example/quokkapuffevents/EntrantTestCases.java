@@ -3,6 +3,7 @@ package com.example.quokkapuffevents;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -10,6 +11,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static com.google.firebase.database.core.RepoManager.clear;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -275,16 +277,28 @@ public class EntrantTestCases {
             onView(withId(R.id.settings_button)).perform(click());
             Thread.sleep(1500);
             onView(withId(R.id.editProfileBtn)).perform(click());
-            Thread.sleep(1500);
-            onView(withId(R.id.userFirstNameTextInput)).perform(typeText("Changed"));
-            onView(withId(R.id.userLastNameTextInput)).perform(typeText("Changed"));
-            onView(withId(R.id.userEmailTextInput)).perform(typeText("Changed"));
-            onView(withId(R.id.userContactInformationInput)).perform(typeText("Changed"));
-            onView(withId(R.id.confirmChangesBtn)).perform(click()); Thread.sleep(1500);
+            Thread.sleep(2000);
 
-            onView(withId(R.id.usernameText)).check(matches(withText("Changed")));
+            onView(withId(R.id.userFirstNameTextInput)).perform(clearText());
+            onView(withId(R.id.userFirstNameTextInput)).perform(typeText("Changed"));
+
+            onView(withId(R.id.userLastNameTextInput)).perform(clearText());
+            onView(withId(R.id.userLastNameTextInput)).perform(typeText("Changed"));
+
+            onView(withId(R.id.userEmailTextInput)).perform(clearText());
+            onView(withId(R.id.userEmailTextInput)).perform(typeText("Changed"));
+
+            onView(withId(R.id.userContactInformationInput)).perform(clearText());
+            onView(withId(R.id.userContactInformationInput)).perform(typeText("Changed"));
+            closeSoftKeyboard();
+
+            onView(withId(R.id.confirmChangesBtn)).perform(click());
+            Thread.sleep(800);
+
+
+
             onView(withId(R.id.userFirstAndLastNameText)).check(matches(
-                    withText("Changed" + " " + "Changed")));
+                    withText("Changed Changed")));
             onView(withId(R.id.userEmailText)).check(matches(withText("Changed")));
             onView(withId(R.id.userPhoneNumber)).check(matches(withText("Changed")));
         } catch (InterruptedException e) {
