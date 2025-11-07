@@ -137,6 +137,7 @@ public class Event {
          */
         ArrayList<String> waitingUsers = new ArrayList<>(); //Create empty list to hold users that are still on the waiting list
         Random r= new Random(); //Random class for the draw
+        Database db = Database.getInstance();
 
         //Collect all users from the eventUsers Map that is still waiting
         for (Map.Entry<String, String> entry : this.eventUsers.entrySet()) {
@@ -148,6 +149,9 @@ public class Event {
         if (numCalled > waitingUsers.size()){
             numCalled = waitingUsers.size();
         }
+        if (numCalled == -1){
+            numCalled = toBeDrawn;
+        }
 
         //List of drawn user ids
         ArrayList<String> chosen = new ArrayList<>();
@@ -158,6 +162,10 @@ public class Event {
             waitingUsers.remove(randInd); //Remove user from waiting so that they cannot be chosen again
 
             SetStatus(chosenUser, "Invited"); //Update map to show that they have been invited
+            db.CreateNotification(1, chosenUser, id, org, "You have been drawn for this event.");
+        }
+        for (String user : waitingUsers){
+            db.CreateNotification(0, user, id, org, "This event has been drawn. Unfortunately you were not drawn, there is a chance that you may be drawn in the future.");
         }
 
         return(chosen); //Return list of ids
