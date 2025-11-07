@@ -26,7 +26,7 @@ public class QRCodeFragment extends Fragment {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_dashboard_fragment, container); // change this to be a camera page/qr code information
+        View view = inflater.inflate(R.layout.home_fragment, container); // change this to be a camera page/qr code information
         return view;
     }
 }

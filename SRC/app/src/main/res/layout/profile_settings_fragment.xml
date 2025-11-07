@@ -141,6 +141,7 @@
             android:textStyle="bold" />
 
         <ListView
+            android:id="@+id/past_events_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="12dp"

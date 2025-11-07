@@ -64,20 +64,50 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enter a Date: "
+                android:text="Enter Event Date: "
                 android:textColor="@color/white"
                 android:textSize="20dp"/>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="4" />
+                android:layout_weight="1" />
 
             <EditText
                 android:id="@+id/eventDateInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="3"
+                android:textAlignment="center"
+                android:hint="Date"
+                android:padding="4dp"
+                android:background="@drawable/border_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/drawDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter Draw Date: "
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/drawDateInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
                 android:textAlignment="center"
                 android:hint="Date"
                 android:padding="4dp"
