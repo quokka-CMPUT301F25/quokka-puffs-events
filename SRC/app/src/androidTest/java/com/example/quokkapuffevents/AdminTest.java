@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -17,6 +18,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 
 import org.junit.Test;
@@ -26,6 +28,7 @@ import com.example.quokkapuffevents.model.Database;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 /**
  * For testing any Admin related User Stories
@@ -77,6 +80,29 @@ public class AdminTest {
         return user;
     }
 
+    public User createTestOrganizer() {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] hashedPasswordByte = md.digest("password".getBytes(StandardCharsets.UTF_8));
+        String hashedPassword = new String(hashedPasswordByte);
+        User user = db.CreateUser("testorganizer@example.com", 1, hashedPassword,
+                "TestOrganizer", "FirstOrganizer", "LastOrganizer",
+                "5870011122");
+        return user;
+    }
+
+    public Event createMockEvent(Date eventDate) {
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
+    }
+
+    public void deleteMockEvent(Event event) {
+        db.DeleteEvent(event.getId());
+    }
+
     public void deleteMockAdmin(User user) {
         db.DeleteUser(user);
     }
@@ -89,9 +115,10 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(4000);
+            Thread.sleep(1500);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
         } catch (InterruptedException e) {
@@ -110,6 +137,7 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -142,6 +170,7 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -169,6 +198,7 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -188,6 +218,8 @@ public class AdminTest {
         deleteMockAdmin(mockAdmin);
     }
 
+
+
     @Test
     public void accessAdminImages() {
         User mockAdmin = createMockAdmin();
@@ -196,6 +228,7 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
             Thread.sleep(1500);
@@ -230,9 +263,10 @@ public class AdminTest {
 
             onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
             onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(2000);
+            Thread.sleep(1500);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
@@ -250,7 +284,7 @@ public class AdminTest {
                     hasSibling(withText("testuser@example.com"))))
                     .perform(click());
 
-            Thread.sleep(1000);
+            Thread.sleep(1500);
 
             assertDoesNotExist(onView(withText("testuser@example.com")));
 
@@ -262,10 +296,113 @@ public class AdminTest {
         deleteMockAdmin(mockAdmin);
         deleteMockAdmin(testUser);
 
-
-
     }
 
 //  US 03.02.01 As an administrator, I want to be able to remove profiles. (In-Progress - KYLE)
+
+    @Test
+    public void deleteEvent() throws InterruptedException {
+
+        User mockAdmin = createMockAdmin();
+
+        db.ListEvents(events -> {
+            if(!events.isEmpty())
+            {
+                for(Event e: events)
+                    db.DeleteEvent(e);
+            }
+        });
+
+        Event mockEvent = createMockEvent(new Date());
+        Thread.sleep(1500);
+
+        try (ActivityScenario<LoginActivity> scenario =
+                     ActivityScenario.launch(LoginActivity.class)) {
+
+            onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
+
+
+//            Go to the events dashboard
+            onView(withId(R.id.eventsIcon)).perform((click()));
+            Thread.sleep(1500);
+
+
+            onView(withText("Mock Event")).check(matches(isDisplayed()));
+
+
+//            Click the delete button
+            onView(allOf(withId(R.id.deleteButton),
+                    hasSibling(withText("Mock Event"))))
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            assertDoesNotExist(onView(withText("Mock Event")));
+
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        deleteMockAdmin(mockAdmin);
+        deleteMockEvent(mockEvent);
+
+    }
+
+    @Test
+    public void deleteOrganizer() {
+
+        User mockAdmin = createMockAdmin();
+        User testOrganizer = createTestOrganizer();
+
+
+        try (ActivityScenario<LoginActivity> scenario =
+                     ActivityScenario.launch(LoginActivity.class)) {
+
+            onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
+
+
+//            Go to the users dashboard
+            onView(withId(R.id.usersIcon)).perform((click()));
+            Thread.sleep(1500);
+
+
+            onView(withText("testorganizer@example.com")).check(matches(isDisplayed()));
+
+
+//            Click the delete button
+            onView(allOf(withId(R.id.deleteButton),
+                    hasSibling(withText("testorganizer@example.com"))))
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            assertDoesNotExist(onView(withText("testorganizer@example.com")));
+
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        deleteMockAdmin(mockAdmin);
+        deleteMockAdmin(testOrganizer);
+
+    }
+
+
 
 }
