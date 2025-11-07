@@ -45,10 +45,10 @@ public class DashboardActivity extends AppCompatActivity {
                     String temp = user.getFirstName() + " " + user.getLastName();
                     userFirstAndLastNameText.setText(temp);
                 } else if (user.getAccountType() == 1) {
-                   //organizerDashboard();
+                   organizerDashboard();
                 }
                 // Load initial fragment
-                replaceFragment(new NotificationFragment());
+                replaceFragment(new HomeFragment());
             }
         });
     }
@@ -58,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
         initializeViews();
 
         homeButton.setOnClickListener(View -> {
-            replaceFragment(new NotificationFragment());
+            replaceFragment(new HomeFragment());
         });
 
         viewEventsButton.setOnClickListener(View -> {
@@ -78,6 +78,10 @@ public class DashboardActivity extends AppCompatActivity {
             });
         });
 
+        notificationButton.setOnClickListener(View -> {
+            replaceFragment(new NotificationFragment());
+        });
+
     }
 
     public void organizerDashboard() {
@@ -85,7 +89,7 @@ public class DashboardActivity extends AppCompatActivity {
         initializeViews();
 
         homeButton.setOnClickListener(View -> {
-            replaceFragment(new NotificationFragment());
+            replaceFragment(new HomeFragment());
         });
 
         viewEventsButton.setOnClickListener(View -> {

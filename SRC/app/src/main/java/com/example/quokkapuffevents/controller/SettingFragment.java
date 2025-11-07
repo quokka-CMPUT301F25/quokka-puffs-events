@@ -8,15 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
-import com.example.quokkapuffevents.model.Database;
-import com.example.quokkapuffevents.model.User;
+import com.example.quokkapuffevents.model.*;
+import com.example.quokkapuffevents.view.EventListFragAdapter;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
 
 public class SettingFragment extends Fragment {
 
@@ -50,105 +56,50 @@ public class SettingFragment extends Fragment {
     TextView userPhoneNumber;
 
 
-    //    Stole this from Seth -- HAHA SORRY! -Kyle.
+    @Nullable
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        // GET INSTANCE OF DATABASE AND CURRENT USER INFO
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.profile_settings_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         db = Database.getInstance();
+        userID = String.valueOf(db.GetCurrentUserID());
+
+        listView = view.findViewById(R.id.past_events_listview);
+
+        DisplayPastEvents(view);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.profile_settings_fragment, container, false);
-        initializeViews(view);
-        displayInfo();
-        setUpListeners(view);
-        return view;
+    public void DisplayUserInfo() {
+        //Displays the info at the top
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        displayInfo();
-    }
+    public void DisplayPastEvents(View view) {
+        ArrayList<Event> finalEvents = new ArrayList<>();
 
-    public void setCurrUser(User currUser) {this.currUser = currUser;}
 
-    public void initializeViews(View v) {
-        /*
-          Initializes all attributes for the fragment
-          @param v
-         * View of the ChangeProfileSettings Fragment
-         */
-
-        signOut = v.findViewById(R.id.signOutBtn);
-        editProfile = v.findViewById(R.id.editProfileBtn);
-        usernameText = v.findViewById(R.id.usernameText);
-        firstAndLastNameText = v.findViewById(R.id.userFirstAndLastNameText);
-        emailText = v.findViewById(R.id.userEmailText);
-        userPhoneNumber = v.findViewById(R.id.userPhoneNumber);
-    }
-
-    public void displayInfo() {
-        String userId = db.GetCurrentUserID();
-        if (currUser != null) {
-            usernameText.setText(currUser.getUserName());
-            String formatName = currUser.getFirstName() + " " + currUser.getLastName();
-            firstAndLastNameText.setText(formatName);
-            emailText.setText(currUser.getEmail());
-            userPhoneNumber.setText(currUser.getPhoneNumber());
-        } else {
-            Log.e("Firestore", "User not found: " + userId);
-        }
-
-    }
-
-    public void setUpListeners(View v) {
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.SetUserID(null);
-                if (currUser.getAccountType() == -1){
-                    ((AdminActivity) getActivity()).goBackToLogin();
+        db.GetUser(userID, user -> {
+            db.GetEventsFromUser(user, events -> {
+                for (Event event : events) {
+                    if (event.getEventDate().before(new Date())) {
+                        finalEvents.add(event);
+                    }
                 }
-                else {
-                    ((DashboardActivity) getActivity()).goBackToLogin();
-                }
+                adapter = new EventListFragAdapter(requireContext(), finalEvents, "Past");
+                listView.setAdapter(adapter);
+                adapter.setEvents(finalEvents);
+            });
 
-            }
         });
+    }
 
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currUser.getAccountType() == -1){
-                    ((AdminActivity) getActivity()).changeProfile(currUser);
-                }
-                else {
-                    ChangeProfileSettings editFragment = new ChangeProfileSettings();
-                    editFragment.setUser(currUser);
-                    ((DashboardActivity) getActivity()).replaceFragment(editFragment);
-                }
-            }
-        });
+    public void EditProfileClicked() {
 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 }
