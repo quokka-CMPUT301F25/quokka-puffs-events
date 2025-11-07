@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -38,7 +40,7 @@ public class ChangeProfileSettings extends Fragment {
      *
      * */
 
-
+    DashboardActivity dashboardActivity;
     private Database db; // collection we want to access
     private User currentUser; //
     String userID;
@@ -46,7 +48,8 @@ public class ChangeProfileSettings extends Fragment {
     /* Editable Text Inputs*/
     EditText email;
     EditText contact;
-    EditText name;
+    EditText firstName;
+    EditText lastName;
 
     /* Buttons / Interactions */
 
@@ -55,28 +58,26 @@ public class ChangeProfileSettings extends Fragment {
     Button confirmBtn;
     Button deleteBtn;
 
-    String currName;
-    String currEmail;
-    String currContact;
-
 
     //    Stole this from Seth -- HAHA SORRY! -Kyle.
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View view = inflater.inflate(R.layout.change_profile_settings, container, false);
 
         // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
-        String userID = String.valueOf(db.GetCurrentUserID());
+        return view;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.change_profile_settings, container);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         initializeViews(view);
         updateEditableUserInformation();
         setUpListeners(view);
-        return view;
     }
 
     public void initializeViews(View v) {
@@ -87,7 +88,8 @@ public class ChangeProfileSettings extends Fragment {
          */
 
         email = v.findViewById(R.id.userEmailTextInput);
-        name = v.findViewById(R.id.userFirstAndLastNameTextInput);
+        firstName = v.findViewById(R.id.userFirstNameTextInput);
+        lastName = v.findViewById(R.id.userLastNameTextInput);
         contact = v.findViewById(R.id.userContactInformationInput);
 
         allowNotifs = v.findViewById(R.id.enableNotificationsSwitchBtn);
@@ -96,7 +98,6 @@ public class ChangeProfileSettings extends Fragment {
         deleteBtn = v.findViewById(R.id.deleteAccountBtn);
 
         userID = db.GetCurrentUserID();
-
     }
 
     public void updateEditableUserInformation(){
@@ -105,23 +106,17 @@ public class ChangeProfileSettings extends Fragment {
          *
          * */
 
-        db.GetUser(userID, user -> {
+        String prevEmail = currentUser.getEmail();
+        String prevFirstName = currentUser.getFirstName();
+        String prevLastName = currentUser.getLastName();
+        String prevContact = currentUser.getPhoneNumber();
+        Boolean prevAllowNotifs = currentUser.getSendNotifications();
 
-            email.setText(user.getEmail());
-            name.setText(user.getUserName());
-
-//            TODO: check if theres a phone number associated to the user
-            /*
-             *  if have a phone number
-             *
-             *       edit text and display phone number
-             * */
-        });
-
-        currName = name.getText().toString();
-        currEmail = email.getText().toString();
-        currContact = contact.getText().toString();
-
+        email.setText(prevEmail);
+        firstName.setText(prevFirstName);
+        lastName.setText(prevLastName);
+        contact.setText(prevContact);
+        allowNotifs.setChecked(prevAllowNotifs);
 
     }
     public void setUpListeners(View v) {
@@ -138,13 +133,10 @@ public class ChangeProfileSettings extends Fragment {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(checkInput()) {
                     confirmChanges();
                 }
-
             }
-
         });
 
         revertBtn.setOnClickListener(new View.OnClickListener() {
@@ -155,17 +147,14 @@ public class ChangeProfileSettings extends Fragment {
         });
 
 
-//        EditText vvvv
-
-
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if(currEmail.equals(email.getText().toString())) {
-
-                    email.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.orangebtn));
-
-                }
+//                if(currEmail.equals(email.getText().toString())) {
+//
+//                    email.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.orangebtn));
+//
+//                }
             }
 
             @Override
@@ -182,11 +171,11 @@ public class ChangeProfileSettings extends Fragment {
         contact.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if(currContact.equals(contact.getText().toString())) {
-
-                    contact.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.orangebtn));
-
-                }
+//                if(currContact.equals(contact.getText().toString())) {
+//
+//                    contact.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.orangebtn));
+//
+//                }
             }
 
             @Override
@@ -202,14 +191,35 @@ public class ChangeProfileSettings extends Fragment {
 
         });
 
-        name.addTextChangedListener(new TextWatcher() {
+        firstName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if(currName.equals(name.getText().toString())) {
+//                if(currFirstName.equals(firstName.getText().toString())) {
+//
+//                     firstName.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.orangebtn));
+//
+//                }
+            }
 
-                     name.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.orangebtn));
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+
+        lastName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+//                if(currLastName.equals(lastName.getText().toString())) {
+//
+//                    lastName.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.orangebtn));
+//
+//                }
             }
 
             @Override
@@ -225,51 +235,64 @@ public class ChangeProfileSettings extends Fragment {
 
     }
 
-//    public void deleteUserAccount() {
-//        /*
-//         * TODO: Delete the user from the database. Also have a confirm button with it.
-//         * */
-//        db.DeleteUser(userID);
-//
-//        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
-//        startActivity(intent);
-//
-//
-////        Go back to login
-//
-//    }
-
-    public boolean checkInput() {
-        /*
-         * TODO: Check all user input is in the correct format before confirm changes
-         *
-         * */
-
-
-
-        return true;
+    public void deleteUserAccount() {
+        db.DeleteUser(userID);
+        ((DashboardActivity) getActivity()).goBackToLogin();
     }
 
     public void confirmChanges() {
-        /*
-         * TODO: Confirm the changes of the user input. Also send a confirmation notifications with it.
-         *
-         * */
+        String newEmail = email.getText().toString().trim();
+        String newFirstName = firstName.getText().toString().trim();
+        String newLastName = lastName.getText().toString().trim();
+        String newContact = contact.getText().toString().trim();
+        Boolean newAllowNotifs = allowNotifs.getShowText();
 
+        currentUser.setEmail(newEmail);
+        currentUser.setFirstName(newFirstName);
+        currentUser.setLastName(newLastName);
+        currentUser.setPhoneNumber(newContact);
+        currentUser.setSendNotifications(newAllowNotifs);
 
+        db.SaveUser(currentUser);
+        leaveProfileSettings();
+    }
 
+    public boolean checkInput() {
+
+        String newEmail = email.getText().toString().trim();
+        String newFirstName = firstName.getText().toString().trim();
+        String newLastName = lastName.getText().toString().trim();
+        String newContact = contact.getText().toString().trim();
+
+        if (!(newEmail.length() < 40)) {
+            return false;
+        }
+        if (!(newFirstName.length() < 20)) {
+            return false;
+        }
+        if (!(newLastName.length() < 20)) {
+            return false;
+        }
+//        if (!(newContact.length() < )) {
+//            return false;
+//        }
+        return true;
     }
 
     public void revertChanges() {
-        /*
-         *  TODO: Rever the the changes the users may have done.
-         *
-         *
-         * */
-
-
-
-
+        leaveProfileSettings();
     }
 
+    public void leaveProfileSettings() {
+        if (currentUser.getAccountType() == -1){
+            ((AdminActivity) getActivity()).goSettingFragment(currentUser);
+        }
+        else {
+            SettingFragment settingFragment = new SettingFragment();
+            settingFragment.setCurrUser(currentUser);
+            ((DashboardActivity) getActivity()).replaceFragment(settingFragment);
+        }
+    }
+
+    public void setUser(User user) {this.currentUser = user;}
 }

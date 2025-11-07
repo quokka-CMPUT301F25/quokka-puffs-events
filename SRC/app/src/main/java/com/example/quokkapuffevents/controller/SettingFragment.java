@@ -2,6 +2,7 @@ package com.example.quokkapuffevents.controller;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,11 +26,34 @@ import java.util.Map;
 
 public class SettingFragment extends Fragment {
 
-    Database db;
-    String userID;
+    /*
+     * Main Purpose: Change user settings and profile
+     *
+     * User can change:
+     *   Notifications
+     *   Email
+     *   Name
+     *   Phone Number // Optional
+     *   Delete Account
+     *
+     * Additional: Provide visual updates to show changes:
+     *
+     *   TODO: Background of changed text or edited switch becomes orange.
+     *
+     * */
 
-    EventListFragAdapter adapter;
-    ListView listView;
+    DashboardActivity dashboardActivity;
+    AdminActivity adminActivity;
+    private Database db; // collection we want to access
+    private User currUser;
+
+
+    Button editProfile;
+    Button signOut;
+    TextView usernameText;
+    TextView firstAndLastNameText;
+    TextView emailText;
+    TextView userPhoneNumber;
 
 
     @Nullable
