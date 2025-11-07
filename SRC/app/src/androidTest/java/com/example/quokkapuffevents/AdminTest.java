@@ -5,12 +5,15 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.*;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
@@ -32,6 +35,17 @@ public class AdminTest {
 
     Database db = Database.getInstance();
 
+    public static void assertDoesNotExist(ViewInteraction viewInteraction) {
+        try {
+            viewInteraction.check((view, noViewFoundException) -> {
+                if (view != null) {
+                    throw new AssertionError("View still exists in hierarchy: " + view);
+                }
+            });
+        } catch (NoMatchingViewException e) {
+        }
+    }
+
     public User createMockAdmin() {
         MessageDigest md = null;
         try {
@@ -48,6 +62,21 @@ public class AdminTest {
 
     }
 
+    public User createTestUser() {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] hashedPasswordByte = md.digest("password".getBytes(StandardCharsets.UTF_8));
+        String hashedPassword = new String(hashedPasswordByte);
+        User user = db.CreateUser("testuser@example.com", 0, hashedPassword,
+                "TestUser", "FirstUser", "LastUser",
+                "5870011111");
+        return user;
+    }
+
     public void deleteMockAdmin(User user) {
         db.DeleteUser(user);
     }
@@ -62,7 +91,7 @@ public class AdminTest {
             onView(withId(R.id.login_password)).perform(typeText("password"));
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(1500);
+            Thread.sleep(4000);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
         } catch (InterruptedException e) {
@@ -185,5 +214,58 @@ public class AdminTest {
 
         deleteMockAdmin(mockAdmin);
     }
+
+//    US 03.01.01 As an administrator, I want to be able to remove events. (In-Progress - KYLE)
+    @Test
+    public void deleteUser() {
+
+        User mockAdmin = createMockAdmin();
+        User testUser = createTestUser();
+
+
+
+
+        try (ActivityScenario<LoginActivity> scenario =
+                     ActivityScenario.launch(LoginActivity.class)) {
+
+            onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            onView(withId(R.id.sign_in_button)).perform(click());
+
+            Thread.sleep(2000);
+
+            onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
+
+
+//            Go to the users dashboard
+            onView(withId(R.id.usersIcon)).perform((click()));
+            Thread.sleep(1500);
+
+
+            onView(withText("testuser@example.com")).check(matches(isDisplayed()));
+
+
+//            Click the delete button
+            onView(allOf(withId(R.id.deleteButton),
+                    hasSibling(withText("testuser@example.com"))))
+                    .perform(click());
+
+            Thread.sleep(1000);
+
+            assertDoesNotExist(onView(withText("testuser@example.com")));
+
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        deleteMockAdmin(mockAdmin);
+        deleteMockAdmin(testUser);
+
+
+
+    }
+
+//  US 03.02.01 As an administrator, I want to be able to remove profiles. (In-Progress - KYLE)
 
 }
