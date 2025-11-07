@@ -544,21 +544,4 @@ public class Database {
         }
     }
 
-    //Test Funcitons
-    /*public void CreateMockUser(String email, Integer type, String hashPass, String userName, Runnable onComplete) {
-        String id = usersRef.document().getId();
-        User newUser = new User(id, email, type, hashPass, userName);
-
-        usersRef.document(id)
-                .set(newUser)
-                .addOnSuccessListener(unused -> {
-                    Log.d("Database", "User created successfully: " + id);
-                    if (onComplete != null) onComplete.run();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Database", "Error creating user", e);
-                    if (onComplete != null) onComplete.run(); // still unblock latch to avoid hanging tests
-                });
-    }*/
-
 }
