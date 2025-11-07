@@ -28,6 +28,7 @@ import androidx.test.rule.ActivityTestRule;
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
+import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
 
 import org.junit.Rule;
@@ -45,6 +46,24 @@ import java.util.Date;
 @RunWith(AndroidJUnit4.class)
 public class EntrantTestCases {
     Database db = Database.getInstance();
+
+    public void ClearDatabase(){
+        db.ListNotifs(notifs -> {
+            for (Notif notif : notifs){
+                db.DeleteNotification(notif);
+            }
+        });
+        db.ListUsers(users -> {
+            for (User user : users){
+                db.DeleteUser(user);
+            }
+        });
+        db.ListEvents(events -> {
+            for (Event event : events){
+                db.DeleteEvent(event);
+            }
+        });
+    }
 
     /**
      * Creates an entrant account for testing user stories.
@@ -257,6 +276,7 @@ public class EntrantTestCases {
             db.DeleteUser(userId); // Deletes mock entrant from database
 
         } catch (InterruptedException e) {
+            ClearDatabase();
             throw new RuntimeException(e);
         }
     }
@@ -302,10 +322,10 @@ public class EntrantTestCases {
             onView(withId(R.id.userEmailText)).check(matches(withText("Changed")));
             onView(withId(R.id.userPhoneNumber)).check(matches(withText("Changed")));
         } catch (InterruptedException e) {
-            db.DeleteUser(db.GetCurrentUserID());
+            ClearDatabase();
             throw new RuntimeException(e);
         } finally {
-            db.DeleteUser(db.GetCurrentUserID());
+            ClearDatabase();
         }
     }
 
@@ -331,8 +351,10 @@ public class EntrantTestCases {
             Thread.sleep(4000);
 
         } catch (InterruptedException e) {
-            db.DeleteUser(dummyID);
+            ClearDatabase();
             throw new RuntimeException(e);
+        } finally {
+            ClearDatabase();
         }
     }
 
@@ -372,10 +394,10 @@ public class EntrantTestCases {
             Thread.sleep(1500);
 
         } catch (InterruptedException e) {
-            db.DeleteUser(mockEntrant);
+            ClearDatabase();
             throw new RuntimeException(e);
         } finally {
-            db.DeleteUser(mockEntrant);
+            ClearDatabase();
         }
     }
 
@@ -415,14 +437,9 @@ public class EntrantTestCases {
 
 
         } catch (InterruptedException e) {
-            db.DeleteUser(mockOrg.getId());
-            db.DeleteUser(db.GetCurrentUserID());
-            db.DeleteEvent(event);
-            throw new RuntimeException(e);
+            ClearDatabase();
         } finally {
-            db.DeleteUser(mockOrg.getId());
-            db.DeleteUser(db.GetCurrentUserID());
-            db.DeleteEvent(event);
+            ClearDatabase();
         }
     }
 
@@ -454,14 +471,10 @@ public class EntrantTestCases {
 
 
         } catch (InterruptedException e) {
-            db.DeleteUser(mockOrg.getId());
-            db.DeleteUser(db.GetCurrentUserID());
-            db.DeleteEvent(event);
+            ClearDatabase();
             throw new RuntimeException(e);
         } finally {
-            db.DeleteUser(mockOrg.getId());
-            db.DeleteUser(db.GetCurrentUserID());
-            db.DeleteEvent(event);
+            ClearDatabase();
         }
     }
 }
