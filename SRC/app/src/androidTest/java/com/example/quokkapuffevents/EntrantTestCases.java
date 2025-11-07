@@ -243,6 +243,7 @@ public class EntrantTestCases {
             db.DeleteUser(db.GetCurrentUserID());
             throw new RuntimeException(e);
         } finally {
-            db.DeleteUser(db.GetCurrentUserID()); } } }
-
+            db.DeleteUser(db.GetCurrentUserID());
+        }
+    }
 }
