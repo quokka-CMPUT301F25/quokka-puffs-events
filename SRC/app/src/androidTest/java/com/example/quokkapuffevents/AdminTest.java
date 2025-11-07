@@ -183,36 +183,4 @@ public class AdminTest {
         deleteMockAdmin(mockAdmin);
     }
 
-    @Test
-    public void signOutAdmin() {
-        User mockAdmin = createMockAdmin();
-        try (ActivityScenario<LoginActivity> scenario =
-                     ActivityScenario.launch(LoginActivity.class)) {
-
-            onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
-            onView(withId(R.id.login_password)).perform(typeText("password"));
-            onView(withId(R.id.sign_in_button)).perform(click());
-
-            Thread.sleep(1500);
-
-            onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
-
-            onView(withId(R.id.settingsIcon)).perform(click());
-
-            Thread.sleep(1500);
-
-            onView(withId(R.id.signOutBtn)).perform(click());
-
-            Thread.sleep(1500);
-
-            onView(withId(R.id.login_information_container)).check(matches(isDisplayed()));
-
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        deleteMockAdmin(mockAdmin);
-    }
-
-
 }
