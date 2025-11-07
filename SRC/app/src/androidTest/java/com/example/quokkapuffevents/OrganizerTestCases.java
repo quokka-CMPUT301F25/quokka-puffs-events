@@ -21,6 +21,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * For testing any Organizer related User Stories
+ */
 @RunWith(AndroidJUnit4.class)
 public class OrganizerTestCases {
 

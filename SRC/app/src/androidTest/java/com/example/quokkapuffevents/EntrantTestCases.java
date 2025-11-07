@@ -21,6 +21,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * For testing any Entrant related User Stories
+ */
 @RunWith(AndroidJUnit4.class)
 public class EntrantTestCases {
     Database db = Database.getInstance();
@@ -75,7 +78,6 @@ public class EntrantTestCases {
     @Test
     public void TestViewingEvents() {
         accessEntrantDashboard();
-
 
     }
 
