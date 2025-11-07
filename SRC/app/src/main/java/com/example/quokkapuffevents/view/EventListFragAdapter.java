@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
+import com.example.quokkapuffevents.controller.DashboardActivity;
+import com.example.quokkapuffevents.controller.HomeFragment;
 import com.example.quokkapuffevents.model.*;
 
 import java.util.ArrayList;
@@ -25,7 +27,8 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     private final List<Event> events;   // adapter owns the list
     private final Database db = Database.getInstance();
     private String type;
-
+    //private Class<?> activity;
+    private DashboardActivity activity;
     private User user;
 
     //region --Waiting UI Elements--
@@ -203,6 +206,17 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void seeDetails(Event event) {
-        //ERRRM idk what to do
+        if (user.getAccountType() == 0){
+            EntrantEventDetails orgFrag = new EntrantEventDetails;
+            orgFrag.SetEvent = event;
+            activity.replaceFragment(EntrantEventDetails);
+        }
+        else { //Organizer
+            OrginzerEventDetails orgFrag = new OrginzerEventDetails;
+            orgFrag.SetEvent = event;
+            activity.replaceFragment(OrginzerEventDetails);
+        }
     }
+
+    public void setActivity(DashboardActivity activity) {this.activity = activity;}
 }
