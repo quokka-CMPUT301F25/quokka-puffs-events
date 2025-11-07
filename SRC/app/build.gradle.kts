@@ -38,6 +38,7 @@ dependencies {
     implementation(libs.ext.junit)
     implementation(libs.espresso.core)
     implementation(libs.firebase.database)
+    implementation(libs.espresso.intents)
     // These were changed from implementation to androidTestImplementation
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.runner)
