@@ -1,5 +1,8 @@
 package com.example.quokkapuffevents.controller;
 
+import static android.view.View.GONE;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -78,6 +81,7 @@ public class DashboardActivity extends AppCompatActivity {
     public void organizerDashboard() {
         //Initialize Buttons
         initializeViews();
+        viewEventsButton.setVisibility(GONE);
 
         homeButton.setOnClickListener(View -> {
             replaceFragment(new HomeFragment());
