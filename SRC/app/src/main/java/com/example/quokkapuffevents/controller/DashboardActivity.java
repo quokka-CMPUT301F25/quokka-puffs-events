@@ -16,8 +16,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
-import com.example.quokkapuffevents.model.User;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 public class DashboardActivity extends AppCompatActivity {
     String userID;
@@ -113,11 +111,11 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        homeButton = findViewById(R.id.button1);
-        viewEventsButton = findViewById(R.id.button2);
-        addEventButton = findViewById(R.id.button3);
-        notificationButton = findViewById(R.id.button4);
-        settingsButton = findViewById(R.id.button5);
+        homeButton = findViewById(R.id.home_button);
+        viewEventsButton = findViewById(R.id.all_events_button);
+        addEventButton = findViewById(R.id.add_events_button);
+        notificationButton = findViewById(R.id.notifs_button);
+        settingsButton = findViewById(R.id.settings_button);
         usernameText = findViewById(R.id.usernameText);
         userFirstAndLastNameText = findViewById(R.id.userFirstAndLastNameText);
     }
