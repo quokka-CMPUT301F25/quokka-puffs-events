@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class EventCreateFragment extends Fragment {
     Button createEvent; //button to initialize creating the event
     String userID; //current user id
 
+    ImageView qrcodeView;
+
     String maxParts;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -85,6 +88,8 @@ public class EventCreateFragment extends Fragment {
         cancelEvent = view.findViewById(R.id.cancelEventCreationBtn);
         createEvent = view.findViewById(R.id.confirmEventCreationBtn);
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
+
+        qrcodeView = view.findViewById(R.id.QRCODETEST);
     }
 
     public void setUpListeners(View view) {
@@ -126,27 +131,29 @@ public class EventCreateFragment extends Fragment {
                 if (maxParts.isEmpty()){
                     Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
                     //Creating QR code
-                    Bitmap bitmap = generateQRCode(event.getId());
-                    db.UploadImageToDatabase(bitmap, uri -> {
-                        event.setQrcodeID(uri);
-                        db.SaveEvent(event);
-                    });
+                    Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
+//                    db.UploadImageToDatabase(bitmap, uri -> {
+//                        event.setQrcodeID(uri);
+//                        db.SaveEvent(event);
+//                    });
+                    qrcodeView.setImageBitmap(bitmap);
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
                     Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
                     //Creating QR code
-                    Bitmap bitmap = generateQRCode(event.getId());
+                    Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap
-                    db.UploadImageToDatabase(bitmap, uri -> {
-                        event.setQrcodeID(uri);
-                        db.SaveEvent(event);
-                    });
+//                    db.UploadImageToDatabase(bitmap, uri -> {
+//                        event.setQrcodeID(uri);
+//                        db.SaveEvent(event);
+//                    });
+                    qrcodeView.setImageBitmap(bitmap);
                 }
 
 
 
 
-                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
+               // ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
             //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });
