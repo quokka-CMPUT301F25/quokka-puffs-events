@@ -11,6 +11,7 @@ firebaseFirestore = "26.0.2"
 runner = "1.7.0"
 firebaseDatabase = "22.0.1"
 espressoIntents = "3.7.0"
+firebaseStorage = "22.0.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -24,6 +25,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
