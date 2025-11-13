@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ public class OrganizerEventDetails extends Fragment {
     Button runLottoButton;
     Button viewParticipantsButton;
     Button changeDetailsButton;
+    ImageView qrcodeView;
 
     @Nullable
     @Override
@@ -46,7 +48,7 @@ public class OrganizerEventDetails extends Fragment {
     private void initialize(View view) {
         db = Database.getInstance();
 
-        //Button Shit
+        //Button
         runLottoButton = view.findViewById(R.id.orgRunLotteryBtn);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
@@ -62,6 +64,11 @@ public class OrganizerEventDetails extends Fragment {
         else {
             runLottoButton.setVisibility(INVISIBLE);
         }
+
+        //QRCode
+        db.GetImage(event.getQrcodeID(), bitmap -> {
+            qrcodeView.setImageBitmap(bitmap);
+        });
     }
 
     public void SetEvent(Event event) {this.event = event; }

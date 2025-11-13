@@ -1,18 +1,29 @@
 package com.example.quokkapuffevents.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 
@@ -23,14 +34,17 @@ public class Database {
     private CollectionReference usersRef;
     private CollectionReference eventsRef;
     private CollectionReference notifsRef;
-    private CollectionReference imagesRef;
+    private FirebaseStorage imageDB;
+
 
     public Database() {
         this.db = FirebaseFirestore.getInstance(); //Get database
+        this.imageDB = FirebaseStorage.getInstance(); //Get Storage
+
         this.usersRef = db.collection("users");
         this.eventsRef = db.collection("events");
         this.notifsRef = db.collection("notifications");
-        this.imagesRef = db.collection("images");
+
     }
 
     public static Database getInstance() {
@@ -155,23 +169,23 @@ public class Database {
         notifsRef.document(id).set(newNotif);
         return(newNotif);
     }
+    public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<Uri> listener){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
 
-    public Event AddImageToEvent(Event event, URI uri){
-        String id = imagesRef.document().getId(); //Creates a document and returns the id
-        event.setImageID(id);
+        String path = "Images/ " + UUID.randomUUID() + ".jpeg";
+        StorageReference refImage = imageDB.getReference(path);
 
-        imagesRef.document(id).set(uri).addOnSuccessListener(task -> {
-            Log.e("Firestore", "Images uploaded successfully");
+        UploadTask uploadTask = refImage.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri uri = taskSnapshot.getUploadSessionUri();
+                listener.onSuccess(uri);
+            }
         });
-        return event;
     }
-
-    //TODO: READ
-    //To edit safetly follow this
-    //More wide ranging changes. For quick fixes user:
-    //event = db.getEvent(event.getID()); //Collects the most recent version
-    //event.setXYZ(xyz) //Edits value needed
-    //db.SaveEvent(event) //Saves the newly edited event back up to the cloud
 
     public void GetUser(String userID, OnSuccessListener<User> listener) {
         usersRef.document(userID).get().addOnSuccessListener(document -> {
@@ -207,7 +221,7 @@ public class Database {
         });
     }
 
-    public void GetImage(Event event, OnSuccessListener<URI> listener) {
+    public void GetImage(Uri uri, OnSuccessListener<Bitmap> listener) {
         /**
          * This method collects the image from an event
          * @param event
@@ -215,11 +229,11 @@ public class Database {
          * @return
          * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
          */
-        imagesRef.document(event.getImageID()).get().addOnSuccessListener(document -> {
-            if (document.exists()) {
-                URI uri = document.toObject(URI.class);
-                listener.onSuccess(uri);
-            }
+        StorageReference refImage = imageDB.getReference(String.valueOf(uri));
+        final File localfile = new File(UUID.randomUUID() + ".jpeg");
+        refImage.getFile(localfile).addOnSuccessListener(taskSnapshot -> {
+            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+            listener.onSuccess(bitmap);
         });
     }
 
