@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
     String userID;
@@ -48,6 +51,17 @@ public class DashboardActivity extends AppCompatActivity {
             // Load initial fragment
             replaceFragment(new HomeFragment());
         });
+
+        //Handling QR Code events
+        Intent intent = getIntent();
+        String eventID = intent.getStringExtra("EVENT_ID");
+        if (eventID != null) {
+            EntrantEventDetailsFragment frag = new EntrantEventDetailsFragment();
+            db.GetEvent(eventID, event -> {
+                frag.setEvent(event);
+                replaceFragment(frag);
+            });
+        }
     }
 
     public void entrantDashboard() {
@@ -152,13 +166,18 @@ public class DashboardActivity extends AppCompatActivity {
             } else {
                 // if the intentResult is not null we'll set
                 // the content and format of scan message
-                String eventID = intentResult.getContents();
+                String fullCode = intentResult.getContents(); // quokka-puff://event/awydgasuda
+                String[] parts = fullCode.split("/"); // ["quokka-puff:", ... , "awydgasuda"]
+                String eventID = parts[3];
+
+                Toast.makeText(getBaseContext(), eventID, Toast.LENGTH_SHORT).show();
+
                 db.GetEvent(eventID, event -> {
                     EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
                     entrantFrag.setEvent(event);
                     replaceFragment(entrantFrag);
                 });
-                viewEventsButton.setText(intentResult.getFormatName());
+                //viewEventsButton.setText(intentResult.getFormatName());
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
