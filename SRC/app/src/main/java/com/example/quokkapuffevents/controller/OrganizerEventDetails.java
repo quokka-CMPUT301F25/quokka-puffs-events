@@ -28,6 +28,8 @@ public class OrganizerEventDetails extends Fragment {
     Button viewParticipantsButton;
     Button changeDetailsButton;
 
+    Button exitButton;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -41,6 +43,7 @@ public class OrganizerEventDetails extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initialize(view);
+        SetUpListeners(view);
     }
 
     private void initialize(View view) {
@@ -50,6 +53,7 @@ public class OrganizerEventDetails extends Fragment {
         runLottoButton = view.findViewById(R.id.orgRunLotteryBtn);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
+        exitButton = view.findViewById(R.id.orgExitOutEventBtn);
 
         //Removing button if after end of event
         if (event.getEventDate().after(new Date())){
@@ -62,6 +66,36 @@ public class OrganizerEventDetails extends Fragment {
         else {
             runLottoButton.setVisibility(INVISIBLE);
         }
+    }
+
+    public void SetUpListeners(View view) {
+
+
+
+//        Goes back to the home view.
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                HomeFragment newFrag = new HomeFragment();
+                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
+            }
+        });
+
+//        This goes to the event details for organizer to change details.
+
+        changeDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Clicked!");
+                EditEventFragment newFrag = new EditEventFragment();
+                newFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
+            }
+        });
+
+
+
     }
 
     public void SetEvent(Event event) {this.event = event; }
