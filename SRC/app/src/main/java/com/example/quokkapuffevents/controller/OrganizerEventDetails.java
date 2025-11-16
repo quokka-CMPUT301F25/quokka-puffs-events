@@ -94,6 +94,16 @@ public class OrganizerEventDetails extends Fragment {
             }
         });
 
+        viewParticipantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Clicked!");
+                OrganizerViewParticipantsFragment newFrag = new OrganizerViewParticipantsFragment();
+                newFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
+            }
+        });
+
 
 
     }

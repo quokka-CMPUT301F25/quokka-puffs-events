@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/dashboardEventsContainer"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/border_shape_general"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="24dp">
+
+        <TextView
+            android:id="@+id/viewParticipantsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:text="View Participants"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="32dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/border_shape_grey"
+            android:padding="4dp"
+            android:layout_marginBottom="12dp">
+
+
+            <TextView
+                android:id="@+id/viewParticipantsTypeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dp"
+                android:text="View by Type: Canceled"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="24dp" />
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/viewCanceledParticipantsBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Canceled"
+                    android:textSize="16dp"
+                    android:backgroundTint="@color/redbtn"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <Button
+                    android:id="@+id/viewWaitingParticipantsBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waiting"
+                    android:textSize="16dp"
+                    android:backgroundTint="@color/greybtn"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <Button
+                    android:id="@+id/viewChosenParticipantsBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chosen"
+                    android:textSize="16dp"
+                    android:backgroundTint="@color/bluebtn"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/orgParticipantListView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="@drawable/border_shape"
+            android:layout_marginBottom="8dp"
+            android:padding="4dp"/>
+
+        <LinearLayout
+            android:id="@+id/redrawContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Replace for canceled entrants"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:layout_weight="2"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/orgRedrawEntrantBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Redraw"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:backgroundTint="@color/bluebtn"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/amountWaitingListContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:padding="4dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount in waiting list:"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:textSize="20dp"/>
+
+            <TextView
+                android:id="@+id/waitingListAmt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textSize="20dp"/>
+
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/viewFinalParticipantsBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Final Participants"
+            android:textSize="24dp"
+            android:backgroundTint="@color/greenbtn"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="8dp"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/orgViewParticipantsBackToDashboardBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back"
+                android:textSize="24dp"
+                android:backgroundTint="@color/greybtn"
+                android:layout_marginTop="8dp"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+
+            <Button
+                android:id="@+id/orgSendNotificationsBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send Notifications"
+                android:textSize="24dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/bluebtn"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
