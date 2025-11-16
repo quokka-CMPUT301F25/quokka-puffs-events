@@ -192,4 +192,9 @@ public class OrganizerTestCases {
         }
         deleteMockUser(testOrganizer);
     }
+
+    @Test
+    public void ImageEventPoster(){
+        // TODO: Create test when storage is all good
+    }
 }
