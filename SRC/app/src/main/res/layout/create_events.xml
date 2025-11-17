@@ -250,10 +250,6 @@
                 android:textSize="20dp"
                 android:textColor="@color/white"
                 android:text="Show GeoLocation Of Participants" />
-            <ImageView
-                android:id="@+id/QRCODETEST"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout

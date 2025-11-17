@@ -25,7 +25,7 @@ public class Event {
     private Date drawnDate;
     private Date eventDate;
     private Uri imageID;
-    private Uri qrcodeID;
+    private String qrcodeID;
     //Add geo data?
     private Boolean drawn;
 
@@ -85,9 +85,9 @@ public class Event {
         return imageID;
     }
 
-    public void setQrcodeID(Uri qrcodeID) {this.qrcodeID = qrcodeID;}
+    public void setQrcodeID(String qrcodeID) {this.qrcodeID = qrcodeID;}
 
-    public Uri getQrcodeID() {return qrcodeID;}
+    public String getQrcodeID() {return qrcodeID;}
 
     public String getId() {
         return id;
