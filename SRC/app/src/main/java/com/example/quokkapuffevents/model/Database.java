@@ -293,6 +293,8 @@ public class Database {
          * @param event
          * This is the event that is being deleted
          */
+        DeleteImage(event.getImageID());
+        DeleteImage(event.getQrcodeID());
         eventsRef.document(event.getId()).delete();
     }
     public void DeleteEvent(String id){
@@ -301,7 +303,7 @@ public class Database {
          * @param id
          * This is the id of the event that is being deleted
          */
-        eventsRef.document(id).delete();
+        GetEvent(id, this::DeleteEvent);
     }
     public void DeleteNotification(Notif notif){
         /**
@@ -318,6 +320,12 @@ public class Database {
          * This is the id of the notif that is being deleted
          */
         notifsRef.document(id).delete();
+    }
+
+    public void DeleteImage(String path){
+        if (path != null) {
+            imageDB.child(path).delete();
+        }
     }
 
     //Extrapolated Date Methods
