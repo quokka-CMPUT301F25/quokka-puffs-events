@@ -51,8 +51,6 @@ public class EventCreateFragment extends Fragment {
     Button createEvent; //button to initialize creating the event
     String userID; //current user id
 
-    ImageView qrcodeView;
-
     String maxParts;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -88,8 +86,6 @@ public class EventCreateFragment extends Fragment {
         cancelEvent = view.findViewById(R.id.cancelEventCreationBtn);
         createEvent = view.findViewById(R.id.confirmEventCreationBtn);
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
-
-        qrcodeView = view.findViewById(R.id.QRCODETEST);
     }
 
     public void setUpListeners(View view) {
@@ -132,28 +128,23 @@ public class EventCreateFragment extends Fragment {
                     Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
-//                    db.UploadImageToDatabase(bitmap, uri -> {
-//                        event.setQrcodeID(uri);
-//                        db.SaveEvent(event);
-//                    });
-                    qrcodeView.setImageBitmap(bitmap);
+                    db.UploadImageToDatabase(bitmap, path -> {
+                        event.setQrcodeID(path);
+                        db.SaveEvent(event);
+                    });
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
                     Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap
-//                    db.UploadImageToDatabase(bitmap, uri -> {
-//                        event.setQrcodeID(uri);
-//                        db.SaveEvent(event);
-//                    });
-                    qrcodeView.setImageBitmap(bitmap);
+                    db.UploadImageToDatabase(bitmap, path -> {
+                        event.setQrcodeID(path);
+                        db.SaveEvent(event);
+                    });
                 }
 
-
-
-
-               // ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
+                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
             //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });
@@ -247,7 +238,7 @@ public class EventCreateFragment extends Fragment {
             return(bitmap);
         }
         catch (WriterException e) {
-            System.out.println("ERORR in creatiuon");
+            System.out.println("Error in creation");
             e.printStackTrace();
         }
         return(null);

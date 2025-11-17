@@ -52,6 +52,7 @@ public class OrganizerEventDetails extends Fragment {
         runLottoButton = view.findViewById(R.id.orgRunLotteryBtn);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
+        qrcodeView = view.findViewById((R.id.qrCode));
 
         //Removing button if after end of event
         if (event.getEventDate().after(new Date())){
@@ -67,14 +68,15 @@ public class OrganizerEventDetails extends Fragment {
 
         //QRCode
         db.GetImage(event.getQrcodeID(), bitmap -> {
-            qrcodeView.setImageBitmap(bitmap);
+            if (bitmap != null) {
+                qrcodeView.setImageBitmap(bitmap);
+            } else {
+                Log.e("IMAGES", "Bitmap from GetImage is null");
+            }
         });
     }
 
     public void SetEvent(Event event) {this.event = event; }
-
-    public static class EntrantEventDetailsFragment extends Fragment {
-    }
 }
 
 
