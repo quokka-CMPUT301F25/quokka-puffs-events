@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -167,6 +168,16 @@ public class OrganizerViewParticipantsFragment extends Fragment {
             public void onClick(View v) {
                 OrganizerEventDetails orgFrag = new OrganizerEventDetails();
                 orgFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(orgFrag);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                OrganizerViewParticipantsInformationFragment orgFrag = new OrganizerViewParticipantsInformationFragment();
+                orgFrag.SetEvent(event);
+                orgFrag.SetUser(userList.get(position));
                 ((DashboardActivity) getActivity()).replaceFragment(orgFrag);
             }
         });
