@@ -27,9 +27,18 @@ public class Event {
     //Add geo data?
     private Boolean drawn;
 
-    public Event(){
-        this.id = "FAILURE";
-    }
+    // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
+
+    /**
+     * The default constructor for Event. Does not have a limit on the max waitlist capacity.
+     * @param id
+     * @param name
+     * @param org
+     * @param description
+     * @param toBeDrawn
+     * @param drawnDate
+     * @param eventDate
+     */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate){
         this.name = name;
         this.id = id;
@@ -43,6 +52,18 @@ public class Event {
         this.drawn = false;
         this.imageID = null;
     }
+
+    /**
+     * The altered constructor for Event. Contains a limit on the max waitlist capacity.
+     * @param id
+     * @param name
+     * @param org
+     * @param description
+     * @param toBeDrawn
+     * @param maxNumWaitlist
+     * @param drawnDate
+     * @param eventDate
+     */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate){
         this.name = name;
         this.id = id;
@@ -56,6 +77,15 @@ public class Event {
         this.drawn = false;
         this.imageID = null;
     }
+
+    /**
+     *
+     */
+    public Event(){
+        this.id = "FAILURE";
+    }
+
+    // Getters and Setters
 
     public String getName() {
         return name;
@@ -117,13 +147,22 @@ public class Event {
         return org;
     }
 
+    //Unique methods
 
-    //Actual methods
+    /**
+     *
+     * @param userID
+     */
     public void addUser(String userID){
         //Adding an entry to the map
         eventUsers.put(userID, "Waiting");
     }
 
+    /**
+     *
+     * @param userID
+     * @param newStatus
+     */
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
         if(eventUsers.size() <= maxNumWaitlist)
@@ -132,14 +171,14 @@ public class Event {
         }
     }
 
+    /**
+     * Randomly chooses the number of people to to draw from the list that are waiting for this event.
+     * @param numCalled
+     * The number of people to draw
+     * @return
+     * Return the array list of all of the drawn users
+     */
     public ArrayList<String> drawUsers(Integer numCalled){
-        /**
-         * This randomly chooses numCalled people that are waiting for this event
-         * @param numCalled
-         * The number of people to draw
-         * @return
-         * Return the array list of all of the drawn users
-         */
         ArrayList<String> waitingUsers = new ArrayList<>(); //Create empty list to hold users that are still on the waiting list
         Random r= new Random(); //Random class for the draw
         Database db = Database.getInstance();
