@@ -402,17 +402,13 @@ public class Database {
          * Returns an ArrayList that holds all of the users that have signed up for this event
          */
         //List of all users in the event
-
-//       KYLE CHANGES vvvvv
         List<String> usersInEvent = new ArrayList<>(event.getEventUsers().keySet());
 
+        //If event has no users
         if (usersInEvent.isEmpty()) {
             listener.onSuccess(new ArrayList<>());
             return;
         }
-
-        //KYLE CHANGES ^^^
-
         //Collects the data for every user with an id in the above list
 
 
