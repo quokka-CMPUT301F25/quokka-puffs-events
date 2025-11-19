@@ -119,6 +119,9 @@ public class EntrantEventDetailsFragment extends Fragment {
         if (event.getEventDate().before(new Date())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
+        if ((event.getNumPeopleWaiting() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+        }
         if ((event.getMaxNumWaitlist() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
