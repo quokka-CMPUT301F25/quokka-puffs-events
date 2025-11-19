@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -126,25 +127,22 @@ public class EventCreateFragment extends Fragment {
                 if (maxParts.isEmpty()){
                     Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
                     //Creating QR code
-                    Bitmap bitmap = generateQRCode(event.getId());
-                    db.UploadImageToDatabase(bitmap, uri -> {
-                        event.setQrcodeID(uri);
+                    Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
+                    db.UploadImageToDatabase(bitmap, path -> {
+                        event.setQrcodeID(path);
                         db.SaveEvent(event);
                     });
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
                     Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
                     //Creating QR code
-                    Bitmap bitmap = generateQRCode(event.getId());
+                    Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap
-                    db.UploadImageToDatabase(bitmap, uri -> {
-                        event.setQrcodeID(uri);
+                    db.UploadImageToDatabase(bitmap, path -> {
+                        event.setQrcodeID(path);
                         db.SaveEvent(event);
                     });
                 }
-
-
-
 
                 ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
@@ -240,7 +238,7 @@ public class EventCreateFragment extends Fragment {
             return(bitmap);
         }
         catch (WriterException e) {
-            System.out.println("ERORR in creatiuon");
+            System.out.println("Error in creation");
             e.printStackTrace();
         }
         return(null);
