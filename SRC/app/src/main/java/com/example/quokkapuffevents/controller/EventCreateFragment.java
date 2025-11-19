@@ -155,14 +155,14 @@ public class EventCreateFragment extends Fragment {
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
-//                    db.UploadImageToDatabase(bitmap, uri -> {
-//                        event.setQrcodeID(uri);
-//                        db.SaveEvent(event);
-//                    });
-//                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
-//                        event.setImageID(uri);
-//                        db.SaveEvent(event);
-//                    });
+                    db.UploadImageToDatabase(bitmap, uri -> {
+                        event.setQrcodeID(uri);
+                        db.SaveEvent(event);
+                    });
+                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
+                        event.setImageID(uri);
+                        db.SaveEvent(event);
+                    });
 
                     qrcodeView.setImageBitmap(bitmap);
                 } else {
@@ -171,21 +171,21 @@ public class EventCreateFragment extends Fragment {
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
-//                    db.UploadImageToDatabase(bitmap, uri -> {
-//                        event.setQrcodeID(uri);
-//                        db.SaveEvent(event);
-//                    }
-//                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
-//                        event.setImageID(uri);
-//                        db.SaveEvent(event);
-//                    });
+                    db.UploadImageToDatabase(bitmap, uri -> {
+                        event.setQrcodeID(uri);
+                        db.SaveEvent(event);
+                    });
+                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
+                        event.setImageID(uri);
+                        db.SaveEvent(event);
+                    });
                     qrcodeView.setImageBitmap(bitmap);
                 }
 
 
 
 
-               // ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
+               ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
             //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });
@@ -194,6 +194,7 @@ public class EventCreateFragment extends Fragment {
             @Override
             public void onClick(View v){
                 //TODO: navigate back to the DashboardActivity with EventListFragment
+                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
         });
     }
