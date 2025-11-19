@@ -101,8 +101,6 @@ public class EventCreateFragment extends Fragment {
         cancelEvent = view.findViewById(R.id.cancelEventCreationBtn);
         createEvent = view.findViewById(R.id.confirmEventCreationBtn);
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
-
-        qrcodeView = view.findViewById(R.id.QRCODETEST);
     }
 
     public void setUpListeners(View view) {
