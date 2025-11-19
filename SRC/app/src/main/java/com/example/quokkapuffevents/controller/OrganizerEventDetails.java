@@ -62,8 +62,7 @@ public class OrganizerEventDetails extends Fragment {
         if (event.getEventDate().after(new Date())){
             runLottoButton.setOnClickListener(v -> {
                 event.drawUsers(-1);
-                event.setDrawn(true);
-                db.SaveEvent(event);
+
             });
         }
         else {
