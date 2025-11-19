@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:id="@+id/userProfileInformationContainer"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_shape_general"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/usernameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="User Name"
+            android:textAlignment="center"
+            android:textSize="32dp"
+            android:layout_marginVertical="12dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Profile Information"
+            android:textAlignment="textStart"
+            android:textSize="24dp"
+            android:layout_marginTop="8dp"/>
+
+        <LinearLayout
+            android:id="@+id/accountNameAndEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/userFirstNameText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:autofillHints="Enter a First name"
+                android:background="@drawable/border_shape_grey"
+                android:text="First name"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:padding="6dp"/>
+
+            <TextView
+                android:id="@+id/userLastNameText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:autofillHints="Enter a Last name"
+                android:background="@drawable/border_shape_grey"
+                android:text="Last name"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:padding="6dp"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/userEmailText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:autofillHints="Enter a First and Last name"
+            android:text="User Email"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/border_shape_grey"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:padding="6dp"
+            />
+
+        <TextView
+            android:id="@+id/userContactInformation"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:autofillHints="Enter a First and Last name"
+            android:text="(XXX) XXX-XXX"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/border_shape_grey"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:padding="6dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Geolocation"
+            android:textAlignment="textStart"
+            android:textSize="24dp"
+            android:layout_marginTop="8dp"/>
+
+
+        <LinearLayout
+            android:id="@+id/accountChangeConfirmContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/goBackToDashboardBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back"
+                android:backgroundTint="@color/greybtn"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                />
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/revokeInviteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel Invite"
+                android:backgroundTint="@color/redbtn"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
