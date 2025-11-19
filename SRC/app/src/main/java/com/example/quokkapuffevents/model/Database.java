@@ -1,10 +1,19 @@
 package com.example.quokkapuffevents.model;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
+import com.example.quokkapuffevents.R;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
@@ -148,7 +157,27 @@ public class Database {
         });
         return newEvent;
     }
-    public Notif CreateNotification(Integer type, String recipient, String originEvent, String originUser, String message){
+
+    String CHANNEL_ID = "notificationChannelID";
+
+
+    private void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Source - https://stackoverflow.com/a
+            // Posted by k1r4n
+            // Retrieved 2025-11-19, License - CC BY-SA 4.0
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            CharSequence name = "notificationChannel";
+            String description = "This is a notification channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public Notif CreateNotification(Integer type, String recipient, String originEvent, String originUser, String message, Context context){
         /**
          * Creates a new notification and saves the new notif data to the database
          * @param type
@@ -167,6 +196,13 @@ public class Database {
         String id = notifsRef.document().getId(); //Creates a document and returns the id
         Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message);
         notifsRef.document(id).set(newNotif);
+
+        createNotificationChannel(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.app_icon)
+                .setContentTitle("Quokka Puffs Events")
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return(newNotif);
     }
     public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<Uri> listener){
