@@ -25,6 +25,9 @@ public class Database {
     private CollectionReference notifsRef;
     private CollectionReference imagesRef;
 
+    /**
+     * Default constructor for Database.
+     */
     public Database() {
         this.db = FirebaseFirestore.getInstance(); //Get database
         this.usersRef = db.collection("users");
@@ -33,6 +36,11 @@ public class Database {
         this.imagesRef = db.collection("images");
     }
 
+    /**
+     * Creates a new static instance of the Database connection.
+     * @return
+     * The database instance.
+     */
     public static Database getInstance() {
         if (instance == null) {
             synchronized (Database.class) {
@@ -43,6 +51,8 @@ public class Database {
         }
         return instance;
     }
+
+    // Getters and Setters
 
     public void SetUserID(String userID) {
         this.userID = userID;
@@ -140,7 +150,7 @@ public class Database {
     /**
      * Creates a new notification and saves the new notif data to the database
      * @param type
-     * This is the type of notifcation. 1 means that this is an invitiation while anything else means that it is simply a message
+     * This is the type of notification. 1 means that this is an invitation while anything else means that it is simply a message
      * @param recipient
      * This is the user that the message is to
      * @param originEvent
@@ -159,6 +169,15 @@ public class Database {
         return(newNotif);
     }
 
+    /**
+     * Adds an image into an event using the images ID.
+     * @param event
+     * The currently selected event.
+     * @param uri
+     * 
+     * @return
+     * The event to add the image to.
+     */
     public Event AddImageToEvent(Event event, URI uri){
         String id = imagesRef.document().getId(); //Creates a document and returns the id
         event.setImageID(id);
@@ -176,6 +195,13 @@ public class Database {
     //event.setXYZ(xyz) //Edits value needed
     //db.SaveEvent(event) //Saves the newly edited event back up to the cloud
 
+    /**
+     * Grabs the currently selected user.
+     * @param userID
+     * The ID of the current user.
+     * @param listener
+     *
+     */
     public void GetUser(String userID, OnSuccessListener<User> listener) {
         usersRef.document(userID).get().addOnSuccessListener(document -> {
             if(document.exists()){
@@ -186,6 +212,14 @@ public class Database {
     }
 
     //TODO Make these prettier. They stink right now
+
+    /**
+     * Grabs the currently selected event.
+     * @param eventID
+     *
+     * @param listener
+     *
+     */
     public void GetEvent(String eventID, OnSuccessListener<Event> listener) {
         eventsRef.document(eventID).get().addOnSuccessListener(document -> {
             if (document.exists()) {
@@ -199,8 +233,6 @@ public class Database {
      * Collects the most up to date data from the database of notif based on their notification id.
      * @param notifID
      * The id of the notif being searched for
-     * @return
-     * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
      */
     public void CheckNotification(String notifID, OnSuccessListener<Notif> listener) {
         notifsRef.document(notifID).get().addOnSuccessListener(document -> {
@@ -215,8 +247,6 @@ public class Database {
      * This method collects the image from an event
      * @param event
      * The event that the image is from
-     * @return
-     * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
      */
     public void GetImage(Event event, OnSuccessListener<URI> listener) {
         imagesRef.document(event.getImageID()).get().addOnSuccessListener(document -> {
@@ -227,12 +257,26 @@ public class Database {
         });
     }
 
+    /**
+     *
+     * @param user
+     */
     public void SaveUser(User user){
         usersRef.document(user.getId()).set(user);
     }
+
+    /**
+     *
+     * @param event
+     */
     public void SaveEvent(Event event){
         eventsRef.document(event.getId()).set(event);
     }
+
+    /**
+     *
+     * @param notif
+     */
     public void SaveNotif(Notif notif){
         notifsRef.document(notif.getId()).set(notif);
     }
@@ -298,8 +342,6 @@ public class Database {
 
     /**
      * This method provides a list of every event that is in the database
-     * @return
-     * Returns an ArrayList that holds all of the known events
      */
     public void ListEvents(OnSuccessListener<ArrayList<Event>> listener){
         //Collects the data for every user with an id in the above list
@@ -318,9 +360,7 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every event that is in the database
-     * @return
-     * Returns an ArrayList that holds all of the known events
+     * This method provides a list of every user that is in the database
      */
     public void ListUsers(OnSuccessListener<ArrayList<User>> listener){
         //Collects the data for every user with an id in the above list
@@ -340,8 +380,6 @@ public class Database {
 
     /**
      * This method provides a list of every notification that is in the database
-     * @return
-     * Returns an ArrayList that holds all of the known notifications
      */
     public void ListNotifs(OnSuccessListener<ArrayList<Notif>> listener){
         //Collects the data for every user with an id in the above list
@@ -363,8 +401,6 @@ public class Database {
      * This method provides a list of every user that is signed up to an event
      * @param event
      * This is the event that is being looked at. The users returned will have signed up to this event
-     * @return
-     * Returns an ArrayList that holds all of the users that have signed up for this event
      */
     public void UsersInEvent(Event event, OnSuccessListener<ArrayList<User>> listener){
         //List of all users in the event
@@ -389,8 +425,6 @@ public class Database {
      * This method provides a list of every event that a user has signed up for
      * @param user
      * This is the user that is being looked at
-     * @return
-     * Returns an ArrayList that holds all of the events that the user has signed up for
      */
     public void GetEventsFromUser(User user, OnSuccessListener<ArrayList<Event>> listener){
         //List of all users in the event
@@ -417,8 +451,6 @@ public class Database {
      * This method draws the correct number of people for an event. It is the random raffle mechanism
      * @param event
      * The event that is randomly selecting participants from its waiting list
-     * @return
-     * Returns an Array List containing all of the chosen users
      */
     public void DrawUsers(Event event, OnSuccessListener<ArrayList<User>> listener){
         //Collect User IDs
@@ -445,8 +477,6 @@ public class Database {
      * The event that is randomly selecting participants from its waiting list
      * @param numToDraw
      * The number of new users from the waiting list to be drawn
-     * @return
-     * Returns an Array List containing all of the newly chosen users
      */
     public void RedrawUsers(Event event, Integer numToDraw, OnSuccessListener<ArrayList<User>> listener){
         //Collect User IDs
@@ -469,18 +499,11 @@ public class Database {
     //Notif Methods
 
     /**
-     *
+     * This method collects and returns all of the notifications that have been sent to a user
      * @param user
-     * @param listener
+     * The user that the notifications have been sent to
      */
     public void GetUserNotifications(User user, OnSuccessListener<ArrayList<Notif>> listener) {
-        /**
-         * This method collects and returns all of the notifications that have been sent to a user
-         * @param user
-         * The user that the notifications have been sent to
-         * @return
-         * Returns an Array List containing all of the notifications
-         */
         notifsRef.whereEqualTo("recipient", user.getId()).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -590,25 +613,4 @@ public class Database {
 
         }
     }
-
-    /**
-     *
-     * @param ref
-     * @param id
-     * @param obj
-     */
-    public void BlockThreadUntilCompleted(CollectionReference ref, String id, Object obj) {
-        CountDownLatch latch = new CountDownLatch(1);
-
-        ref.document(id).set(obj)
-                .addOnSuccessListener(unused -> latch.countDown())
-                .addOnFailureListener(e -> latch.countDown());
-
-        try {
-            latch.await();
-        } catch (InterruptedException e){
-            throw new RuntimeException(e);
-        }
-    }
-
 }
