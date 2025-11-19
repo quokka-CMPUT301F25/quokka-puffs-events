@@ -1,7 +1,5 @@
 package com.example.quokkapuffevents.model;
 
-import android.net.Uri;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,8 +22,8 @@ public class Event {
     private Date startDate;
     private Date drawnDate;
     private Date eventDate;
-    private Uri imageID;
-    private Uri qrcodeID;
+    private String imageID;
+    private String qrcodeID;
     //Add geo data?
     private Boolean drawn;
 
@@ -77,17 +75,17 @@ public class Event {
         return drawn;
     }
 
-    public void setImageID(Uri imageID) {
+    public void setImageID(String imageID) {
         this.imageID = imageID;
     }
 
-    public Uri getImageID() {
+    public String getImageID() {
         return imageID;
     }
 
-    public void setQrcodeID(Uri qrcodeID) {this.qrcodeID = qrcodeID;}
+    public void setQrcodeID(String qrcodeID) {this.qrcodeID = qrcodeID;}
 
-    public Uri getQrcodeID() {return qrcodeID;}
+    public String getQrcodeID() {return qrcodeID;}
 
     public String getId() {
         return id;

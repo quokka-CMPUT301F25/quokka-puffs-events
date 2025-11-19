@@ -59,8 +59,6 @@ public class EventCreateFragment extends Fragment {
     Button createEvent; //button to initialize creating the event
     String userID; //current user id
 
-    ImageView qrcodeView;
-
     String maxParts;
 
     // IMAGE UPLOAD VARIABLES
@@ -161,8 +159,6 @@ public class EventCreateFragment extends Fragment {
                         event.setImageID(uri);
                         db.SaveEvent(event);
                     });
-
-                    qrcodeView.setImageBitmap(bitmap);
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
                     Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
@@ -177,10 +173,7 @@ public class EventCreateFragment extends Fragment {
                         event.setImageID(uri);
                         db.SaveEvent(event);
                     });
-                    qrcodeView.setImageBitmap(bitmap);
                 }
-
-
 
 
                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
@@ -287,7 +280,7 @@ public class EventCreateFragment extends Fragment {
             return(bitmap);
         }
         catch (WriterException e) {
-            System.out.println("ERROR in creation");
+            System.out.println("Error in creation");
             e.printStackTrace();
         }
         return(null);
