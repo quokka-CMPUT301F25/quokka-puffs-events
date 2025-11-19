@@ -4,9 +4,12 @@ import static android.view.View.GONE;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +19,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
     String userID;
@@ -45,6 +52,17 @@ public class DashboardActivity extends AppCompatActivity {
             // Load initial fragment
             replaceFragment(new HomeFragment());
         });
+
+        //Handling QR Code events
+        Intent intent = getIntent();
+        String eventID = intent.getStringExtra("EVENT_ID");
+        if (eventID != null) {
+            EntrantEventDetailsFragment frag = new EntrantEventDetailsFragment();
+            db.GetEvent(eventID, event -> {
+                frag.setEvent(event);
+                replaceFragment(frag);
+            });
+        }
     }
 
     public void entrantDashboard() {
@@ -60,7 +78,10 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         addEventButton.setOnClickListener(View -> {
-            replaceFragment(new QRCodeFragment());
+            IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+            intentIntegrator.setPrompt("Scan a barcode or QR Code");
+            intentIntegrator.setOrientationLocked(true);
+            intentIntegrator.initiateScan();
         });
 
         settingsButton.setOnClickListener(View -> {
@@ -133,4 +154,36 @@ public class DashboardActivity extends AppCompatActivity {
         finish();
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        // if the intentResult is null then
+        // toast a message as "cancelled"
+        if (intentResult != null) {
+            if (intentResult.getContents() == null) {
+                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+                // if the intentResult is not null we'll set
+                // the content and format of scan message
+                String fullCode = intentResult.getContents(); // quokka-puff://event/awydgasuda
+                String[] parts = fullCode.split("/"); // ["quokka-puff:", ... , "awydgasuda"]
+                String eventID = parts[3];
+
+                Toast.makeText(getBaseContext(), eventID, Toast.LENGTH_SHORT).show();
+
+                db.GetEvent(eventID, event -> {
+                    EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
+                    entrantFrag.setEvent(event);
+                    replaceFragment(entrantFrag);
+                });
+                //viewEventsButton.setText(intentResult.getFormatName());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+
 }
