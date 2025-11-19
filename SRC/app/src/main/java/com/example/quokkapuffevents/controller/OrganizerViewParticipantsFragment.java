@@ -159,11 +159,20 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         finalParticipantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeViewType("Enrolled", view);
+                changeViewType("Accepted", view);
             }
         });
 
         backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OrganizerEventDetails orgFrag = new OrganizerEventDetails();
+                orgFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(orgFrag);
+            }
+        });
+
+        redrawBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OrganizerEventDetails orgFrag = new OrganizerEventDetails();
