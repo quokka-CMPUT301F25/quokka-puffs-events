@@ -5,10 +5,12 @@ import static androidx.core.content.ContextCompat.getSystemService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,7 +29,11 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,12 +49,12 @@ public class Database {
     private CollectionReference usersRef;
     private CollectionReference eventsRef;
     private CollectionReference notifsRef;
-    private FirebaseStorage imageDB;
+    private StorageReference imageDB;
 
 
     public Database() {
         this.db = FirebaseFirestore.getInstance(); //Get database
-        this.imageDB = FirebaseStorage.getInstance(); //Get Storage
+        this.imageDB = FirebaseStorage.getInstance().getReference("Uploads"); //Get Storage
 
         this.usersRef = db.collection("users");
         this.eventsRef = db.collection("events");
@@ -205,20 +211,20 @@ public class Database {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return(newNotif);
     }
-    public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<Uri> listener){
+    public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<String> listener){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        String path = "Images/ " + UUID.randomUUID() + ".jpeg";
-        StorageReference refImage = imageDB.getReference(path);
+        String path = UUID.randomUUID() + ".jpg";
+        StorageReference refImage = imageDB.child(path);
 
         UploadTask uploadTask = refImage.putBytes(data);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri uri = taskSnapshot.getUploadSessionUri();
-                listener.onSuccess(uri);
+//                String uri = taskSnapshot.getUploadSessionUri().toString();
+                listener.onSuccess(path);
             }
         });
     }
@@ -257,19 +263,20 @@ public class Database {
         });
     }
 
-    public void GetImage(Uri uri, OnSuccessListener<Bitmap> listener) {
+    public void GetImage(String path, OnSuccessListener<Bitmap> listener) {
         /**
          * This method collects the image from an event
-         * @param event
-         * The event that the image is from
+         * @param path
+         * The path to the image
          * @return
-         * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
+         * Returns a listener for a bitmap
          */
-        StorageReference refImage = imageDB.getReference(String.valueOf(uri));
-        final File localfile = new File(UUID.randomUUID() + ".jpeg");
-        refImage.getFile(localfile).addOnSuccessListener(taskSnapshot -> {
-            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
-            listener.onSuccess(bitmap);
+        StorageReference refImage = imageDB.child(path);
+        refImage.getBytes(1000000000).addOnSuccessListener(bytes -> {
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            listener.onSuccess(bmp);
+        }).addOnFailureListener(e -> {
+            Log.e("IMAGES", "Download failed", e);
         });
     }
 
@@ -306,6 +313,8 @@ public class Database {
          * @param event
          * This is the event that is being deleted
          */
+        DeleteImage(event.getImageID());
+        DeleteImage(event.getQrcodeID());
         eventsRef.document(event.getId()).delete();
     }
     public void DeleteEvent(String id){
@@ -314,7 +323,7 @@ public class Database {
          * @param id
          * This is the id of the event that is being deleted
          */
-        eventsRef.document(id).delete();
+        GetEvent(id, this::DeleteEvent);
     }
     public void DeleteNotification(Notif notif){
         /**
@@ -331,6 +340,12 @@ public class Database {
          * This is the id of the notif that is being deleted
          */
         notifsRef.document(id).delete();
+    }
+
+    public void DeleteImage(String path){
+        if (path != null) {
+            imageDB.child(path).delete();
+        }
     }
 
     //Extrapolated Date Methods
@@ -407,10 +422,17 @@ public class Database {
          * Returns an ArrayList that holds all of the users that have signed up for this event
          */
         //List of all users in the event
-        List usersInEvent = (List) event.getEventUsers().keySet();
+        List<String> usersInEvent = new ArrayList<>(event.getEventUsers().keySet());
 
+        //If event has no users
+        if (usersInEvent.isEmpty()) {
+            listener.onSuccess(new ArrayList<>());
+            return;
+        }
         //Collects the data for every user with an id in the above list
-        usersRef.whereIn("id", (List) usersInEvent).get()
+
+
+        usersRef.whereIn("id", usersInEvent).get() // edited it as well -- KYLE
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         ArrayList<User> users = new ArrayList<>();
@@ -452,7 +474,7 @@ public class Database {
     }
 
     //TODO Add logic for sending out notifications. Need Testing
-    public void DrawUsers(Event event, OnSuccessListener<ArrayList<User>> listener){
+    public void DrawUsers(Event event){
         /**
          * This method draws the correct number of people for an event. It is the random raffle mechanism
          * @param event
@@ -461,23 +483,12 @@ public class Database {
          * Returns an Array List containing all of the chosen users
          */
         //Collect User IDs
-        ArrayList<String> userID = event.drawUsers(-1);
-        //Make into Users
-        usersRef.whereIn("id", (List) userID).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<User> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            users.add(doc.toObject(User.class));
-                        }
-                        listener.onSuccess(users);
-                    } else {
-                        Log.e("Firestore", "Error getting notifications", task.getException());
-                    }
-                });
+        ArrayList<String> userIDs = event.drawUsers(-1);
+        event.setDrawn(true);
+        SaveEvent(event);
     }
 
-    public void RedrawUsers(Event event, Integer numToDraw, OnSuccessListener<ArrayList<User>> listener){
+    public void RedrawUsers(Event event, Integer numToDraw){
         /**
          * This method is used to redraw a specific number of participents. It is used after an event as already drawn the majority of its users
          * It allows for gaps caused by people cancelling or rejecting to be filled
@@ -489,20 +500,9 @@ public class Database {
          * Returns an Array List containing all of the newly chosen users
          */
         //Collect User IDs
-        ArrayList<String> userID = event.drawUsers(numToDraw);
-        //Make into Users
-        usersRef.whereIn("id", (List) userID).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<User> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            users.add(doc.toObject(User.class));
-                        }
-                        listener.onSuccess(users);
-                    } else {
-                        Log.e("Firestore", "Error getting notifications", task.getException());
-                    }
-                });
+        ArrayList<String> userIDs = event.drawUsers(numToDraw);
+        event.setDrawn(true);
+        SaveEvent(event);
     }
 
     //Notif Methods
@@ -596,18 +596,22 @@ public class Database {
         }
     }
 
-    public void BlockThreadUntilCompleted(CollectionReference ref, String id, Object obj) {
-        CountDownLatch latch = new CountDownLatch(1);
+    public void RegisterUserIntoEvent(Event event, User user){
+        user.addEvent(event.getId());
+        event.SetStatus(user.getId(), "Waiting");
+        SaveUser(user);
+        SaveEvent(event);
 
-        ref.document(id).set(obj)
-                .addOnSuccessListener(unused -> latch.countDown())
-                .addOnFailureListener(e -> latch.countDown());
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have joined the waiting list");
+    }
 
-        try {
-            latch.await();
-        } catch (InterruptedException e){
-            throw new RuntimeException(e);
-        }
+    public void CancelUserIntoEvent(Event event, User user){
+        user.addEvent(event.getId());
+        event.SetStatus(user.getId(), "Cancelled");
+        SaveUser(user);
+        SaveEvent(event);
+
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have left the waiting list");
     }
 
 }

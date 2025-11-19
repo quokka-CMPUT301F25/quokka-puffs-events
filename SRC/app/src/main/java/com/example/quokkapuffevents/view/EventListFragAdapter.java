@@ -191,23 +191,11 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void registerForEvent(Event event) {
-        if(event.getMaxNumWaitlist() != null && event.getEventUsers().size() < event.getMaxNumWaitlist()) {
-            event.addUser(user.getId());
-            db.SaveEvent(event);
-            user.addEvent(event.getId());
-            db.SaveUser(user);
-        }
-        else{
-            event.addUser(user.getId());
-            db.SaveEvent(event);
-            user.addEvent(event.getId());
-            db.SaveUser(user);
-        }
+        db.RegisterUserIntoEvent(event, user);
     }
 
     public void leaveWaitingList(Event event) {
-        event.SetStatus(user.getId(), "Cancelled");
-        db.SaveEvent(event);
+        db.CancelUserIntoEvent(event, user);
     }
 
     public void seeDetails(Event event) {
