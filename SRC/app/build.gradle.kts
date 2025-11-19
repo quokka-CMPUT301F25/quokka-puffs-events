@@ -35,10 +35,12 @@ android {
 dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation("com.google.firebase:firebase-storage")
     implementation(libs.ext.junit)
     implementation(libs.espresso.core)
     implementation(libs.firebase.database)
     implementation(libs.espresso.intents)
+    implementation(libs.firebase.storage)
     // These were changed from implementation to androidTestImplementation
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.runner)
@@ -59,4 +61,7 @@ dependencies {
     // You might have duplicates after the change, you can keep just one set
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    //For QR Codes
+    implementation("com.journeyapps:zxing-android-embedded:4.1.0")
 }

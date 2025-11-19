@@ -1,12 +1,15 @@
 package com.example.quokkapuffevents.controller;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -16,7 +19,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -107,9 +114,9 @@ public class EventCreateFragment extends Fragment {
 
 //                boolean addGeolocate = addGeo.isChecked(); //TODO: IDK YET???
                   //Validating inputs
-//                if (!validateInputs()) {
-//                    return;
-//                }
+                if (!validateInputs()) {
+                    return;
+                }
 
                 //Creating Date Objects
                 Date drawDate = dateConverter(drawDateString);
@@ -118,12 +125,24 @@ public class EventCreateFragment extends Fragment {
                 //Create event in database
 //                createEventObject(userID, desc, parts, maxParts, new Date(), new Date(), new Date(), title);
                 if (maxParts.isEmpty()){
-                    db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
+                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
+                    //Creating QR code
+                    Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
+                    db.UploadImageToDatabase(bitmap, path -> {
+                        event.setQrcodeID(path);
+                        db.SaveEvent(event);
+                    });
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
-                    db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
+                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
+                    //Creating QR code
+                    Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
+                    //Saving bitmap
+                    db.UploadImageToDatabase(bitmap, path -> {
+                        event.setQrcodeID(path);
+                        db.SaveEvent(event);
+                    });
                 }
-
 
                 ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
@@ -206,6 +225,23 @@ public class EventCreateFragment extends Fragment {
             int maxPar = Integer.parseInt(maxParts);
             db.CreateEvent(title, id, desc, parts, maxPar, endDate, eventDate);
         }
+    }
+
+    //This code was adapted from GeeksForGeeks. https://www.geeksforgeeks.org/android/how-to-generate-qr-code-in-android/
+    private Bitmap generateQRCode(String text)
+    {
+        BarcodeEncoder barcodeEncoder
+                = new BarcodeEncoder();
+        try {
+            // pixels.
+            Bitmap bitmap = barcodeEncoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 280, 280);
+            return(bitmap);
+        }
+        catch (WriterException e) {
+            System.out.println("Error in creation");
+            e.printStackTrace();
+        }
+        return(null);
     }
 
 }
