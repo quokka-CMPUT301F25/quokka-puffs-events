@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class HomeFragment extends Fragment {
                 db.GetEventsFromUser(user, eventsOrg -> {
                     EventListFragAdapter adapter = new EventListFragAdapter(requireContext(), eventsOrg, "Past");
                     waitingEvents.setAdapter(adapter);
+//                    Log.d("DEBUG", "eventsOrg size: " + eventsOrg.size());
                     adapter.setActivity((DashboardActivity) getActivity());
                 });
             }

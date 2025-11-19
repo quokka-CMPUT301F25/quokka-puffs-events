@@ -402,10 +402,17 @@ public class Database {
          * Returns an ArrayList that holds all of the users that have signed up for this event
          */
         //List of all users in the event
-        List usersInEvent = (List) event.getEventUsers().keySet();
+        List<String> usersInEvent = new ArrayList<>(event.getEventUsers().keySet());
 
+        //If event has no users
+        if (usersInEvent.isEmpty()) {
+            listener.onSuccess(new ArrayList<>());
+            return;
+        }
         //Collects the data for every user with an id in the above list
-        usersRef.whereIn("id", (List) usersInEvent).get()
+
+
+        usersRef.whereIn("id", usersInEvent).get() // edited it as well -- KYLE
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         ArrayList<User> users = new ArrayList<>();
