@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,9 @@ public class OrganizerEventDetails extends Fragment {
     Button runLottoButton;
     Button viewParticipantsButton;
     Button changeDetailsButton;
+    ImageView qrcodeView;
+
+    Button exitButton;
 
     @Nullable
     @Override
@@ -41,15 +45,18 @@ public class OrganizerEventDetails extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initialize(view);
+        SetUpListeners(view);
     }
 
     private void initialize(View view) {
         db = Database.getInstance();
 
-        //Button Shit
+        //Button
         runLottoButton = view.findViewById(R.id.orgRunLotteryBtn);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
+        exitButton = view.findViewById(R.id.orgExitOutEventBtn);
+        qrcodeView = view.findViewById((R.id.qrCode));
 
         //Removing button if after end of event
         if (event.getEventDate().after(new Date())){
@@ -62,12 +69,58 @@ public class OrganizerEventDetails extends Fragment {
         else {
             runLottoButton.setVisibility(INVISIBLE);
         }
+
+        //QRCode
+        db.GetImage(event.getQrcodeID(), bitmap -> {
+            if (bitmap != null) {
+                qrcodeView.setImageBitmap(bitmap);
+            } else {
+                Log.e("IMAGES", "Bitmap from GetImage is null");
+            }
+        });
+    }
+
+    public void SetUpListeners(View view) {
+
+
+
+//        Goes back to the home view.
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                HomeFragment newFrag = new HomeFragment();
+                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
+            }
+        });
+
+//        This goes to the event details for organizer to change details.
+
+        changeDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Clicked!");
+                EditEventFragment newFrag = new EditEventFragment();
+                newFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
+            }
+        });
+
+        viewParticipantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Clicked!");
+                OrganizerViewParticipantsFragment newFrag = new OrganizerViewParticipantsFragment();
+                newFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
+            }
+        });
+
+
+
     }
 
     public void SetEvent(Event event) {this.event = event; }
-
-    public static class EntrantEventDetailsFragment extends Fragment {
-    }
 }
 
 
