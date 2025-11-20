@@ -59,10 +59,10 @@ public class OrganizerEventDetails extends Fragment {
         qrcodeView = view.findViewById((R.id.qrCode));
 
         //Removing button if after end of event
-        if (event.getEventDate().after(new Date())){
+        if ((event.getEventDate().after(new Date())) && (event.getDrawn() == false)){
             runLottoButton.setOnClickListener(v -> {
-                event.drawUsers(-1);
-
+                db.DrawUsers(event);
+                runLottoButton.setVisibility(INVISIBLE);
             });
         }
         else {
