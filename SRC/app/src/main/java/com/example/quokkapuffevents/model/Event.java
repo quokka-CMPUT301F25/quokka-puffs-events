@@ -129,7 +129,15 @@ public class Event {
         return org;
     }
 
-
+    public Integer getNumInvitedAccepted(){
+        Integer total = 0;
+        for (String entry : eventUsers.keySet()) {
+            if ((eventUsers.get(entry).equals("Invited")) || (eventUsers.get(entry).equals("Accepted"))) {
+                total += 1;
+            }
+        }
+        return(total);
+    }
     //Actual methods
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user

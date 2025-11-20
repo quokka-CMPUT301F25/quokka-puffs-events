@@ -465,7 +465,6 @@ public class Database {
          */
         //Collect User IDs
         ArrayList<String> userIDs = event.drawUsers(numToDraw);
-        event.setDrawn(true);
         SaveEvent(event);
     }
 

@@ -31,6 +31,7 @@ public class EntrantEventDetailsFragment extends Fragment {
     TextView orgEventNameText;
     TextView eventTotalParticiapntsWaitingText;
     TextView eventDrawDateText;
+    TextView eventDrawn;
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
@@ -65,6 +66,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         orgEventNameText = view.findViewById(R.id.orgEventNameText);
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
         eventDrawDateText = view.findViewById(R.id.eventDrawDateText);
+        eventDrawn = view.findViewById(R.id.eventDrawn);
         eventDescriptionText = view.findViewById(R.id.eventDescriptionText);
         entrantRegisterForEventBtn = view.findViewById(R.id.entrantRegisterForEventBtn);
         goBackToDashboardBtn = view.findViewById(R.id.goBackToDashboardBtn);
@@ -88,6 +90,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         eventTotalParticiapntsWaitingText.setText(Integer.toString(event.getNumPeopleWaiting()));
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
+        eventDrawn.setText(event.getDrawn().toString());
 
         //Removing button if after end or full
         if (event.getEventDate().before(new Date())){
