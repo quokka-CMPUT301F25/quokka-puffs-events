@@ -162,6 +162,10 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
             db.GetUser(event.getOrg(), user -> {
                 originUserText_all.setText(user.getUserName().toString() + "'s     ");
             });
+
+            db.GetUser(event.getOrg(), user -> {
+                originUserText_all.setText(user.getUserName().toString() + "'s     ");
+            });
         }
 
         return view;
