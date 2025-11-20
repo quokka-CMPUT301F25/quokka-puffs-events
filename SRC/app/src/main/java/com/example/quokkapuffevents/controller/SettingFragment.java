@@ -133,7 +133,7 @@ public class SettingFragment extends Fragment {
             if (currUser.getAccountType() != -1){
                 db.GetEventsFromUser(currUser, events -> {
                     for (Event event : events) {
-                        if (event.getEventDate().before(new Date())) {
+                        if (event.getEventDate().before(new Date()) || (event.getDrawn() == true) || (event.getEventUsers().get(currUser.getId()) != "Waiting")) {
                             finalEvents.add(event);
                         }
                     }
