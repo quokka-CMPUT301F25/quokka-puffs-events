@@ -1,18 +1,35 @@
 package com.example.quokkapuffevents.model;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 
@@ -23,17 +40,20 @@ public class Database {
     private CollectionReference usersRef;
     private CollectionReference eventsRef;
     private CollectionReference notifsRef;
-    private CollectionReference imagesRef;
+    private StorageReference imageDB;
+
 
     /**
      * Default constructor for Database.
      */
     public Database() {
         this.db = FirebaseFirestore.getInstance(); //Get database
+        this.imageDB = FirebaseStorage.getInstance().getReference("Uploads"); //Get Storage
+
         this.usersRef = db.collection("users");
         this.eventsRef = db.collection("events");
         this.notifsRef = db.collection("notifications");
-        this.imagesRef = db.collection("images");
+
     }
 
     /**
@@ -168,40 +188,23 @@ public class Database {
         notifsRef.document(id).set(newNotif);
         return(newNotif);
     }
+    public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<String> listener){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
 
-    /**
-     * Adds an image into an event using the images ID.
-     * @param event
-     * The currently selected event.
-     * @param uri
-     * 
-     * @return
-     * The event to add the image to.
-     */
-    public Event AddImageToEvent(Event event, URI uri){
-        String id = imagesRef.document().getId(); //Creates a document and returns the id
-        event.setImageID(id);
+        String path = UUID.randomUUID() + ".jpg";
+        StorageReference refImage = imageDB.child(path);
 
-        imagesRef.document(id).set(uri).addOnSuccessListener(task -> {
-            Log.e("Firestore", "Images uploaded successfully");
+        UploadTask uploadTask = refImage.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                listener.onSuccess(path);
+            }
         });
-        return event;
     }
 
-    //TODO: READ
-    //To edit safetly follow this
-    //More wide ranging changes. For quick fixes user:
-    //event = db.getEvent(event.getID()); //Collects the most recent version
-    //event.setXYZ(xyz) //Edits value needed
-    //db.SaveEvent(event) //Saves the newly edited event back up to the cloud
-
-    /**
-     * Grabs the currently selected user.
-     * @param userID
-     * The ID of the current user.
-     * @param listener
-     *
-     */
     public void GetUser(String userID, OnSuccessListener<User> listener) {
         usersRef.document(userID).get().addOnSuccessListener(document -> {
             if(document.exists()){
@@ -243,17 +246,29 @@ public class Database {
         });
     }
 
-    /**
-     * This method collects the image from an event
-     * @param event
-     * The event that the image is from
-     */
-    public void GetImage(Event event, OnSuccessListener<URI> listener) {
-        imagesRef.document(event.getImageID()).get().addOnSuccessListener(document -> {
-            if (document.exists()) {
-                URI uri = document.toObject(URI.class);
-                listener.onSuccess(uri);
-            }
+//    public void GetImage(String uri, OnSuccessListener<Bitmap> listener) {
+//        /**
+//         * This method collects the image from an event
+//         * @param event
+//         * The event that the image is from
+//         * @return
+//         * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
+//         */
+//        StorageReference refImage = imageDB.getReference(uri);
+//        final File localfile = new File(UUID.randomUUID() + ".jpeg");
+//        refImage.getFile(localfile).addOnSuccessListener(taskSnapshot -> {
+//            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+//            listener.onSuccess(bitmap);
+//        });
+//    }
+
+    public void GetImage(String path, OnSuccessListener<Bitmap> listener) {
+        StorageReference refImage = imageDB.child(path);
+        refImage.getBytes(1000000000).addOnSuccessListener(bytes -> {
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            listener.onSuccess(bmp);
+        }).addOnFailureListener(e -> {
+            Log.e("IMAGES", "Download failed", e);
         });
     }
 
@@ -307,6 +322,8 @@ public class Database {
      * This is the event that is being deleted.
      */
     public void DeleteEvent(Event event){
+        DeleteImage(event.getImageID());
+        DeleteImage(event.getQrcodeID());
         eventsRef.document(event.getId()).delete();
     }
 
@@ -316,7 +333,7 @@ public class Database {
      * This is the id of the event that is being deleted.
      */
     public void DeleteEvent(String id){
-        eventsRef.document(id).delete();
+        GetEvent(id, this::DeleteEvent);
     }
 
     /**
@@ -335,6 +352,12 @@ public class Database {
      */
     public void DeleteNotification(String id){
         notifsRef.document(id).delete();
+    }
+
+    public void DeleteImage(String path){
+        if (path != null) {
+            imageDB.child(path).delete();
+        }
     }
 
     //Extrapolated Date Methods
@@ -404,10 +427,17 @@ public class Database {
      */
     public void UsersInEvent(Event event, OnSuccessListener<ArrayList<User>> listener){
         //List of all users in the event
-        List usersInEvent = (List) event.getEventUsers().keySet();
+        List<String> usersInEvent = new ArrayList<>(event.getEventUsers().keySet());
 
+        //If event has no users
+        if (usersInEvent.isEmpty()) {
+            listener.onSuccess(new ArrayList<>());
+            return;
+        }
         //Collects the data for every user with an id in the above list
-        usersRef.whereIn("id", (List) usersInEvent).get()
+
+
+        usersRef.whereIn("id", usersInEvent).get() // edited it as well -- KYLE
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         ArrayList<User> users = new ArrayList<>();
@@ -613,4 +643,19 @@ public class Database {
 
         }
     }
+
+    public void BlockThreadUntilCompleted(CollectionReference ref, String id, Object obj) {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        ref.document(id).set(obj)
+                .addOnSuccessListener(unused -> latch.countDown())
+                .addOnFailureListener(e -> latch.countDown());
+
+        try {
+            latch.await();
+        } catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+    }
+
 }

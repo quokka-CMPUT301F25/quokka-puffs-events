@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,17 +18,28 @@ import com.example.quokkapuffevents.model.Database;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
     private Database db;
     private SharedPreferences.Editor loginPrefsEditor;
+    private String possibleEventID = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.login_page);
+
+        //Handling QR Code
+        // Check if the app was opened from a URI
+        Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction()) && intent.getData() != null) {
+            Uri data = intent.getData(); // quokka-puff://event/awydgasuda
+            List<String> segments = data.getPathSegments(); // ["awydgasuda"]
+            possibleEventID = segments.get(0); //Getting the id
+        }
 
         db = Database.getInstance();
 
@@ -122,8 +134,13 @@ public class LoginActivity extends AppCompatActivity {
                             db.SetUserID(users.get(0).getId());
                             if(users.get(0).getAccountType() == -1)
                                 SwitchActivity(AdminActivity.class);
-                            else
+                            else {
+                                Intent i = new Intent(this, DashboardActivity.class);
+                                if (possibleEventID != null) {
+                                    i.putExtra("EVENT_ID", possibleEventID);
+                                }
                                 SwitchActivity(DashboardActivity.class);
+                            }
                         }
 
                         //If password is wrong then we have an error
@@ -141,9 +158,13 @@ public class LoginActivity extends AppCompatActivity {
                             db.SetUserID(users.get(0).getId());
                             if(users.get(0).getAccountType() == -1)
                                 SwitchActivity(AdminActivity.class);
-                            else
+                            else {
+                                Intent i = new Intent(this, DashboardActivity.class);
+                                if (possibleEventID != null) {
+                                    i.putExtra("EVENT_ID", possibleEventID);
+                                }
                                 SwitchActivity(DashboardActivity.class);
-
+                            }
                         }
                         //If no then we have an error
                         else {
