@@ -229,6 +229,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
                     if (user != null) {
                         userList.add(user);
+
                     }
 
                     if (pending.decrementAndGet() == 0) {
