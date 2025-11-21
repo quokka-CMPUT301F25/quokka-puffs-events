@@ -24,11 +24,11 @@ public class LoadingActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Code to execute after 10 seconds
+                // Code to execute after 1 second of waiting
                 Intent intent=new Intent(LoadingActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
-        }, 1000);
+        }, 1000); // 1 second of waiting in milliseconds
 
     }
 }
