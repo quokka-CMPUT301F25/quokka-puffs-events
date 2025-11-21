@@ -68,9 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        backButton.setOnClickListener(v -> {
-            SwitchActivity(LoginActivity.class);
-        });
+        backButton.setOnClickListener(v -> SwitchActivity(LoginActivity.class));
 
         signUpButton.setOnClickListener(v -> {
             String emailText = email.getText().toString().trim();
@@ -84,24 +82,73 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    //Changing activity depending on what the user has selected
-    // Note the `Class<?>` means it can be any class
+    /**
+     * Changes currently displayed activity depending on what the user has pressed.
+     * @param activity
+     * The new activity class to display.
+     */
     private void SwitchActivity(Class<?> activity) {
+        // Note the `Class<?>` means it can be any class
+
         Intent intent = new Intent(this, activity);
         startActivity(intent);
     }
 
-    //Display's if the Username or Email Address is already in use
+    /**
+     * A toast 'error' message to display when the entered Username or Email Address is already in
+     * use.
+     */
     private void DisplayInUseErrorMsg() {
         Toast.makeText(this, "Email Address or Username is already in use", Toast.LENGTH_SHORT).show();
     }
 
-    //Display's if the one of input fields are left blank or a role is not selected
+    /**
+     * A toast 'error' message to display when one or more of the input fields are left blank and or
+     * a role is not selected.
+     */
     private void DisplayMissInfoErrorMsg() {
         Toast.makeText(this, "A field is missing information or a role is not selected", Toast.LENGTH_SHORT).show();
     }
 
-    //Validates the information entered by the user
+    /**
+     * Hashes the given password using the SHA-512 algorithm and returns the result as a String.
+     * @param password
+     * The password to hash.
+     * @return
+     * A String of the SHA-512 hash of the input password.
+     */
+    private String PasswordHashing(String password) {
+        MessageDigest md = null;
+
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] hashedPasswordByte = md.digest(password.getBytes(StandardCharsets.UTF_8));
+
+        return new String(hashedPasswordByte);
+    }
+
+    /**
+     * Validates that the information entered by the user is fully filled out / available.
+     * @param username
+     * The user submitted username.
+     * @param email
+     * The user submitted email address.
+     * @param password
+     * The user submitted password (unhashed).
+     * @param firstName
+     * The user submitted first name.
+     * @param lastName
+     * The user submitted last name.
+     * @param phone
+     * The user submitted phone number (optional).
+     * @param entrant
+     * A checkbox to check if the user wants to be registered as an entrant.
+     * @param organizer
+     * A checkbox to check if the user wants to be registered as an organizer.
+     */
     private void ValidateInformation(String username, String email, String password, String firstName, String lastName, String phone, CheckBox entrant, CheckBox organizer){
         db.ValidatePasswordByEmail(email, password, users -> {
             if (!users.isEmpty()) {
@@ -112,14 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (entrant.isChecked()) {
 
                         //Hashing password
-                        MessageDigest md = null;
-                        try {
-                            md = MessageDigest.getInstance("SHA-512");
-                        } catch (NoSuchAlgorithmException e) {
-                            throw new RuntimeException(e);
-                        }
-                        byte[] hashedPasswordByte = md.digest(password.getBytes(StandardCharsets.UTF_8));
-                        String hashedPassword = new String(hashedPasswordByte);
+                        String hashedPassword = PasswordHashing(password);
 
                         //Creating User
                         User newUser = db.CreateUser(email, 0, hashedPassword, username, firstName, lastName, phone);
@@ -130,14 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
                     else if (organizer.isChecked()) {
 
                         //Hashing password
-                        MessageDigest md = null;
-                        try {
-                            md = MessageDigest.getInstance("SHA-512");
-                        } catch (NoSuchAlgorithmException e) {
-                            throw new RuntimeException(e);
-                        }
-                        byte[] hashedPasswordByte = md.digest(password.getBytes(StandardCharsets.UTF_8));
-                        String hashedPassword = new String(hashedPasswordByte);
+                        String hashedPassword = PasswordHashing(password);
 
                         //Creating User
                         User newUser = db.CreateUser(email, 1, hashedPassword, username, firstName, lastName, phone);

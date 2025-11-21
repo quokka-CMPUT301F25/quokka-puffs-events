@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Notif {
     private String id;
-    private Integer type; //If just a notification or a choice. 0 or 1
+    private Integer type; //If just an alert or a choice. 0 or alert, 1 for choice.
     private String recipient;
     private String originEvent;
     private String originUser;
@@ -14,13 +14,26 @@ public class Notif {
     private Boolean chosen;
     private Integer choice; //-1 for N/A, 0 for Undecided, 1 For no, 2 for yes
     private Date timeStamp;
-    public Notif(String id, Integer type, String recipient, String originEvent, String originUser, String message){
-        /**
-         * Normal constructor for a notification
-         */
 
+    /**
+     * Normal constructor for a notification.
+     * @param id
+     * The String ID associated with a notification.
+     * @param type
+     * An Integer representing this particular notification as just an alert or containing a choice
+     * (0 for alert, 1 for choice).
+     * @param recipient
+     * A String containing who is receiving the notification.
+     * @param originEvent
+     * A String detailing which event this notification comes from.
+     * @param originUser
+     * A String detailing who sent out this notification.
+     * @param message
+     * A String containing what the notification's text description contains.
+     */
+    public Notif(String id, Integer type, String recipient, String originEvent, String originUser, String message){
         this.id = id;
-        this.type = type; //If just a notification or a choice
+        this.type = type; //If just an alert or a choice
         this.recipient = recipient;
         this.originEvent = originEvent;
         this.originUser = originUser;
@@ -37,13 +50,15 @@ public class Notif {
         }
     }
 
+    /**
+     * This is an empty Notification constructor. Sets the ID to "FAILURE". If the ID is "FAILURE"
+     * then something has gone wrong.
+     */
     public Notif(){
-        /**
-         * This is an empty notification. If the ID is "Failure" then something has gone wrong.
-         */
-
         this.id = "FAILURE";
     }
+
+    // Getters and Setters
 
     public String getMessage() {
         return message;
