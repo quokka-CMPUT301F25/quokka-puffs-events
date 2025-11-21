@@ -149,7 +149,7 @@
                 android:id="@+id/startAndEndDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="id"
+                android:text="Start date - End date"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:maxLines="1">
@@ -188,55 +188,14 @@
             </View>
 
             <TextView
-                android:id="@+id/phoneNumber"
+                android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(xxx)-xxx-xxxx"
+                android:text="\n \n \n \n"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:maxLines="1">
-
-            </TextView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Account Type:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
-
-            </View>
-
-            <TextView
-                android:id="@+id/accountType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="Admin"
-                android:textColor="@color/white"
-                android:textSize="20sp">
+                android:maxLines="3"
+                android:scrollbars="vertical">
 
             </TextView>
 
@@ -254,12 +213,12 @@
             android:textStyle="bold"
             android:background="@drawable/border_shape_grey"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
         </TextView>
 
         <ListView
-            android:id="@+id/allEventsUser"
+            android:id="@+id/allUsersEvent"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginStart="8dp"
