@@ -13,14 +13,14 @@
         android:backgroundTint="@color/mainblue">
 
         <TextView
-            android:id="@+id/firstAndLastName"
+            android:id="@+id/eventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
-            android:text="NAME"
+            android:text="Event Name"
             android:textColor="@color/white"
             android:textSize="40sp"
             android:textStyle="bold"
@@ -43,12 +43,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/firstAndLastName">
+            app:layout_constraintTop_toBottomOf="@+id/eventName">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email:"
+                android:text="Organizer:"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold">
@@ -62,11 +62,11 @@
             </View>
 
             <TextView
-                android:id="@+id/email"
+                android:id="@+id/organizerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="EMAIL@DOMAIN.ca"
+                android:text="Jimbob"
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
@@ -90,7 +90,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Username:"
+                android:text="Max Entrants:"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold">
@@ -104,10 +104,10 @@
             </View>
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/maxEntrants"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="XxxKyleLovaxxX"
+                android:text="10"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:maxLines="1">
@@ -132,7 +132,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Account ID:"
+                android:text="Start/End date:"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold">
@@ -146,7 +146,7 @@
             </View>
 
             <TextView
-                android:id="@+id/userid"
+                android:id="@+id/startAndEndDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="id"
@@ -174,7 +174,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phone Number:"
+                android:text="Description:"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold">
