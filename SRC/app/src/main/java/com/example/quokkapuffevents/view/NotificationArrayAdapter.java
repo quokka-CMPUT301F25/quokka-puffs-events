@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
+import com.example.quokkapuffevents.controller.DashboardActivity;
+import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
+import com.example.quokkapuffevents.controller.NotificationDetailsFragment;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Notif;
 
@@ -51,42 +54,64 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         notifyDataSetChanged();
     }
 
+    private View view;
+    private DashboardActivity activity = (DashboardActivity) getContext();
+
+    private Notif notification;
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = (convertView == null)
-                ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_invite, parent, false)
-                : convertView;
+        Database db = Database.getInstance();
+        notification = getItem(position);
 
-        Notif notification = getItem(position);
+        if (notification.getType() == 1) {
+            view = (convertView == null)
+                    ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_invite, parent, false)
+                    : convertView;
 
-        TextView notificationType = view.findViewById(R.id.notificationTypeText);
-        TextView userText = view.findViewById(R.id.userText);
-        TextView eventText = view.findViewById(R.id.eventText);
+            BindInviteUIAndLogic();
+        }
+        else if(notification.getType() == 0) {
+            view = (convertView == null)
+                    ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_rejected, parent, false)
+                    : convertView;
 
-        Button removeButton = view.findViewById(R.id.removeBtn);
-        Button rejectButton = view.findViewById(R.id.rejectBtn);
-        Button acceptButton = view.findViewById(R.id.acceptBtn);
+            BindRejectUIAndLogic();
+        }
+        else if(notification.getType() == -1) {
+            view = (convertView == null)
+                    ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_message, parent, false)
+                    : convertView;
 
-        // --- UI Binding ---
-        if (notification.getType() == 1 && !notification.getChosen()) {
-            notificationType.setText(R.string.winner_header);
-            //removeButton.setVisibility(View.GONE);
-        } else if (notification.getType() == 0){
-            notificationType.setText(notification.getMessage());
-            rejectButton.setVisibility(View.GONE);
-            acceptButton.setVisibility(View.GONE);
-        }else if (!notification.getChosen()) {
-            notificationType.setText(R.string.not_picked);
-            rejectButton.setVisibility(View.GONE);
-            acceptButton.setVisibility(View.GONE);
+            BindMessageUIAndLogic();
         }
 
-        // --- Button Logic ---
+        //--- Universal Notification UI ---
+        TextView eventText = view.findViewById(R.id.eventText);
+        Button removeButton = view.findViewById(R.id.removeBtn);
+
         removeButton.setOnClickListener(v -> {
             db.DeleteNotification(notification);
-            removeNotification(notification);   // remove locally
+            removeNotification(notification);
         });
+
+        db.GetEvent(notification.getOriginEvent(), event -> {
+            eventText.setText(event.getName());
+        });
+
+        return view;
+    }
+
+    /**
+     *  Binds the UI to logic for an invite notification. Clicking the accept button will notify
+     *  the database that the user has accepted the invite, clicking the reject button will notify the
+     *  database that the user has rejected the invite, clicking the details button will show the event details
+     */
+    public void BindInviteUIAndLogic() {
+        Button rejectButton = view.findViewById(R.id.rejectBtn);
+        Button acceptButton = view.findViewById(R.id.acceptBtn);
+        Button detailsButton = view.findViewById(R.id.detailsBtn);
 
         rejectButton.setOnClickListener(v -> {
             InvitationButtonClicked(notification, 0);
@@ -96,23 +121,49 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
             InvitationButtonClicked(notification, 1);
         });
 
-        // --- Async user/event UI Binding ---
-        db.GetUser(notification.getOriginUser(), user ->
-                userText.setText(String.format("%s's: ", user.getUserName())));
-
-        db.GetEvent(notification.getOriginEvent(), event -> {
-            eventText.setText(event.getName());
+        detailsButton.setOnClickListener(v -> {
+            db.GetEvent(notification.getOriginEvent(), event -> {
+                EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
+                entrantFrag.setEvent(event);
+                activity.replaceFragment(entrantFrag);
+            });
         });
-
-        if (notification.getChosen()) {
-            removeButton.setVisibility(View.VISIBLE);
-            rejectButton.setVisibility(View.GONE);
-            acceptButton.setVisibility(View.GONE);
-        }
-
-        return view;
     }
 
+    /**
+     * Binds the UI to logic for a reject notification. Clicking the details button will bring
+     * you to the event details.
+     */
+    private void BindRejectUIAndLogic() {
+        Button detailsButton = view.findViewById(R.id.detailsBtn);
+        detailsButton.setOnClickListener(v -> {
+            db.GetEvent(notification.getOriginEvent(), event -> {
+                EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
+                entrantFrag.setEvent(event);
+                activity.replaceFragment(entrantFrag);
+            });
+        });
+    }
+
+    /**
+     * Binds the UI to logic for a reject notification. Clicking the details button will bring
+     * you to the notification details.
+     */
+    private void BindMessageUIAndLogic() {
+        Button detailsButton = view.findViewById(R.id.detailsBtn);
+        detailsButton.setOnClickListener(v -> {
+            NotificationDetailsFragment notifDetailsFragment = new NotificationDetailsFragment();
+            notifDetailsFragment.setNotification(notification);
+            activity.replaceFragment(notifDetailsFragment);
+        });
+    }
+
+    /**
+     * @param notification -> The notification to update
+     *
+     * Changes the status of the user in the database based on selection in the notification.
+     * If the user clicks the details button, the notification message will be shown in a new fragment
+     */
     public void UpdateEventStatus(Notif notification) {
         db.GetEvent(notification.getOriginEvent(), event -> {
             if (notification.getChoice() == 1) {
@@ -126,6 +177,12 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         });
     }
 
+    /**
+     * @param notification -> The notification to update
+     *
+     * Updates the notification so that invitations options are not shown more than once after a
+     * selection.
+     */
     public void InvitationButtonClicked(Notif notification, int choice) {
         notification.setChoice(choice);
         notification.setChosen(true);
