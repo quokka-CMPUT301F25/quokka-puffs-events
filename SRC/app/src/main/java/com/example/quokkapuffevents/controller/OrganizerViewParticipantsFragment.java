@@ -175,9 +175,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         redrawBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OrganizerEventDetails orgFrag = new OrganizerEventDetails();
-                orgFrag.SetEvent(event);
-                ((DashboardActivity) getActivity()).replaceFragment(orgFrag);
+                db.RedrawUsers(event, event.getToBeDrawn() - event.getNumPeopleWaiting());
             }
         });
 
@@ -211,6 +209,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
                     if (user != null) {
                         userList.add(user);
+
                     }
 
                     if (pending.decrementAndGet() == 0) {
@@ -228,14 +227,11 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
                         //            If waiting, view the amount.
                         if(filterType.equals("Waiting")) {
-
                             view.findViewById(R.id.amountWaitingListContainer).setVisibility(VISIBLE);
                             view.findViewById(R.id.redrawContainer).setVisibility(GONE);
                             waitingListAmt.setText(String.valueOf(userList.size()));
 
                         }
-
-
                     }
 
                 });
@@ -243,7 +239,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
             }
         }
 
-        if (filterType.equals("Canceled")) {
+        if ((filterType.equals("Canceled")) && (event.getDrawn() == true)) {
             view.findViewById(R.id.amountWaitingListContainer).setVisibility(GONE);
             view.findViewById(R.id.redrawContainer).setVisibility(VISIBLE);
 
