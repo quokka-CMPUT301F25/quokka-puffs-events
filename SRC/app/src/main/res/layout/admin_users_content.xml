@@ -35,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:textSize="30sp"
-                android:textStyle="bold">
+                android:textStyle="bold"
+                android:text="12345567890">
 
             </TextView>
 
@@ -51,7 +52,8 @@
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:textSize="30sp"
-                android:textStyle="bold">
+                android:textStyle="bold"
+                android:text="12345567890">
 
             </TextView>
 
