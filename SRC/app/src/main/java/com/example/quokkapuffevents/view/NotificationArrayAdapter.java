@@ -1,7 +1,6 @@
 package com.example.quokkapuffevents.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,7 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = (convertView == null)
-                ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content, parent, false)
+                ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_invite, parent, false)
                 : convertView;
 
         Notif notification = getItem(position);
