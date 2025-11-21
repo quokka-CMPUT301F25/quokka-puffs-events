@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:text="Start date - End date"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:maxLines="1">
 
             </TextView>
@@ -207,7 +207,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="Events:"
+            android:text="Users:"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -238,10 +238,11 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/redbtn"
             android:text="Back"
+            android:focusable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/allEventsUser">
+            app:layout_constraintTop_toBottomOf="@+id/allUsersEvent">
 
         </Button>
 

@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.controller.AdminActivity;
+import com.example.quokkapuffevents.controller.AdminEventDetailsFrag;
+import com.example.quokkapuffevents.controller.AdminUserDetailsFrag;
 import com.example.quokkapuffevents.controller.DashboardActivity;
 import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
 import com.example.quokkapuffevents.model.Database;
@@ -56,7 +58,7 @@ public class AdminEventFragAdapter extends ArrayAdapter<Event> {
 
         TextView eventCreators = (TextView) listItem.findViewById(R.id.eventCreator);
         db.GetUser(currentEvent.getOrg(), user -> {
-            eventCreators.setText(user.getUserName());
+            eventCreators.setText(user.getUserName() + "'s");
         });
 
         TextView eventDates = (TextView) listItem.findViewById(R.id.eventDate);
@@ -81,14 +83,14 @@ public class AdminEventFragAdapter extends ArrayAdapter<Event> {
         detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
-                entrantFrag.setEvent(event);
+                AdminEventDetailsFrag detailsFrag = new AdminEventDetailsFrag();
+                detailsFrag.setEvent(event);
 
                 AdminActivity activity = (AdminActivity) getContext();
 
                 activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.adminFragmentContainer, entrantFrag)
+                        .replace(R.id.adminFragmentContainer, detailsFrag)
                         .addToBackStack(null)
                         .commit();
             }
