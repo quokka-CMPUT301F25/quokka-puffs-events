@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -12,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
+import com.example.quokkapuffevents.controller.AdminActivity;
+import com.example.quokkapuffevents.controller.AdminUserDetailsFrag;
+import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
@@ -39,13 +43,13 @@ public class AdminUserFragAdapter extends ArrayAdapter<User> {
         db = Database.getInstance();
 
         User currentUser = userList.get(position);
-        TextView userTexts = (TextView) listItem.findViewById(R.id.username);
-        userTexts.setText(currentUser.getUserName());
+        TextView userTexts = (TextView) listItem.findViewById(R.id.firstName);
+        userTexts.setText(currentUser.getFirstName());
 
-        TextView emailTexts = (TextView) listItem.findViewById(R.id.userEmail);
-        emailTexts.setText(currentUser.getEmail());
+        TextView emailTexts = (TextView) listItem.findViewById(R.id.lastName);
+        emailTexts.setText(currentUser.getLastName());
 
-        ImageButton deleteButton = listItem.findViewById(R.id.deleteButton);
+        Button deleteButton = listItem.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +57,23 @@ public class AdminUserFragAdapter extends ArrayAdapter<User> {
                 db.DeleteUser(user);
                 userList.remove(user);
                 notifyDataSetChanged();
+            }
+        });
+
+        Button detailsButton = listItem.findViewById(R.id.detailsButton);
+        detailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdminUserDetailsFrag detailsFrag = new AdminUserDetailsFrag();
+                detailsFrag.setUser(currentUser);
+
+                AdminActivity activity = (AdminActivity) getContext();
+
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.adminFragmentContainer, detailsFrag)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
