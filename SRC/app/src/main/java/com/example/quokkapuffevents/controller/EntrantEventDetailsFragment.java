@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
+import com.example.quokkapuffevents.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,10 +32,13 @@ public class EntrantEventDetailsFragment extends Fragment {
     TextView orgEventNameText;
     TextView eventTotalParticiapntsWaitingText;
     TextView eventDrawDateText;
-    TextView eventDrawn;
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
+    Button goBackAdminBtn;
+    int waitingParticipants = 0;
+
+
 
 
     @Override
@@ -50,6 +54,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         initializeViews(view);
         displayInfo();
         setUpListeners(view);
+        checkAdmin(view);
         return view;
     }
 
@@ -66,7 +71,6 @@ public class EntrantEventDetailsFragment extends Fragment {
         orgEventNameText = view.findViewById(R.id.orgEventNameText);
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
         eventDrawDateText = view.findViewById(R.id.eventDrawDateText);
-        eventDrawn = view.findViewById(R.id.eventDrawn);
         eventDescriptionText = view.findViewById(R.id.eventDescriptionText);
         entrantRegisterForEventBtn = view.findViewById(R.id.entrantRegisterForEventBtn);
         goBackToDashboardBtn = view.findViewById(R.id.goBackToDashboardBtn);
@@ -79,6 +83,16 @@ public class EntrantEventDetailsFragment extends Fragment {
         String eventDescription = event.getDescription();
         String eventName = event.getName();
         Date eventDrawDateObj = event.getDrawnDate();
+        Map<String, String> participants = event.getEventUsers();
+
+        participants.forEach((user, status) -> {
+            if(status.equals("Waitlist")) {
+                waitingParticipants++;
+            }
+        });
+
+
+
 
 //        Format the date into DD/MM/YYYY
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -87,16 +101,12 @@ public class EntrantEventDetailsFragment extends Fragment {
 
 //        Display info to fragment
         orgEventNameText.setText(eventName);
-        eventTotalParticiapntsWaitingText.setText(Integer.toString(event.getNumPeopleWaiting()));
+        eventTotalParticiapntsWaitingText.setText(Integer.toString(waitingParticipants));
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
-        eventDrawn.setText(event.getDrawn().toString());
 
-        //Removing button if after end or full
+        //Removing button if after end of event
         if (event.getEventDate().before(new Date())){
-            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
-        }
-        if ((event.getNumPeopleWaiting() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
 
@@ -106,6 +116,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
             }
@@ -115,9 +126,8 @@ public class EntrantEventDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                db.GetUser(db.GetCurrentUserID(), user -> {
-                    db.RegisterUserIntoEvent(event, user);
-                });
+                event.addUser(db.GetCurrentUserID());
+                db.SaveEvent(event);
 
                 CharSequence message = "You have been added to the waiting list.";
                 int duration = Toast.LENGTH_SHORT;
@@ -128,13 +138,25 @@ public class EntrantEventDetailsFragment extends Fragment {
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
 
+            }
+        });
 
+    }
 
+    public void checkAdmin(View view) {
+        db.GetUser(db.GetCurrentUserID(), user -> {
+            if (user.getAccountType() == -1) {
+                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+
+                goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getParentFragmentManager().popBackStack();
+                    }
+                });
             }
         });
     }
-
-
 
 }
 
