@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
+import com.example.quokkapuffevents.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class EntrantEventDetailsFragment extends Fragment {
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
+    Button goBackAdminBtn;
     int waitingParticipants = 0;
 
 
@@ -52,6 +54,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         initializeViews(view);
         displayInfo();
         setUpListeners(view);
+        checkAdmin(view);
         return view;
     }
 
@@ -113,6 +116,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
             }
@@ -134,13 +138,25 @@ public class EntrantEventDetailsFragment extends Fragment {
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
 
+            }
+        });
 
+    }
 
+    public void checkAdmin(View view) {
+        db.GetUser(db.GetCurrentUserID(), user -> {
+            if (user.getAccountType() == -1) {
+                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+
+                goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getParentFragmentManager().popBackStack();
+                    }
+                });
             }
         });
     }
-
-
 
 }
 
