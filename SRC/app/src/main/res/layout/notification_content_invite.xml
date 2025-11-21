@@ -55,6 +55,7 @@
             android:layout_marginHorizontal="4dp"
             android:backgroundTint="@color/redbtn"
             android:text="Reject"/>
+
         <Button
             android:id="@+id/acceptBtn"
             android:layout_width="wrap_content"
