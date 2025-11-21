@@ -72,8 +72,12 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         // --- UI Binding ---
         if (notification.getType() == 1 && !notification.getChosen()) {
             notificationType.setText(R.string.winner_header);
-            removeButton.setVisibility(View.GONE);
-        } else if (!notification.getChosen()) {
+            //removeButton.setVisibility(View.GONE);
+        } else if (notification.getType() == 0){
+            notificationType.setText(notification.getMessage());
+            rejectButton.setVisibility(View.GONE);
+            acceptButton.setVisibility(View.GONE);
+        }else if (!notification.getChosen()) {
             notificationType.setText(R.string.not_picked);
             rejectButton.setVisibility(View.GONE);
             acceptButton.setVisibility(View.GONE);
@@ -112,12 +116,14 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
 
     public void UpdateEventStatus(Notif notification) {
         db.GetEvent(notification.getOriginEvent(), event -> {
-            if (notification.getChoice() == 1)
+            if (notification.getChoice() == 1) {
                 event.SetStatus(db.GetCurrentUserID(), "Accepted");
+                db.SaveEvent(event);
+            }
             else
-                event.SetStatus(db.GetCurrentUserID(), "Rejected");
-
-            db.SaveEvent(event);
+                db.GetUser(db.GetCurrentUserID(), user -> {
+                    db.CancelUserIntoEvent(event, user);
+                });
         });
     }
 
