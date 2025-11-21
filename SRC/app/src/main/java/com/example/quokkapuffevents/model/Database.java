@@ -246,22 +246,6 @@ public class Database {
         });
     }
 
-//    public void GetImage(String uri, OnSuccessListener<Bitmap> listener) {
-//        /**
-//         * This method collects the image from an event
-//         * @param event
-//         * The event that the image is from
-//         * @return
-//         * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
-//         */
-//        StorageReference refImage = imageDB.getReference(uri);
-//        final File localfile = new File(UUID.randomUUID() + ".jpeg");
-//        refImage.getFile(localfile).addOnSuccessListener(taskSnapshot -> {
-//            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
-//            listener.onSuccess(bitmap);
-//        });
-//    }
-
     public void GetImage(String path, OnSuccessListener<Bitmap> listener) {
         StorageReference refImage = imageDB.child(path);
         refImage.getBytes(1000000000).addOnSuccessListener(bytes -> {
@@ -477,53 +461,34 @@ public class Database {
     }
 
     //TODO Add logic for sending out notifications. Need Testing
-    /**
-     * This method draws the correct number of people for an event. It is the random raffle mechanism
-     * @param event
-     * The event that is randomly selecting participants from its waiting list
-     */
-    public void DrawUsers(Event event, OnSuccessListener<ArrayList<User>> listener){
+    public void DrawUsers(Event event){
+        /**
+         * This method draws the correct number of people for an event. It is the random raffle mechanism
+         * @param event
+         * The event that is randomly selecting participents from its waiting list
+         * @return
+         * Returns an Array List containing all of the chosen users
+         */
         //Collect User IDs
-        ArrayList<String> userID = event.drawUsers(-1);
-        //Make into Users
-        usersRef.whereIn("id", (List) userID).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<User> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            users.add(doc.toObject(User.class));
-                        }
-                        listener.onSuccess(users);
-                    } else {
-                        Log.e("Firestore", "Error getting notifications", task.getException());
-                    }
-                });
+        ArrayList<String> userIDs = event.drawUsers(-1);
+        event.setDrawn(true);
+        SaveEvent(event);
     }
 
-    /**
-     * This method is used to redraw a specific number of participants. It is used after an event as already drawn the majority of its users
-     * It allows for gaps caused by people cancelling or rejecting to be filled
-     * @param event
-     * The event that is randomly selecting participants from its waiting list
-     * @param numToDraw
-     * The number of new users from the waiting list to be drawn
-     */
-    public void RedrawUsers(Event event, Integer numToDraw, OnSuccessListener<ArrayList<User>> listener){
+    public void RedrawUsers(Event event, Integer numToDraw){
+        /**
+         * This method is used to redraw a specific number of participents. It is used after an event as already drawn the majority of its users
+         * It allows for gaps caused by people cancelling or rejecting to be filled
+         * @param event
+         * The event that is randomly selecting participents from its waiting list
+         * @param numToDraw
+         * The number of new users from the waiting list to be drawn
+         * @return
+         * Returns an Array List containing all of the newly chosen users
+         */
         //Collect User IDs
-        ArrayList<String> userID = event.drawUsers(numToDraw);
-        //Make into Users
-        usersRef.whereIn("id", (List) userID).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<User> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            users.add(doc.toObject(User.class));
-                        }
-                        listener.onSuccess(users);
-                    } else {
-                        Log.e("Firestore", "Error getting notifications", task.getException());
-                    }
-                });
+        ArrayList<String> userIDs = event.drawUsers(numToDraw);
+        SaveEvent(event);
     }
 
     //Notif Methods
@@ -644,18 +609,22 @@ public class Database {
         }
     }
 
-    public void BlockThreadUntilCompleted(CollectionReference ref, String id, Object obj) {
-        CountDownLatch latch = new CountDownLatch(1);
+    public void RegisterUserIntoEvent(Event event, User user){
+        user.addEvent(event.getId());
+        event.SetStatus(user.getId(), "Waiting");
+        SaveUser(user);
+        SaveEvent(event);
 
-        ref.document(id).set(obj)
-                .addOnSuccessListener(unused -> latch.countDown())
-                .addOnFailureListener(e -> latch.countDown());
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have joined the waiting list");
+    }
 
-        try {
-            latch.await();
-        } catch (InterruptedException e){
-            throw new RuntimeException(e);
-        }
+    public void CancelUserIntoEvent(Event event, User user){
+        user.addEvent(event.getId());
+        event.SetStatus(user.getId(), "Cancelled");
+        SaveUser(user);
+        SaveEvent(event);
+
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have left the waiting list");
     }
 
 }
