@@ -2,6 +2,7 @@ package com.example.quokkapuffevents.controller;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,10 @@ import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
 
 public class AdminEventDetailsFrag extends Fragment {
 
@@ -77,34 +81,59 @@ public class AdminEventDetailsFrag extends Fragment {
         db.GetUser(event.getOrg(), user -> {
             organizer.setText(user.getFirstName());
         });
+
         maxEntrants.setText(String.valueOf(event.getMaxNumWaitlist()));
+        if (event.getMaxNumWaitlist() == -1) {
+            maxEntrants.setText("No limit");
+        }
 
 
-        startEndDate.setText(event.getName());
+        String pattern = "MMM. dd, YYYY";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        Date startDate = event.getStartDate();
+        Date endDate = event.getEventDate();
 
-        db.GetU(user, events -> {
-            ArrayList<String> tempArray = new ArrayList<>();
-            for (int i = 0; i < events.size(); i++) {
-                Event tempEvent = events.get(i);
-                tempArray.add(tempEvent.getName());
+        startEndDate.setText(sdf.format(startDate) + " - " + sdf.format(startDate));
+
+        description.setText(event.getDescription());
+        description.setMovementMethod(new ScrollingMovementMethod());
+
+        Map<String, String> userInEvent = event.getEventUsers();
+        ArrayList<String> tempArray = new ArrayList<>();
+        adapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_list_item_1,
+                tempArray
+        ){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view =super.getView(position, convertView, parent);
+
+                TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                textView.setTextColor(Color.WHITE);
+
+                return view;
             }
-            adapter = new ArrayAdapter<>(requireContext(),
-                    android.R.layout.simple_list_item_1,
-                    tempArray
-            ){
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View view =super.getView(position, convertView, parent);
+        };
 
-                    TextView textView=(TextView) view.findViewById(android.R.id.text1);
+        allUsersEvent.setAdapter(adapter);
+        for (String key : userInEvent.keySet()) {
+            db.GetUser(key, user -> {
+                tempArray.add(user.getFirstName());
+                adapter.notifyDataSetChanged();
+            });
+        }
 
-                    textView.setTextColor(Color.WHITE);
+    }
 
-                    return view;
-                }
-            };
+    public void setUpListeners(View view) {
+        goBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            allEventsUser.setAdapter(adapter);
+                getParentFragmentManager().popBackStack();
+
+            }
         });
 
     }
