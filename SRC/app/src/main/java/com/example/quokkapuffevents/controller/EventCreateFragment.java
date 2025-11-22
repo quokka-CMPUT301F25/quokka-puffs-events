@@ -178,13 +178,11 @@ public class EventCreateFragment extends Fragment {
 
                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
-            //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });
 
         cancelEvent.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                //TODO: navigate back to the DashboardActivity with EventListFragment
                 ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
         });
