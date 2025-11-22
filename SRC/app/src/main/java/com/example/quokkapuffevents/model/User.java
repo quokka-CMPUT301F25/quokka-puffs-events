@@ -18,10 +18,26 @@ public class User {
     private Boolean sendNotifications;
     //etc etc
 
-
-    public User(){
-        this.id = "FAILURE";
-    }
+    /**
+     * Normal constructor for a User.
+     * @param id
+     * The String ID associated with the User.
+     * @param email
+     * The String Email Address of the User.
+     * @param accountType
+     * An integer representing what kind of account this User is (-1 for Admin, 0 for Entrant, 1 for
+     * Organizer).
+     * @param hashPassword
+     * The String hashed password of the User.
+     * @param username
+     * The String Username of the User.
+     * @param firstName
+     * The String First Name of the User.
+     * @param lastName
+     * The String Last Name of the User.
+     * @param phoneNumber
+     * The String Phone Number of the User (Optional)
+     */
     public User(String id, String email, Integer accountType, String hashPassword, String username, String firstName, String lastName, String phoneNumber){
         this.id = id;
         this.email = email;
@@ -34,6 +50,16 @@ public class User {
         this.accountType = accountType;
         this.sendNotifications = true;
     }
+
+    /**
+     * This is an empty User constructor. Sets the ID to "FAILURE". If the ID is "FAILURE"
+     * then something has gone wrong.
+     */
+    public User(){
+        this.id = "FAILURE";
+    }
+
+    // Getters and Setters
 
     public String getEmail() {
         return email;
