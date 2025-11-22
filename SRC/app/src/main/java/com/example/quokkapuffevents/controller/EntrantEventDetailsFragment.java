@@ -31,12 +31,10 @@ public class EntrantEventDetailsFragment extends Fragment {
     TextView orgEventNameText;
     TextView eventTotalParticiapntsWaitingText;
     TextView eventDrawDateText;
+    TextView eventDrawn;
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
-    int waitingParticipants = 0;
-
-
 
 
     @Override
@@ -68,6 +66,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         orgEventNameText = view.findViewById(R.id.orgEventNameText);
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
         eventDrawDateText = view.findViewById(R.id.eventDrawDateText);
+        eventDrawn = view.findViewById(R.id.eventDrawn);
         eventDescriptionText = view.findViewById(R.id.eventDescriptionText);
         entrantRegisterForEventBtn = view.findViewById(R.id.entrantRegisterForEventBtn);
         goBackToDashboardBtn = view.findViewById(R.id.goBackToDashboardBtn);
@@ -80,16 +79,6 @@ public class EntrantEventDetailsFragment extends Fragment {
         String eventDescription = event.getDescription();
         String eventName = event.getName();
         Date eventDrawDateObj = event.getDrawnDate();
-        Map<String, String> participants = event.getEventUsers();
-
-        participants.forEach((user, status) -> {
-            if(status.equals("Waitlist")) {
-                waitingParticipants++;
-            }
-        });
-
-
-
 
 //        Format the date into DD/MM/YYYY
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -98,12 +87,16 @@ public class EntrantEventDetailsFragment extends Fragment {
 
 //        Display info to fragment
         orgEventNameText.setText(eventName);
-        eventTotalParticiapntsWaitingText.setText(Integer.toString(waitingParticipants));
+        eventTotalParticiapntsWaitingText.setText(Integer.toString(event.getNumPeopleWaiting()));
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
+        eventDrawn.setText(event.getDrawn().toString());
 
-        //Removing button if after end of event
+        //Removing button if after end or full
         if (event.getEventDate().before(new Date())){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+        }
+        if ((event.getNumPeopleWaiting() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
 
@@ -122,8 +115,9 @@ public class EntrantEventDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                event.addUser(db.GetCurrentUserID());
-                db.SaveEvent(event);
+                db.GetUser(db.GetCurrentUserID(), user -> {
+                    db.RegisterUserIntoEvent(event, user);
+                });
 
                 CharSequence message = "You have been added to the waiting list.";
                 int duration = Toast.LENGTH_SHORT;
