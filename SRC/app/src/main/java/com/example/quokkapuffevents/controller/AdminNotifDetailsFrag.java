@@ -86,8 +86,6 @@ public class AdminNotifDetailsFrag extends Fragment {
             recipient.setText(user.getFirstName());
         });
 
-        message.setText(notif.getMessage());
-
         db.GetEvent(notif.getOriginEvent(), event -> {
             originEvent.setText(event.getName());
         });
@@ -95,6 +93,8 @@ public class AdminNotifDetailsFrag extends Fragment {
         if (notif.getType() == 1) {
             choice.setVisibility(VISIBLE);
             status.setVisibility(VISIBLE);
+            message.setText(notif.getMessage());
+
 
             if (notif.getChoice() == 0) {
                 choice.setText("Recipient has not accepted the invitation");
