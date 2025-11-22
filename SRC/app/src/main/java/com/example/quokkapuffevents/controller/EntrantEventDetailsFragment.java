@@ -2,11 +2,13 @@ package com.example.quokkapuffevents.controller;
 
 import static android.view.View.INVISIBLE;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,6 +32,7 @@ public class EntrantEventDetailsFragment extends Fragment {
     private Event event;
 
     TextView orgEventNameText;
+    ImageView eventImage;
     TextView eventTotalParticiapntsWaitingText;
     TextView eventDrawDateText;
     TextView eventDrawn;
@@ -64,6 +68,7 @@ public class EntrantEventDetailsFragment extends Fragment {
 
 //        Grab all the ids to the corresponding variable
         orgEventNameText = view.findViewById(R.id.orgEventNameText);
+        eventImage = view.findViewById(R.id.eventImageView);
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
         eventDrawDateText = view.findViewById(R.id.eventDrawDateText);
         eventDrawn = view.findViewById(R.id.eventDrawn);
@@ -87,6 +92,19 @@ public class EntrantEventDetailsFragment extends Fragment {
 
 //        Display info to fragment
         orgEventNameText.setText(eventName);
+        db.GetImage(event.getImageID(), new OnSuccessListener<Bitmap>() {
+            @Override
+            public void onSuccess(Bitmap bitmap) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            eventImage.setImageBitmap(bitmap);
+                        }
+                    });
+                }
+            }
+        });
         eventTotalParticiapntsWaitingText.setText(Integer.toString(event.getNumPeopleWaiting()));
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);

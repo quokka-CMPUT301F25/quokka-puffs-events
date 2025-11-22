@@ -130,6 +130,9 @@ public class Event {
     public Date getEventDate() {
         return eventDate;
     }
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
 
     public Date getStartDate() {
         return startDate;
@@ -138,13 +141,22 @@ public class Event {
     public Date getDrawnDate() {
         return drawnDate;
     }
+    public void setDrawnDate(Date drawnDate){
+        this.drawnDate = drawnDate;
+    }
 
     public Integer getMaxNumWaitlist() {
         return maxNumWaitlist;
     }
+    public void setMaxNumWaitlist(Integer maxNumWaitlist) {
+        this.maxNumWaitlist = maxNumWaitlist;
+    }
 
     public Integer getToBeDrawn() {
         return toBeDrawn;
+    }
+    public void setToBeDrawn(Integer toBeDrawn){
+        this.toBeDrawn = toBeDrawn;
     }
 
     public Map<String, String> getEventUsers() {
@@ -153,6 +165,9 @@ public class Event {
 
     public String getDescription() {
         return description;
+    }
+    public void setDescription(String desc) {
+        this.description = desc;
     }
 
     public String getOrg() {
