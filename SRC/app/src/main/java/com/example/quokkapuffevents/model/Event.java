@@ -187,7 +187,7 @@ public class Event {
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
         eventUsers.put(userID, newStatus);
-        Log.d("FUCK", "Got here");
+        Log.d("EVENT", "User status has been changed");
         if (Objects.equals(newStatus, "Cancelled")){
             numPeopleWaiting -= 1;
         } else if (Objects.equals(newStatus, "Waiting")){
