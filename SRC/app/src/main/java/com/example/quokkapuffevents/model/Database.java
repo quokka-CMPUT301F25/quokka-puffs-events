@@ -179,6 +179,12 @@ public class Database {
         notifsRef.document(id).set(newNotif);
         return(newNotif);
     }
+
+    /**
+     *
+     * @param bitmap
+     * @param listener
+     */
     public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<String> listener){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -196,6 +202,11 @@ public class Database {
         });
     }
 
+    /**
+     * Grabs the currently selected User from the database.
+     * @param userID
+     * @param listener
+     */
     public void GetUser(String userID, OnSuccessListener<User> listener) {
         usersRef.document(userID).get().addOnSuccessListener(document -> {
             if(document.exists()){
@@ -206,7 +217,7 @@ public class Database {
     }
     
     /**
-     * Grabs the currently selected event.
+     * Grabs the currently selected event from the database.
      * @param eventID
      *
      * @param listener
@@ -221,6 +232,41 @@ public class Database {
         });
     }
 
+    /**
+     * Collects the most up to date data from the database of notif based on their notification id.
+     * @param notifID
+     * The id of the notif being searched for
+     */
+    public void CheckNotification(String notifID, OnSuccessListener<Notif> listener) {
+        notifsRef.document(notifID).get().addOnSuccessListener(document -> {
+            if (document.exists()) {
+                Notif notif = document.toObject(Notif.class);
+                listener.onSuccess(notif);
+            }
+        });
+    }
+
+//    public void GetImage(String uri, OnSuccessListener<Bitmap> listener) {
+//        /**
+//         * This method collects the image from an event
+//         * @param event
+//         * The event that the image is from
+//         * @return
+//         * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
+//         */
+//        StorageReference refImage = imageDB.getReference(uri);
+//        final File localfile = new File(UUID.randomUUID() + ".jpeg");
+//        refImage.getFile(localfile).addOnSuccessListener(taskSnapshot -> {
+//            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+//            listener.onSuccess(bitmap);
+//        });
+//    }
+
+    /**
+     *
+     * @param path
+     * @param listener
+     */
     public void GetImage(String path, OnSuccessListener<Bitmap> listener) {
         if (path == null){
             //Commented out cause if no image is uploaded it crashes
@@ -302,18 +348,18 @@ public class Database {
     }
 
     /**
-     * Deletes the provided notif from the firebase database using the specified object.
+     * Deletes the provided notification from the firebase database using the specified object.
      * @param notif
-     * This is the notif that is being deleted.
+     * This is the notification that is being deleted.
      */
     public void DeleteNotification(Notif notif){
         notifsRef.document(notif.getId()).delete();
     }
 
     /**
-     * Deletes the provided notif from the firebase database using the notification id.
+     * Deletes the provided notification from the firebase database using the notification id.
      * @param id
-     * This is the id of the notif that is being deleted.
+     * This is the id of the notification that is being deleted.
      */
     public void DeleteNotification(String id){
         notifsRef.document(id).delete();
@@ -329,7 +375,7 @@ public class Database {
     //TODO: Test all of these:
 
     /**
-     * This method provides a list of every event that is in the database
+     * Provides a list of every event that is in the database
      */
     public void ListEvents(OnSuccessListener<ArrayList<Event>> listener){
         //Collects the data for every user with an id in the above list
@@ -348,7 +394,7 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every user that is in the database
+     * Provides a list of every user that is in the database.
      */
     public void ListUsers(OnSuccessListener<ArrayList<User>> listener){
         //Collects the data for every user with an id in the above list
@@ -367,7 +413,7 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every notification that is in the database
+     * Provides a list of every notification that is in the database.
      */
     public void ListNotifs(OnSuccessListener<ArrayList<Notif>> listener){
         //Collects the data for every user with an id in the above list
@@ -386,9 +432,10 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every user that is signed up to an event
+     * Provides a list of every user that is signed up to an event.
      * @param event
-     * This is the event that is being looked at. The users returned will have signed up to this event
+     * This is the event that is being looked at. The users returned will have signed up to this
+     * event.
      */
     public void UsersInEvent(Event event, OnSuccessListener<ArrayList<User>> listener){
         //List of all users in the event
@@ -417,9 +464,9 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every event that a user has signed up for
+     * Provides a list of every event that a user has signed up for.
      * @param user
-     * This is the user that is being looked at
+     * This is the user that is being looked at.
      */
     public void GetEventsFromUser(User user, OnSuccessListener<ArrayList<Event>> listener){
         //List of all users in the event
@@ -442,9 +489,9 @@ public class Database {
     }
 
     /**
-     * This method draws the correct number of people for an event. It is the random raffle mechanism
+     * Draws the correct number of people for an event. It is the random raffle mechanism.
      * @param event
-     * The event that is randomly selecting participents from its waiting list
+     * The event that is randomly selecting participants from its waiting list.
      */
     public void DrawUsers(Event event){
         //Collect User IDs
@@ -453,8 +500,8 @@ public class Database {
         SaveEvent(event);
     }
     /**
-     * This method is used to redraw a specific number of participents. It is used after an event as already drawn the majority of its users
-     * It allows for gaps caused by people cancelling or rejecting to be filled
+     * Used to redraw a specific number of participants. Used after an event has already drawn the
+     * majority of its users. Allows for gaps caused by people cancelling or rejecting to be filled.
      * @param event
      * The event that is randomly selecting participents from its waiting list
      * @param numToDraw
