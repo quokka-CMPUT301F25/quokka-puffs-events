@@ -84,7 +84,7 @@
                     android:id="@+id/viewChosenParticipantsBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chosen"
+                    android:text="Invited"
                     android:textSize="16dp"
                     android:backgroundTint="@color/bluebtn"
                     android:layout_weight="1"

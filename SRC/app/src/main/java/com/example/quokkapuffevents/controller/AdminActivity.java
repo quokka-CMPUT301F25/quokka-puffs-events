@@ -33,9 +33,8 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
-        replaceFragment(fragmentManager, new AdminEventFragment());
+        replaceFragment(new AdminEventFragment());
 
 
         title = findViewById(R.id.adminTitle);
@@ -49,7 +48,7 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 title.setText("All Images");
-                replaceFragment(fragmentManager, new AdminPhotoFragment());
+                replaceFragment(new AdminPhotoFragment());
             }
         });
 
@@ -57,7 +56,7 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 title.setText("All Events");
-                replaceFragment(fragmentManager, new AdminEventFragment());
+                replaceFragment(new AdminEventFragment());
             }
         });
 
@@ -65,7 +64,7 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 title.setText("All Users");
-                replaceFragment(fragmentManager, new AdminUserFragment());
+                replaceFragment(new AdminUserFragment());
             }
         });
 
@@ -73,7 +72,7 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 title.setText("All Notifications");
-                replaceFragment(fragmentManager, new AdminNotificationFragment());
+                replaceFragment(new AdminNotificationFragment());
             }
         });
 
@@ -84,14 +83,15 @@ public class AdminActivity extends AppCompatActivity {
                 db.GetUser(db.GetCurrentUserID(), user -> {
                     SettingFragment settingFragment = new SettingFragment();
                     settingFragment.setCurrUser(user);
-                    replaceFragment(fragmentManager, settingFragment);
+                    replaceFragment(settingFragment);
                 });
             }
         });
 
     }
 
-    public void replaceFragment(FragmentManager fragmentManager, Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.adminFragmentContainer, fragment, null)
@@ -107,15 +107,13 @@ public class AdminActivity extends AppCompatActivity {
     public void changeProfile(User user) {
         ChangeProfileSettings editFragment = new ChangeProfileSettings();
         editFragment.setUser(user);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        replaceFragment(fragmentManager, editFragment);
+        replaceFragment(editFragment);
     }
 
     public void goSettingFragment (User user) {
         SettingFragment settingFragment = new SettingFragment();
         settingFragment.setCurrUser(user);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        replaceFragment(fragmentManager, settingFragment);
+        replaceFragment(settingFragment);
     }
 
 }

@@ -86,13 +86,9 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
         //region --Waiting UI Elements--
             waitingEvents = view.findViewById(R.id.waiting_events_content);
-
-
-
             originUserText_waiting = view.findViewById(R.id.user_text_waiting);
             eventText_waiting = view.findViewById(R.id.event_text_waiting);
             eventDate_waiting = view.findViewById(R.id.event_date_waiting);
-
 
             cancelEventBtn_waiting = view.findViewById(R.id.cancel_event_btn_waiting);
             detailsEventBtn_waiting = view.findViewById(R.id.details_event_btn_waiting);
@@ -122,7 +118,6 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
         UIBinding();
 
         if(type.equals("Waiting")) {
-            originUserText_waiting.setText(event.getOrg());
             eventText_waiting.setText(event.getName());
             eventDate_waiting.setText(event.getStartDate().toString());
 
@@ -133,20 +128,26 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
             detailsEventBtn_waiting.setOnClickListener(v -> {
                 seeDetails(event);
             });
+
+            db.GetUser(event.getOrg(), user -> {
+                originUserText_waiting.setText(user.getUserName().toString() + "'s     ");
+            });
         }
 
         if(type.equals("Past")) {
-            //originUserText_past.setText(event.getOrg());
             eventText_past.setText(event.getName());
             eventDate_past.setText(event.getStartDate().toString());
 
             eventDetailsBtn_past.setOnClickListener(v -> {
                 seeDetails(event);
             });
+
+            db.GetUser(event.getOrg(), user -> {
+                originUserText_past.setText(user.getUserName().toString() + "'s    ");
+            });
         }
 
         if (type.equals("all")) {
-            //originUserText_all.setText(event.getOrg());
             eventText_all.setText(event.getName());
             eventDate_all.setText(event.getStartDate().toString());
 
@@ -156,6 +157,12 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
             eventRegisterBtn_all.setOnClickListener(v -> {
                 registerForEvent(event);
+                events.remove(event);
+                notifyDataSetChanged();
+            });
+
+            db.GetUser(event.getOrg(), user -> {
+                originUserText_all.setText(user.getUserName().toString() + "'s     ");
             });
         }
 
@@ -191,23 +198,11 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void registerForEvent(Event event) {
-        if(event.getMaxNumWaitlist() != null && event.getEventUsers().size() < event.getMaxNumWaitlist()) {
-            event.addUser(user.getId());
-            db.SaveEvent(event);
-            user.addEvent(event.getId());
-            db.SaveUser(user);
-        }
-        else{
-            event.addUser(user.getId());
-            db.SaveEvent(event);
-            user.addEvent(event.getId());
-            db.SaveUser(user);
-        }
+        db.RegisterUserIntoEvent(event, user);
     }
 
     public void leaveWaitingList(Event event) {
-        event.SetStatus(user.getId(), "Cancelled");
-        db.SaveEvent(event);
+        db.CancelUserIntoEvent(event, user);
     }
 
     public void seeDetails(Event event) {

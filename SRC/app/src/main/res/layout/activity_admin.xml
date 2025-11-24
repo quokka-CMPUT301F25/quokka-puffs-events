@@ -61,7 +61,7 @@
             android:contentDescription="Go to images fragment"
             android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/images_icon">
+            android:src="@drawable/all_images">
 
         </ImageButton>
 
@@ -76,7 +76,7 @@
             android:contentDescription="Go to events fragment"
             android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/events_icon">
+            android:src="@drawable/all_events">
 
         </ImageButton>
 
@@ -91,7 +91,7 @@
             android:contentDescription="Go to users fragment"
             android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/users_icon">
+            android:src="@drawable/all_users">
 
         </ImageButton>
 
@@ -106,7 +106,7 @@
             android:contentDescription="Go to notifications fragment"
             android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/notifications_icon">
+            android:src="@drawable/notifs">
 
         </ImageButton>
 
@@ -121,7 +121,7 @@
             android:contentDescription="Go to notifications fragment"
             android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/settings_icon">
+            android:src="@drawable/settings">
 
         </ImageButton>
 
