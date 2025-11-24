@@ -1,6 +1,8 @@
 package com.example.quokkapuffevents.model;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,9 +17,7 @@ public class Event {
     private String description;
     private Integer toBeDrawn;
     private Integer maxNumWaitlist;
-    //TODO
-    //private QRCode qrCode;
-    //private Geo geo;????
+    private Integer numPeopleWaiting;
     private Map<String, String> eventUsers = new HashMap<>(); //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
     private Date drawnDate;
@@ -27,9 +27,18 @@ public class Event {
     //Add geo data?
     private Boolean drawn;
 
-    public Event(){
-        this.id = "FAILURE";
-    }
+    // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
+
+    /**
+     * The default constructor for Event. Does not have a limit on the max waitlist capacity.
+     * @param id
+     * @param name
+     * @param org
+     * @param description
+     * @param toBeDrawn
+     * @param drawnDate
+     * @param eventDate
+     */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate){
         this.name = name;
         this.id = id;
@@ -43,7 +52,20 @@ public class Event {
         this.drawn = false;
         this.imageID = null;
         this.qrcodeID = null;
+        this.numPeopleWaiting = 0;
     }
+
+    /**
+     * The altered constructor for Event. Contains a limit on the max waitlist capacity.
+     * @param id
+     * @param name
+     * @param org
+     * @param description
+     * @param toBeDrawn
+     * @param maxNumWaitlist
+     * @param drawnDate
+     * @param eventDate
+     */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate){
         this.name = name;
         this.id = id;
@@ -57,7 +79,17 @@ public class Event {
         this.drawn = false;
         this.imageID = null;
         this.qrcodeID = null;
+        this.numPeopleWaiting = 0;
     }
+
+    /**
+     *
+     */
+    public Event(){
+        this.id = "FAILURE";
+    }
+
+    // Getters and Setters
 
     public String getName() {
         return name;
@@ -91,8 +123,15 @@ public class Event {
         return id;
     }
 
+    public Integer getNumPeopleWaiting() {
+        return numPeopleWaiting;
+    }
+
     public Date getEventDate() {
         return eventDate;
+    }
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
     }
 
     public Date getStartDate() {
@@ -102,13 +141,22 @@ public class Event {
     public Date getDrawnDate() {
         return drawnDate;
     }
+    public void setDrawnDate(Date drawnDate){
+        this.drawnDate = drawnDate;
+    }
 
     public Integer getMaxNumWaitlist() {
         return maxNumWaitlist;
     }
+    public void setMaxNumWaitlist(Integer maxNumWaitlist) {
+        this.maxNumWaitlist = maxNumWaitlist;
+    }
 
     public Integer getToBeDrawn() {
         return toBeDrawn;
+    }
+    public void setToBeDrawn(Integer toBeDrawn){
+        this.toBeDrawn = toBeDrawn;
     }
 
     public Map<String, String> getEventUsers() {
@@ -118,36 +166,45 @@ public class Event {
     public String getDescription() {
         return description;
     }
+    public void setDescription(String desc) {
+        this.description = desc;
+    }
 
     public String getOrg() {
         return org;
     }
 
-
-    //Actual methods
-    public void addUser(String userID){
-        //Adding an entry to the map
-        eventUsers.put(userID, "Waiting");
+    public Integer getNumInvitedAccepted(){
+        Integer total = 0;
+        for (String entry : eventUsers.keySet()) {
+            if ((eventUsers.get(entry).equals("Invited")) || (eventUsers.get(entry).equals("Accepted"))) {
+                total += 1;
+            }
+        }
+        return(total);
     }
-
+    //Actual methods
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
-        if(eventUsers.size() <= maxNumWaitlist)
-        {
-            eventUsers.put(userID, newStatus);
+        eventUsers.put(userID, newStatus);
+        Log.d("FUCK", "Got here");
+        if (Objects.equals(newStatus, "Cancelled")){
+            numPeopleWaiting -= 1;
+        } else if (Objects.equals(newStatus, "Waiting")){
+            numPeopleWaiting += 1;
         }
     }
 
+    /**
+     * Randomly chooses the number of people to to draw from the list that are waiting for this event.
+     * @param numCalled
+     * The number of people to draw
+     * @return
+     * Return the array list of all of the drawn users
+     */
     public ArrayList<String> drawUsers(Integer numCalled){
-        /**
-         * This randomly chooses numCalled people that are waiting for this event
-         * @param numCalled
-         * The number of people to draw
-         * @return
-         * Return the array list of all of the drawn users
-         */
         ArrayList<String> waitingUsers = new ArrayList<>(); //Create empty list to hold users that are still on the waiting list
-        Random r= new Random(); //Random class for the draw
+        Random r = new Random(); //Random class for the draw
         Database db = Database.getInstance();
 
         //Collect all users from the eventUsers Map that is still waiting
@@ -157,11 +214,11 @@ public class Event {
             }
         }
         //Ensure that no error. Easier to do here than anywhere else
-        if (numCalled > waitingUsers.size()){
-            numCalled = waitingUsers.size();
-        }
         if (numCalled == -1){
             numCalled = toBeDrawn;
+        }
+        if (numCalled > waitingUsers.size()){
+            numCalled = waitingUsers.size();
         }
 
         //List of drawn user ids

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/dashboardEventsContainer"
         android:layout_width="400dp"
@@ -11,9 +12,8 @@
         android:background="@drawable/border_shape_general"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="24dp">
-
-
+        android:paddingVertical="24dp"
+        android:layout_gravity="center_horizontal">
 
         <TextView
             android:id="@+id/orgEventNameText"
@@ -27,96 +27,127 @@
             android:textStyle="bold"
             android:layout_marginBottom="24dp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Participants in waiting list:"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:layout_weight="2"/>
-
-            <TextView
-                android:id="@+id/eventTotalParticipantsWaitingText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="AMOUNT"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:textAlignment="textEnd"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Draw Date:"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:layout_weight="2"/>
-
-            <TextView
-                android:id="@+id/eventDrawDateText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DATE"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:textAlignment="textEnd"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description:"
-            android:textColor="@color/white"
-            android:textSize="24dp"
-            android:layout_marginBottom="8dp"/>
-
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/eventDescriptionText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PLACEHOLDER DESCRIPTION"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                />
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/eventImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/all_events"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Event image"
+                    android:layout_marginBottom="16dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Participants in waiting list:"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:id="@+id/eventTotalParticipantsWaitingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="AMOUNT"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"
+                        android:textAlignment="textEnd"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Draw Date:"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:id="@+id/eventDrawDateText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DATE"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"
+                        android:textAlignment="textEnd"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Drawn Status:"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:id="@+id/eventDrawn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="STATUS"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"
+                        android:textAlignment="textEnd"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description:"
+                    android:textColor="@color/white"
+                    android:textSize="24dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/eventDescriptionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PLACEHOLDER DESCRIPTION"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"/>
+
+            </LinearLayout>
         </ScrollView>
 
-
-
-
-
-
-
-
+        <!-- Buttons outside the ScrollView -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:orientation="horizontal">
-
 
             <Button
                 android:id="@+id/goBackToDashboardBtn"
@@ -131,7 +162,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
-
 
             <Button
                 android:id="@+id/entrantRegisterForEventBtn"

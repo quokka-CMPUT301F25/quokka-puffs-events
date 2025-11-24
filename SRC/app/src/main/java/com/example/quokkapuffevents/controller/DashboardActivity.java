@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +28,11 @@ import java.util.List;
 public class DashboardActivity extends AppCompatActivity {
     String userID;
     Database db;
-    Button homeButton;
-    Button viewEventsButton;
-    Button addEventButton;
-    Button notificationButton;
-    Button settingsButton;
+    ImageButton homeButton;
+    ImageButton viewEventsButton;
+    ImageButton addEventButton;
+    ImageButton notificationButton;
+    ImageButton settingsButton;
     TextView usernameText;
     TextView userFirstAndLastNameText;
 

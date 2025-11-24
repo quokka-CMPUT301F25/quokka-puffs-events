@@ -42,56 +42,102 @@
         android:paddingBottom="24dp"
         >
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/headerBtnContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
 
-            <Button
-                android:id ="@+id/home_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:layout_weight="1"
-                android:backgroundTint="@color/transparent"/>
+            <ImageButton
+                android:id="@+id/home_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/home"
+                android:contentDescription="Go to home fragment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/all_events_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"/>
 
-            <Button
-                android:id ="@+id/all_events_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Events"
-                android:layout_weight="1"
-                android:backgroundTint="@color/transparent"/>
+            <ImageButton
+                android:id="@+id/all_events_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/all_events"
+                android:contentDescription="Go to event fragment"
+                app:layout_constraintStart_toEndOf="@+id/home_button"
+                app:layout_constraintEnd_toStartOf="@+id/add_events_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <Button
-                android:id ="@+id/add_events_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Event"
-                android:layout_weight="1"
-                android:backgroundTint="@color/transparent"/>
+            <ImageButton
+                android:id="@+id/add_events_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/add_events"
+                android:contentDescription="Go to add event fragment"
+                app:layout_constraintStart_toEndOf="@+id/all_events_button"
+                app:layout_constraintEnd_toStartOf="@+id/notifs_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <Button
-                android:id ="@+id/notifs_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Notifications"
-                android:layout_weight="1"
-                android:backgroundTint="@color/transparent"/>
+            <ImageButton
+                android:id="@+id/notifs_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/notifs"
+                android:contentDescription="Go to notif fragment"
+                app:layout_constraintStart_toEndOf="@+id/add_events_button"
+                app:layout_constraintEnd_toStartOf="@+id/settings_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <Button
-                android:id ="@+id/settings_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Settings"
-                android:layout_weight="1"
-                android:backgroundTint="@color/transparent"/>
+            <ImageButton
+                android:id="@+id/settings_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/settings"
+                android:contentDescription="Go to settings fragment"
+                app:layout_constraintStart_toEndOf="@+id/notifs_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

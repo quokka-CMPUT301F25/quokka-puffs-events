@@ -1,6 +1,10 @@
 package com.example.quokkapuffevents.controller;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -13,6 +17,10 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,6 +33,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,7 +50,6 @@ public class EventCreateFragment extends Fragment {
     EditText drawDate; //not in views yet, start of registration period
     EditText dateOfEvent; // date of event
     EditText eventDesc; //description of event
-    Button addImagesBtn; //TODO: How will we implement images for events and add to database
     Switch limitPar;
     //the switch in XML file that determines whether organizer would like to limit the numb of participants
     EditText numbPar; //not in views yet, number of participants to be chosen
@@ -53,6 +61,11 @@ public class EventCreateFragment extends Fragment {
 
     String maxParts;
 
+    // IMAGE UPLOAD VARIABLES
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private Bitmap selectedImageBitmap;
+    Button addImagesBtn; //TODO: How will we implement images for events and add to database
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -62,9 +75,9 @@ public class EventCreateFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        super.onViewCreated(view, savedInstanceState);
         db = Database.getInstance();
         userID = db.GetCurrentUserID();
+        registerImagePickerLauncher();
         initializeViews(view);
         setUpListeners(view);
     }
@@ -79,7 +92,7 @@ public class EventCreateFragment extends Fragment {
         dateOfEvent = view.findViewById(R.id.eventDateInput);
         drawDate = view.findViewById(R.id.drawDateInput);
         eventDesc = view.findViewById(R.id.eventDescInput);
-        //addImagesBtn = view.findViewById(R.id.addPhotosBtn);
+        addImagesBtn = view.findViewById(R.id.eventAddImagesBtn);
         limitPar = view.findViewById(R.id.eventLimitParticipantsSwitch);
         maxPar = view.findViewById(R.id.eventMaxParticipantsInput);
         addGeo = view.findViewById(R.id.eventGeolocationSwitch);
@@ -89,24 +102,34 @@ public class EventCreateFragment extends Fragment {
     }
 
     public void setUpListeners(View view) {
+
+        // opens ui which allows user to select where they want theyre images pulled from
+        addImagesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                imagePickerLauncher.launch(Intent.createChooser(intent, "Select Event Poster Image"));
+            }
+        });
+
         createEvent.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
 
 
-//               // Getting input values
+               // Getting input values
                 String title = eventTitle.getText().toString().trim();
                 String desc = eventDesc.getText().toString().trim();
-//
-//                //TODO: change if we are adding a calendar widget
+
+                //TODO: change if we are adding a calendar widget
                 //Format that user type has to be yyyy-mm-dd in order for DateConverter to work
-//                String startDateString = startDateDraw.getText().toString().trim();
-//                String endDateString = endDateDraw.getText().toString().trim();
                 String eventDateString = dateOfEvent.getText().toString().trim();
                 String drawDateString = drawDate.getText().toString().trim();
                 int parts = Integer.parseInt(numbPar.getText().toString()); // number of wanted participants in event
                 String maxParts = "";
-//
+
                 boolean limitParts = limitPar.isChecked();
                 if (limitParts){
                     maxParts = maxPar.getText().toString().trim();
@@ -123,13 +146,17 @@ public class EventCreateFragment extends Fragment {
                 Date eventDate = dateConverter(eventDateString);
 
                 //Create event in database
-//                createEventObject(userID, desc, parts, maxParts, new Date(), new Date(), new Date(), title);
                 if (maxParts.isEmpty()){
                     Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
-                    db.UploadImageToDatabase(bitmap, path -> {
-                        event.setQrcodeID(path);
+                    //Saving bitmap and image poster
+                    db.UploadImageToDatabase(bitmap, uri -> {
+                        event.setQrcodeID(uri);
+                        db.SaveEvent(event);
+                    });
+                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
+                        event.setImageID(uri);
                         db.SaveEvent(event);
                     });
                 } else {
@@ -137,24 +164,67 @@ public class EventCreateFragment extends Fragment {
                     Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
-                    //Saving bitmap
-                    db.UploadImageToDatabase(bitmap, path -> {
-                        event.setQrcodeID(path);
+                    //Saving bitmap and image poster
+                    db.UploadImageToDatabase(bitmap, uri -> {
+                        event.setQrcodeID(uri);
+                        db.SaveEvent(event);
+                    });
+                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
+                        event.setImageID(uri);
                         db.SaveEvent(event);
                     });
                 }
 
-                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
+
+               ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
-            //TODO: navigate back to the DashboardActivity with EventListFragment (show updated event list)
         });
 
         cancelEvent.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                //TODO: navigate back to the DashboardActivity with EventListFragment
+                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
         });
+    }
+
+    public void registerImagePickerLauncher() {
+        /**
+         * Registers the activity result launcher for image picking
+         */
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            Intent data = result.getData();
+                            Uri imageUri = data.getData();
+                            handleImageSelection(imageUri);
+                        }
+                    }
+                }
+        );
+    }
+
+    public void handleImageSelection(Uri imageUri) {
+        /**
+         * Handles the selected image and converts it to Bitmap
+         * @param imageUri
+         * URI of the selected image
+         */
+        try {
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(imageUri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            selectedImageBitmap = bitmap;
+
+        } catch (Exception e) {
+            Log.e("ImageHandling", "Error converting URI to Bitmap", e);
+            Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public Date dateConverter(String dateString){
@@ -195,36 +265,6 @@ public class EventCreateFragment extends Fragment {
             }
         }
         return true;
-    }
-
-    public void createEventObject(String id, String desc, int parts, String maxParts,
-                                  Date startDate, Date endDate, Date eventDate, String title){
-        /**
-         * Method to create the event itself (easier for testing)
-         * @param id
-         * Current user ID using the app (automatic that they are an organizer)
-         * @param desc
-         * Description of event
-         * @param parts
-         * Number of Participants to be in event
-         * @param maxParts
-         * Max participants to join waiting list
-         * (This is an OPTIONAL feature dealt with within this method)
-         * @param startDate
-         * Start of when entrants are allowed to join waiting list
-         * @param endDate
-         * End of when entrants are allowed to join waiting list
-         * @param eventDate
-         * Day of the event
-         * @param title
-         * Title of event
-         */
-        if (maxParts.isEmpty()){
-            db.CreateEvent(title, id, desc, parts, endDate, eventDate);
-        } else {
-            int maxPar = Integer.parseInt(maxParts);
-            db.CreateEvent(title, id, desc, parts, maxPar, endDate, eventDate);
-        }
     }
 
     //This code was adapted from GeeksForGeeks. https://www.geeksforgeeks.org/android/how-to-generate-qr-code-in-android/
