@@ -1,15 +1,13 @@
 package com.example.quokkapuffevents.model;
 
-import android.content.Context;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.example.quokkapuffevents.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,18 +17,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 
 
 public class Database {
@@ -231,13 +222,19 @@ public class Database {
     }
 
     public void GetImage(String path, OnSuccessListener<Bitmap> listener) {
-        StorageReference refImage = imageDB.child(path);
-        refImage.getBytes(1000000000).addOnSuccessListener(bytes -> {
-            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            listener.onSuccess(bmp);
-        }).addOnFailureListener(e -> {
-            Log.e("IMAGES", "Download failed", e);
-        });
+        if (path == null){
+            //Commented out cause if no image is uploaded it crashes
+//            Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.all_images);
+//            listener.onSuccess(bitmap);
+        } else{
+            StorageReference refImage = imageDB.child(path);
+            refImage.getBytes(1000000000).addOnSuccessListener(bytes -> {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                listener.onSuccess(bmp);
+            }).addOnFailureListener(e -> {
+                Log.e("IMAGES", "Download failed", e);
+            });
+        }
     }
 
     /**
@@ -611,7 +608,6 @@ public class Database {
      * The user that us cancelling from the event
      */
     public void CancelUserIntoEvent(Event event, User user){
-        user.addEvent(event.getId());
         event.SetStatus(user.getId(), "Cancelled");
         SaveUser(user);
         SaveEvent(event);
