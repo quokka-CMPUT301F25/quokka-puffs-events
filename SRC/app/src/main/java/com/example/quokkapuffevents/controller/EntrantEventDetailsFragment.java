@@ -2,11 +2,13 @@ package com.example.quokkapuffevents.controller;
 
 import static android.view.View.INVISIBLE;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +32,10 @@ public class EntrantEventDetailsFragment extends Fragment {
     private Event event;
 
     TextView orgEventNameText;
+    ImageView eventImage;
     TextView eventTotalParticiapntsWaitingText;
     TextView eventDrawDateText;
+    TextView eventDrawn;
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
@@ -69,8 +73,10 @@ public class EntrantEventDetailsFragment extends Fragment {
 
 //        Grab all the ids to the corresponding variable
         orgEventNameText = view.findViewById(R.id.orgEventNameText);
+        eventImage = view.findViewById(R.id.eventImageView);
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
         eventDrawDateText = view.findViewById(R.id.eventDrawDateText);
+        eventDrawn = view.findViewById(R.id.eventDrawn);
         eventDescriptionText = view.findViewById(R.id.eventDescriptionText);
         entrantRegisterForEventBtn = view.findViewById(R.id.entrantRegisterForEventBtn);
         goBackToDashboardBtn = view.findViewById(R.id.goBackToDashboardBtn);
@@ -101,12 +107,29 @@ public class EntrantEventDetailsFragment extends Fragment {
 
 //        Display info to fragment
         orgEventNameText.setText(eventName);
-        eventTotalParticiapntsWaitingText.setText(Integer.toString(waitingParticipants));
+        db.GetImage(event.getImageID(), new OnSuccessListener<Bitmap>() {
+            @Override
+            public void onSuccess(Bitmap bitmap) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            eventImage.setImageBitmap(bitmap);
+                        }
+                    });
+                }
+            }
+        });
+        eventTotalParticiapntsWaitingText.setText(Integer.toString(event.getNumPeopleWaiting()));
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
+        eventDrawn.setText(event.getDrawn().toString());
 
-        //Removing button if after end of event
+        //Removing button if after end or full
         if (event.getEventDate().before(new Date())){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+        }
+        if ((event.getNumPeopleWaiting() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
 
@@ -126,8 +149,9 @@ public class EntrantEventDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                event.addUser(db.GetCurrentUserID());
-                db.SaveEvent(event);
+                db.GetUser(db.GetCurrentUserID(), user -> {
+                    db.RegisterUserIntoEvent(event, user);
+                });
 
                 CharSequence message = "You have been added to the waiting list.";
                 int duration = Toast.LENGTH_SHORT;
