@@ -103,7 +103,7 @@ public class AdminEventDetailsFrag extends Fragment {
 
         startEndDate.setText(sdf.format(startDate) + " - " + sdf.format(startDate));
 
-        description.setText(event.getId());
+        description.setText(event.getDescription());
         description.setMovementMethod(new ScrollingMovementMethod());
 
         Map<String, String> userInEvent = event.getEventUsers();

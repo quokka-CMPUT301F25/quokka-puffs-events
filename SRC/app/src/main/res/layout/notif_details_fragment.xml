@@ -50,7 +50,7 @@
                 android:background="@drawable/border_shape_grey"
                 android:gravity="left"
                 android:maxLines="1"
-                android:text="Notif name"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="40sp"
                 android:textStyle="bold">
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="Jimbob"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
@@ -135,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="Carl"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
@@ -177,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="3"
-                android:text="You have joined the waiting list"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
@@ -262,7 +262,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="Sleepover"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
