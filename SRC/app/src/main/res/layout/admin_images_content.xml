@@ -8,18 +8,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@drawable/content_border"
+        android:layout_height="188dp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/content_border">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
             android:src="@drawable/image_temp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,25 +30,31 @@
 
         </ImageView>
 
-        <ImageButton
+        <Button
             android:id="@+id/deleteButton"
             android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="end"
-            android:layout_marginHorizontal="4dp"
-            android:layout_marginStart="96dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="40dp"
-            android:layout_weight="1"
-            android:background="@drawable/border_shape_general"
-            android:backgroundTint="@color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/trash_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:backgroundTint="@color/redbtn"
+            android:text="Delete"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent">
 
-        </ImageButton>
+        </Button>
+
+        <Button
+            android:id="@+id/detailsButton"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="40dp"
+            android:backgroundTint="@color/greybtn"
+            android:text="Details"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deleteButton">
+
+        </Button>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

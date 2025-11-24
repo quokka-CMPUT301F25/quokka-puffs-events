@@ -23,6 +23,7 @@ public class AdminPhotoFragment extends Fragment {
     private AdminPhotoFragAdapter adapter;
     private Database db;
     private ArrayList<Event> eventList = new ArrayList<>();
+    private ArrayList<Event> tempEventsList = new ArrayList<>();
 
     public AdminPhotoFragment() {
 
@@ -37,13 +38,21 @@ public class AdminPhotoFragment extends Fragment {
 
         listView = imageFragmentView.findViewById(R.id.adminImagesListView);
 
+        // Create an adapter for the images
         adapter = new AdminPhotoFragAdapter(getContext(), eventList);
         listView.setAdapter(adapter);
 
+        // Add all the images to the adapter
         db.ListEvents( events -> {
             // refresh adapter
             eventList.clear();
-            eventList.addAll(events);
+
+            for (Event event : events) {
+                if (event.getImageID() != null) {
+                    eventList.add(event);
+                }
+            }
+
             adapter.notifyDataSetChanged();
         });
 

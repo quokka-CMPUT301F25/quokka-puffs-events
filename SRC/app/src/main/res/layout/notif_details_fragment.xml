@@ -37,6 +37,12 @@
 
             </TextView>
 
+            <View
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+            </View>
+
             <TextView
                 android:id="@+id/notifName"
                 android:layout_width="match_parent"
