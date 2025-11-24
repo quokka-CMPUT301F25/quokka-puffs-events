@@ -104,13 +104,12 @@ public class AdminNotifDetailsFrag extends Fragment {
         db.GetEvent(notif.getOriginEvent(), event -> {
             originEvent.setText(event.getName());
         });
-        System.out.println(notif.getMessage());
-        //message.setText(notif.getMessage());
+        message.setText(notif.getMessage());
 
         if (notif.getType() == 1) {
+            System.out.println("I EAT POOP");
             choice.setVisibility(VISIBLE);
             status.setVisibility(VISIBLE);
-
 
             if (notif.getChoice() == 0) {
                 choice.setText("Recipient has not accepted the invitation");

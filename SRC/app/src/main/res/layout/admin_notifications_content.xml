@@ -53,7 +53,7 @@
                 android:maxLines="1"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                android:text="Origin User">
+                android:text="">
 
             </TextView>
 
