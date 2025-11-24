@@ -2,6 +2,7 @@ package com.example.quokkapuffevents.controller;
 
 import static android.view.View.INVISIBLE;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +19,12 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class OrganizerEventDetails extends Fragment {
 
@@ -48,6 +54,12 @@ public class OrganizerEventDetails extends Fragment {
         SetUpListeners(view);
     }
 
+
+    /**
+     * This method initalizes all the interactables and connects them to their variables
+     * @param view
+     * View of the organizer_event_dashboard fragment
+     */
     private void initialize(View view) {
         db = Database.getInstance();
 
@@ -79,6 +91,11 @@ public class OrganizerEventDetails extends Fragment {
         });
     }
 
+    /**
+     * This is a method that sets up the listeners for click events. It sends the user to their respective functions and/or fragment.
+     * @param view
+     * View of the fragment
+     */
     public void SetUpListeners(View view) {
 
 
@@ -119,6 +136,10 @@ public class OrganizerEventDetails extends Fragment {
 
     }
 
+    /**
+     * Basic getter of getting the current event
+     * @param event
+     */
     public void SetEvent(Event event) {this.event = event; }
 }
 

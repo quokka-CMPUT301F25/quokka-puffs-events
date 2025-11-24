@@ -4,7 +4,12 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +17,11 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
@@ -23,10 +30,16 @@ import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 import com.example.quokkapuffevents.view.AdminUserFragAdapter;
 import com.example.quokkapuffevents.view.OrgViewParticipantsFragAdapter;
+import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class OrganizerViewParticipantsFragment extends Fragment {
@@ -45,6 +58,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
     private Button finalParticipantsBtn;
     private Button redrawBtn;
     private Button backBtn;
+    private Button csvCreateBtn;
 
     ListView listView;
     private OrgViewParticipantsFragAdapter adapter;
@@ -54,6 +68,19 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         this.event = event;
     }
 
+
+    /**
+     * Sets up the view, listview/adapters and the default information is displayed
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -104,12 +131,15 @@ public class OrganizerViewParticipantsFragment extends Fragment {
             }
         }
 
-
-
-
         return userFragmentView;
     }
 
+    /**
+     * Sets up functionality for interactables
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -118,6 +148,13 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         SetUpListeners(view);
     }
 
+    /**
+     *
+     * This method sets up the itneractables and viewables from the fragment.
+     *
+     * @param view
+     * View returned by {@link #onViewCreated(View, Bundle)}
+     */
     public void initialize(View view) {
 
 
@@ -130,9 +167,16 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         redrawBtn = view.findViewById(R.id.orgRedrawEntrantBtn);
         backBtn = view.findViewById(R.id.orgViewParticipantsBackToDashboardBtn);
         finalParticipantsBtn = view.findViewById(R.id.viewFinalParticipantsBtn);
+        csvCreateBtn = view.findViewById(R.id.createFinalParticipantsCSV);
 
     }
 
+    /**
+     *
+     * This method sets up the click events on the filter types, navigation, and action buttons.
+     *
+     * @param view returned by {@link #initialize(View)}
+     */
     public void SetUpListeners(View view) {
 
         canceledBtn.setOnClickListener(new View.OnClickListener() {
@@ -188,10 +232,23 @@ public class OrganizerViewParticipantsFragment extends Fragment {
                 ((DashboardActivity) getActivity()).replaceFragment(orgFrag);
             }
         });
-
-
+        csvCreateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("CLICKED CSV BTN");
+                createCSV();
+            }
+        });
     }
 
+    /**
+     *
+     * This method filters the users in the event by their status and displays the users applicable to the @param filterType
+     * It also shows interactables based on the filtertype aswell.
+     *
+     * @param filterType retrieved from {@link #SetUpListeners(View)}
+     * @param view retrieved from {@link #SetUpListeners(View)}
+     */
     public void changeViewType(String filterType, View view) {
 
         Map<String, String> eventUsers = event.getEventUsers();
@@ -258,5 +315,81 @@ public class OrganizerViewParticipantsFragment extends Fragment {
     }
 
 
+    /**
+     * This method grabs the users from the event and creates an arraylist of the ID's of users who are 'Accepted' into the event.
+     * It then sends the arraylist of id's to the writeCSV method
+     */
+    public void createCSV() {
 
- }
+        ArrayList<String> userIDs = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry: event.getEventUsers().entrySet()) {
+            if (entry.getValue().equals("Accepted")) {
+                userIDs.add(entry.getKey());
+            }
+        }
+
+        ArrayList<User> users = new ArrayList<>();
+        AtomicInteger remaining = new AtomicInteger(userIDs.size());
+
+        for (String id : userIDs) {
+            db.GetUser(id, user -> {
+                users.add(user);
+
+                if (remaining.decrementAndGet() == 0) {
+                    writeCSV(users);
+                }
+            });
+        }
+
+    }
+
+    /**
+     * This method grabs from a list of users provided and writes their
+     *  firstname, lastname, email, phone number
+     *  in a csv format and is then saved into their files.
+     * @param users provided by {@link #createCSV()}
+     */
+    public void writeCSV(List<User> users) {
+
+        File file = new File(getContext().getExternalFilesDir(null), event.getName() + "_accepted_participants.csv");
+
+
+        try {
+
+            FileWriter output = new FileWriter(file);
+            CSVWriter writer = new CSVWriter(output);
+
+            String[] header = {"Username", "First Name", "Last Name", "Email", "Phone Number"};
+            writer.writeNext(header);
+
+            for(User u: users) {
+
+                String[] data = {u.getUserName(), u.getFirstName(), u.getLastName(), u.getEmail(),u.getPhoneNumber()};
+                writer.writeNext(data);
+
+            }
+
+            Toast.makeText(
+                    getContext(),
+                    "CSV exported successfully to: " + file.getAbsolutePath(),
+                    Toast.LENGTH_LONG
+            ).show();
+
+            writer.close();
+
+        } catch (IOException e) {
+
+            Toast.makeText(
+                    getContext(),
+                    "Error exporting CSV: " + e.getMessage(),
+                    Toast.LENGTH_LONG
+            ).show();
+
+            throw new RuntimeException(e);
+
+        }
+
+    }
+
+}
