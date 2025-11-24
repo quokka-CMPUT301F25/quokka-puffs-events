@@ -2,7 +2,9 @@ package com.example.quokkapuffevents.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -54,6 +56,47 @@ public class RegisterActivity extends AppCompatActivity {
                 }
         });
 
+        // For formatting the phone number after the input
+        phoneNumber.addTextChangedListener(new TextWatcher() {
+            boolean isFormatting;      // prevents infinite loop
+
+            // Not needed for formatting
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            // Not needed for formatting
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isFormatting) {
+                    return;
+                }
+
+                isFormatting = true;
+
+                // Remove everything except digits
+                String digits = s.toString().replaceAll("\\D", "");
+
+                // Limit to 10 digits
+                if (digits.length() > 10) {
+                    digits = digits.substring(0, 10);
+                }
+
+                // Build formatted phone number
+                String formattedNumber = formatPhoneDigits(digits);
+
+                // Replace the EditText value
+                phoneNumber.removeTextChangedListener(this);
+                phoneNumber.setText(formattedNumber);
+                phoneNumber.setSelection(formattedNumber.length());
+                phoneNumber.addTextChangedListener(this);
+
+                isFormatting = false;
+            }
+        });
+
         entrantButton.setOnCheckedChangeListener((button, isChecked) -> {
             // Uncheck organizer button if its checked
             if(isChecked) {
@@ -92,6 +135,31 @@ public class RegisterActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, activity);
         startActivity(intent);
+    }
+
+    /**
+     * Formats an inputted phone number to fit the (XXX) XXX-XXXX format.
+     * @param digits
+     * The unformatted phone number digits.
+     * @return
+     * The formatted phone number.
+     */
+    private String formatPhoneDigits(String digits) {
+        StringBuilder formatted = new StringBuilder();
+
+        int length = digits.length();
+
+        if (length > 0) {
+            formatted.append("(").append(digits, 0, Math.min(3, length));
+        }
+        if (length >= 4) {
+            formatted.append(") ").append(digits, 3, Math.min(6, length));
+        }
+        if (length >= 7) {
+            formatted.append("-").append(digits.substring(6));
+        }
+
+        return formatted.toString();
     }
 
     /**
