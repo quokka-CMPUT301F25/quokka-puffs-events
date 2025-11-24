@@ -213,9 +213,7 @@ public class Database {
             }
         });
     }
-
-    //TODO Make these prettier. They stink right now
-
+    
     /**
      * Grabs the currently selected event.
      * @param eventID
@@ -228,20 +226,6 @@ public class Database {
             if (document.exists()) {
                 Event event = document.toObject(Event.class);
                 listener.onSuccess(event);
-            }
-        });
-    }
-
-    /**
-     * Collects the most up to date data from the database of notif based on their notification id.
-     * @param notifID
-     * The id of the notif being searched for
-     */
-    public void CheckNotification(String notifID, OnSuccessListener<Notif> listener) {
-        notifsRef.document(notifID).get().addOnSuccessListener(document -> {
-            if (document.exists()) {
-                Notif notif = document.toObject(Notif.class);
-                listener.onSuccess(notif);
             }
         });
     }
@@ -460,38 +444,30 @@ public class Database {
                 });
     }
 
-    //TODO Add logic for sending out notifications. Need Testing
+    /**
+     * This method draws the correct number of people for an event. It is the random raffle mechanism
+     * @param event
+     * The event that is randomly selecting participents from its waiting list
+     */
     public void DrawUsers(Event event){
-        /**
-         * This method draws the correct number of people for an event. It is the random raffle mechanism
-         * @param event
-         * The event that is randomly selecting participents from its waiting list
-         * @return
-         * Returns an Array List containing all of the chosen users
-         */
         //Collect User IDs
         ArrayList<String> userIDs = event.drawUsers(-1);
         event.setDrawn(true);
         SaveEvent(event);
     }
-
+    /**
+     * This method is used to redraw a specific number of participents. It is used after an event as already drawn the majority of its users
+     * It allows for gaps caused by people cancelling or rejecting to be filled
+     * @param event
+     * The event that is randomly selecting participents from its waiting list
+     * @param numToDraw
+     * The number of new users from the waiting list to be drawn
+     */
     public void RedrawUsers(Event event, Integer numToDraw){
-        /**
-         * This method is used to redraw a specific number of participents. It is used after an event as already drawn the majority of its users
-         * It allows for gaps caused by people cancelling or rejecting to be filled
-         * @param event
-         * The event that is randomly selecting participents from its waiting list
-         * @param numToDraw
-         * The number of new users from the waiting list to be drawn
-         * @return
-         * Returns an Array List containing all of the newly chosen users
-         */
         //Collect User IDs
         ArrayList<String> userIDs = event.drawUsers(numToDraw);
         SaveEvent(event);
     }
-
-    //Notif Methods
 
     /**
      * This method collects and returns all of the notifications that have been sent to a user
@@ -609,6 +585,14 @@ public class Database {
         }
     }
 
+    /**
+     * This method is used to streamline all of the required changes of a user joining an event.
+     * Updates both the event and the user
+     * @param event
+     * The event that the user is joining
+     * @param user
+     * The user that us joining the event
+     */
     public void RegisterUserIntoEvent(Event event, User user){
         user.addEvent(event.getId());
         event.SetStatus(user.getId(), "Waiting");
@@ -618,6 +602,14 @@ public class Database {
         CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have joined the waiting list");
     }
 
+    /**
+     * This method is used to streamline all of the required changes of a user cancelling joining an event.
+     * Updates both the event and the user
+     * @param event
+     * The event that the user is cancelling for
+     * @param user
+     * The user that us cancelling from the event
+     */
     public void CancelUserIntoEvent(Event event, User user){
         user.addEvent(event.getId());
         event.SetStatus(user.getId(), "Cancelled");
