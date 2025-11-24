@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.controller;
 
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 import android.graphics.Color;
@@ -48,7 +49,7 @@ public class AdminNotifDetailsFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.user_details_fragment, container, false);
+        View view = inflater.inflate(R.layout.notif_details_fragment, container, false);
         initializeViews(view);
         displayInfo(view);
         setUpListeners(view);
@@ -67,11 +68,16 @@ public class AdminNotifDetailsFrag extends Fragment {
         notifName = view.findViewById(R.id.notifName);
         sender = view.findViewById(R.id.sender);
         recipient = view.findViewById(R.id.recipient);
-        message = view.findViewById(R.id.message);
+        message = view.findViewById(R.id.messageText);
         status = view.findViewById(R.id.status);
         originEvent = view.findViewById(R.id.event);
         choice = view.findViewById(R.id.choice);
         goBackBtn = view.findViewById(R.id.goBackBtn);
+
+        if (notif.getType() == 0) {
+            choice.setVisibility(INVISIBLE);
+            status.setVisibility(INVISIBLE);
+        }
 
     }
 
@@ -89,11 +95,12 @@ public class AdminNotifDetailsFrag extends Fragment {
         db.GetEvent(notif.getOriginEvent(), event -> {
             originEvent.setText(event.getName());
         });
+        System.out.println(notif.getMessage());
+        //message.setText(notif.getMessage());
 
         if (notif.getType() == 1) {
             choice.setVisibility(VISIBLE);
             status.setVisibility(VISIBLE);
-            message.setText(notif.getMessage());
 
 
             if (notif.getChoice() == 0) {
