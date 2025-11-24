@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.quokkapuffevents.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -124,6 +124,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
             }
@@ -146,13 +147,10 @@ public class EntrantEventDetailsFragment extends Fragment {
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
 
-
-
             }
         });
+
     }
-
-
 
 }
 
