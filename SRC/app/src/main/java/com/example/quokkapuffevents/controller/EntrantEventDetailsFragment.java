@@ -35,7 +35,6 @@ public class EntrantEventDetailsFragment extends Fragment {
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
-    Button goBackAdminBtn;
     int waitingParticipants = 0;
 
 
