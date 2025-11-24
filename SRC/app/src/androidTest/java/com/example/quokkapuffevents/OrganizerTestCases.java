@@ -99,7 +99,7 @@ public class OrganizerTestCases {
                 attendees.add(attendee);
                 Thread.sleep(500);
 
-                event.addUser(attendee.getId());
+                db.RegisterUserIntoEvent(event, attendee);
             }
 
             db.SaveEvent(event);

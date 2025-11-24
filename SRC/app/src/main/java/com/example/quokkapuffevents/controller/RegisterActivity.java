@@ -58,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // For formatting the phone number after the input
         phoneNumber.addTextChangedListener(new TextWatcher() {
-            boolean isFormatting;      // prevents infinite loop
+            boolean isFormatting; // prevents infinite looping
 
             // Not needed for formatting
             @Override
