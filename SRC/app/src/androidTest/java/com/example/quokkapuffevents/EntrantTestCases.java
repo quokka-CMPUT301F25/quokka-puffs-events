@@ -20,6 +20,7 @@ import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
@@ -31,7 +32,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+//import androidx.test.rule.ActivityTestRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
@@ -140,11 +141,11 @@ public class EntrantTestCases {
         }
     }
 
+    /**
+     * User Story US 01.01.01 test case
+     */
     @Test
     public void TestJoinWaitingList() {
-        //User Story: US 01.01.01
-
-
         Database db = Database.getInstance();
 
         // Create Organizer
@@ -335,11 +336,14 @@ public class EntrantTestCases {
         accessEntrantDashboard();
     }
 
-    @Test public void UpdateEntrantInfo() {
-        //User Story: US 01.02.02
+    /**
+     * User Story US 01.02.02 test case
+     */
+    @Test
+    public void UpdateEntrantInfo() {
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
 
-
-        accessEntrantDashboard();
         try {
             onView(withId(R.id.settings_button)).perform(click());
             Thread.sleep(1500);
@@ -362,8 +366,6 @@ public class EntrantTestCases {
             onView(withId(R.id.confirmChangesBtn)).perform(click());
             Thread.sleep(800);
 
-
-
             onView(withId(R.id.userFirstAndLastNameText)).check(matches(
                     withText("Changed Changed")));
             onView(withId(R.id.userEmailText)).check(matches(withText("Changed")));
@@ -376,7 +378,11 @@ public class EntrantTestCases {
         }
     }
 
-    @Test public void TestDeleteProfile() {
+    /**
+     * User Story US 01.02.04 test case
+     */
+    @Test
+    public void TestDeleteProfile() {
         accessEntrantDashboard();
         String dummyID = db.GetCurrentUserID();
         try {
@@ -389,7 +395,7 @@ public class EntrantTestCases {
 
             // Testing if returned back to
             onView(withId(R.id.sign_in_button)).check(matches(isDisplayed()));
-            assertEquals(db.GetCurrentUserID(), null);
+            assertNull(db.GetCurrentUserID());
             db.ListUsers(users -> {
                 for (User user : users){
                     assertNotEquals(dummyID, user.getId());
@@ -405,8 +411,10 @@ public class EntrantTestCases {
         }
     }
 
+    /**
+     * User Story US 01.07.01 test case
+     */
     @Test public void TestRememberMe() {
-        //User Story: US 01.07.01
         User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoadingActivity> scenario = ActivityScenario.launch(LoadingActivity.class)) {
             Thread.sleep(1500);
@@ -448,8 +456,11 @@ public class EntrantTestCases {
         }
     }
 
-    @Test public void TestChosenInDrawNotif() {
-        //User Story: US 01.04.01
+    /**
+     * User Story US 01.04.01 test case
+     */
+    @Test
+    public void TestChosenInDrawNotif() {
         User mockOrg = null;
         Event event = null;
         try {
@@ -490,8 +501,10 @@ public class EntrantTestCases {
         }
     }
 
+    /**
+     * User Story US 01.04.02 test case
+     */
     @Test public void TestNotChosenInDrawNotif() {
-        //User Story: US 01.04.02
         User mockOrg = null;
         Event event = null;
         try {
@@ -525,10 +538,11 @@ public class EntrantTestCases {
         }
     }
 
+    /**
+     * User Story US 01.05.02 test case
+     */
     @Test
     public void TestAcceptInviteToEvent() {
-        //User Story: US 01.05.02
-
         User mockOrg = null;
         Event event = null;
         try {
@@ -555,7 +569,7 @@ public class EntrantTestCases {
 
             //Get updated event info
             db.GetEvent(event.getId(), updatedEvent -> {
-                assertEquals(updatedEvent.getEventUsers().get(mockEntrant.getId()), "Accepted");
+                assertEquals("Accepted", updatedEvent.getEventUsers().get(mockEntrant.getId()));
             });
             Thread.sleep(1500);
 
@@ -567,9 +581,11 @@ public class EntrantTestCases {
         }
     }
 
-    @Test public void TestDeclineInviteToEvent() {
-        //User Story: US 01.05.03
-
+    /**
+     * User Story US 01.05.03 test case
+     */
+    @Test
+    public void TestDeclineInviteToEvent() {
         User mockOrg = null;
         Event event = null;
         try {
@@ -596,7 +612,7 @@ public class EntrantTestCases {
 
             //Get updated Event info
             db.GetEvent(event.getId(), updatedEvent -> {
-                assertEquals(updatedEvent.getEventUsers().get(mockEntrant.getId()), "Rejected");
+                assertEquals("Rejected", updatedEvent.getEventUsers().get(mockEntrant.getId()));
             });
             Thread.sleep(1500);
         } catch (InterruptedException e) {
@@ -606,8 +622,11 @@ public class EntrantTestCases {
         }
     }
 
-    @Test public void TestSendNotifToAllSelected() {
-        //User Story: US 02.07.02
+    /**
+     * User Story US 02.07.02 test case
+     */
+    @Test
+    public void TestSendNotifToAllSelected() {
         User mockOrg = null;
         Event event = null;
         User temp = accessEntrantDashboard();
@@ -656,6 +675,46 @@ public class EntrantTestCases {
             ClearDatabase();
         } finally {
             ClearDatabase();
+        }
+    }
+
+    /**
+     * User Story US 01.04.03 test case
+     */
+    @Test
+    public void NotificationsOptOut() {
+        // Create and login entrant
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
+
+        try {
+            Thread.sleep(1500);
+
+            onView(withId(R.id.settings_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.editProfileBtn)).perform(click());
+
+            // Check if user has notification turned on by default
+            db.GetUser(entrant.getId(), user -> {
+                assertEquals(true, user.getSendNotifications());
+            });
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.enableNotificationsSwitchBtn)).perform(click());
+
+            // Check if after turning off notifications from the menu it saves to the database
+            db.GetUser(entrant.getId(), user -> {
+                assertEquals(false, user.getSendNotifications());
+            });
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(entrant);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(entrant);
         }
     }
 }

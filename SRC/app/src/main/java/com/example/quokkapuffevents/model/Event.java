@@ -83,7 +83,8 @@ public class Event {
     }
 
     /**
-     *
+     * This is an empty Event constructor. Sets the ID to "FAILURE". If the ID is "FAILURE"
+     * then something has gone wrong.
      */
     public Event(){
         this.id = "FAILURE";
@@ -115,9 +116,13 @@ public class Event {
         return imageID;
     }
 
-    public void setQrcodeID(String qrcodeID) {this.qrcodeID = qrcodeID;}
+    public void setQrcodeID(String qrcodeID) {
+        this.qrcodeID = qrcodeID;
+    }
 
-    public String getQrcodeID() {return qrcodeID;}
+    public String getQrcodeID() {
+        return qrcodeID;
+    }
 
     public String getId() {
         return id;
