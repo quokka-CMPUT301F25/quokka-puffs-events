@@ -258,11 +258,9 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         for (Map.Entry<String, String> entry : eventUsers.entrySet()) {
 
             if (entry.getValue().equals(filterType)) {
-//                Async stuff #annoying
                 pending.incrementAndGet();
 
                 db.GetUser(entry.getKey(), user -> {
-//                    Gett user and add it to the userList
 
                     if (user != null) {
                         userList.add(user);
@@ -282,7 +280,6 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
                         adapter.notifyDataSetChanged();
 
-                        //            If waiting, view the amount.
                         if(filterType.equals("Waiting")) {
                             view.findViewById(R.id.amountWaitingListContainer).setVisibility(VISIBLE);
                             view.findViewById(R.id.redrawContainer).setVisibility(GONE);
