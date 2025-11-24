@@ -6,30 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.fragment.app.Fragment;
 
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.controller.AdminActivity;
 import com.example.quokkapuffevents.controller.AdminEventDetailsFrag;
-import com.example.quokkapuffevents.controller.AdminUserDetailsFrag;
-import com.example.quokkapuffevents.controller.DashboardActivity;
-import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
-import com.example.quokkapuffevents.model.Notif;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class AdminEventFragAdapter extends ArrayAdapter<Event> {
 

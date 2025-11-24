@@ -51,18 +51,23 @@ public class AdminUserDetailsFrag extends Fragment {
 
         View view = inflater.inflate(R.layout.user_details_fragment, container, false);
         initializeViews(view);
-        displayInfo(view);
-        setUpListeners(view);
+        displayInfo();
+        setUpListeners();
         return view;
 
     }
 
+    // Setter
     public void setUser(User user) {
 
         this.user = user;
 
     }
 
+    /**
+     * Finds each view and initializes each one
+     * @param view The view that is accessed to find each view
+     */
     public void initializeViews(View view) {
 
         firstAndLastName = view.findViewById(R.id.firstAndLastName);
@@ -76,7 +81,10 @@ public class AdminUserDetailsFrag extends Fragment {
 
     }
 
-    public void displayInfo(View view) {
+    /**
+     * Using the initialized views set each one to display each detail of the user
+     */
+    public void displayInfo() {
 
         firstAndLastName.setText(user.getFirstName() + " " + user.getLastName());
         email.setText(user.getEmail());
@@ -121,7 +129,10 @@ public class AdminUserDetailsFrag extends Fragment {
 
     }
 
-    public void setUpListeners(View view) {
+    /**
+     * A back button to go back to all the users
+     */
+    public void setUpListeners() {
         goBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

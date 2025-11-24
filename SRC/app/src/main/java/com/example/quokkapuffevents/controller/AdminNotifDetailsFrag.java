@@ -40,6 +40,7 @@ public class AdminNotifDetailsFrag extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
         // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
@@ -51,18 +52,23 @@ public class AdminNotifDetailsFrag extends Fragment {
 
         View view = inflater.inflate(R.layout.notif_details_fragment, container, false);
         initializeViews(view);
-        displayInfo(view);
-        setUpListeners(view);
+        displayInfo();
+        setUpListeners();
         return view;
 
     }
 
+    // Setter
     public void setNotif(Notif notif) {
 
         this.notif = notif;
 
     }
 
+    /**
+     * Finds each view and initializes each one
+     * @param view The view that is accessed to find each view
+     */
     public void initializeViews(View view) {
 
         notifName = view.findViewById(R.id.notifName);
@@ -81,7 +87,10 @@ public class AdminNotifDetailsFrag extends Fragment {
 
     }
 
-    public void displayInfo(View view) {
+    /**
+     * Using the initialized views set each one to display each detail of the notification
+     */
+    public void displayInfo( ) {
 
         db.GetUser(notif.getOriginUser(), user -> {
             notifName.setText(user.getFirstName());
@@ -121,7 +130,10 @@ public class AdminNotifDetailsFrag extends Fragment {
 
     }
 
-    public void setUpListeners(View view) {
+    /**
+     * A back button to go back to all the notifications
+     */
+    public void setUpListeners() {
         goBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

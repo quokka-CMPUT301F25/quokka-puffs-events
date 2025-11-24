@@ -43,9 +43,11 @@ public class AdminEventFragment extends Fragment {
 
         listView = eventFragmentView.findViewById(R.id.adminEventsListView);
 
+        // Create an adapter for the events
         adapter = new AdminEventFragAdapter(getContext(), eventList);
         listView.setAdapter(adapter);
 
+        // Add all the events to the adapter
         db.ListEvents( events -> {
             // refresh adapter
             eventList.clear();

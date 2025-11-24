@@ -38,9 +38,11 @@ public class AdminUserFragment extends Fragment {
 
         listView = userFragmentView.findViewById(R.id.adminUsersListView);
 
+        // Create an adapter for the users
         adapter = new AdminUserFragAdapter(requireContext(), userList);
         listView.setAdapter(adapter);
 
+        // Add all the users to the adapter
         db.ListUsers( users -> {
             // refresh adapter
             userList.clear();
