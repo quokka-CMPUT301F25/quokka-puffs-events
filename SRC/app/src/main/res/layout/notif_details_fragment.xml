@@ -30,7 +30,7 @@
                 android:background="@drawable/border_shape_grey"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="Notification from"
+                android:text="Notification from "
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold">
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_shape_grey"
-                android:gravity="center"
+                android:gravity="left"
                 android:maxLines="1"
                 android:text="Notif name"
                 android:textColor="@color/white"
@@ -167,7 +167,7 @@
             </View>
 
             <TextView
-                android:id="@+id/message"
+                android:id="@+id/messageText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="3"
@@ -180,7 +180,8 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout5"
+            android:id="@+id/statusLayout"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -190,7 +191,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
+            app:layout_constraintTop_toBottomOf="@+id/choiceLayout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -264,7 +265,8 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout7"
+            android:id="@+id/choiceLayout"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

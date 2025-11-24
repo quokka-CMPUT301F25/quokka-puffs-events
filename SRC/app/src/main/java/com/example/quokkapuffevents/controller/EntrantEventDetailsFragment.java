@@ -54,7 +54,6 @@ public class EntrantEventDetailsFragment extends Fragment {
         initializeViews(view);
         displayInfo();
         setUpListeners(view);
-        checkAdmin(view);
         return view;
     }
 
@@ -141,21 +140,6 @@ public class EntrantEventDetailsFragment extends Fragment {
             }
         });
 
-    }
-
-    public void checkAdmin(View view) {
-        db.GetUser(db.GetCurrentUserID(), user -> {
-            if (user.getAccountType() == -1) {
-                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
-
-                goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getParentFragmentManager().popBackStack();
-                    }
-                });
-            }
-        });
     }
 
 }
