@@ -198,6 +198,7 @@ public class EntrantTestCases {
     /**
      * User Story US 01.01.03 test case
      */
+    // TODO: FIX THIS TEST
     @Test
     public void TestViewingEvents() {
         // Create and Login Entrant
@@ -316,12 +317,20 @@ public class EntrantTestCases {
         }
     }
 
+    /**
+     * User Story US 01.02.03 test case
+     */
+    // TODO: FINISH THE TEST
     @Test
     public void TestViewingPastEvents() {
         User entrant = accessEntrantDashboard();
         db.DeleteUser(entrant);
     }
 
+    /**
+     * User Story US 01.04.02 test case
+     */
+    // TODO: FINISH THE TEST
     @Test
     public void TestReceivingLostNotification() {
         User entrant = accessEntrantDashboard();
@@ -332,7 +341,7 @@ public class EntrantTestCases {
      * User Story US 01.02.02 test case
      */
     @Test
-    public void UpdateEntrantInfo() {
+    public void TestUpdateEntrantInfo() {
         User entrant = accessEntrantDashboard();
         db.SetUserID(entrant.getId());
 
@@ -494,7 +503,9 @@ public class EntrantTestCases {
     /**
      * User Story US 01.04.02 test case
      */
-    @Test public void TestNotChosenInDrawNotif() {
+    // TODO: FIX THIS TEST
+    @Test
+    public void TestNotChosenInDrawNotif() {
         User mockEntrant = accessEntrantDashboard();
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
         Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
@@ -532,6 +543,7 @@ public class EntrantTestCases {
     /**
      * User Story US 01.05.02 test case
      */
+    // TODO: FIX THIS TEST
     @Test
     public void TestAcceptInviteToEvent() {
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
@@ -575,6 +587,7 @@ public class EntrantTestCases {
     /**
      * User Story US 01.05.03 test case
      */
+    // TODO: FIX THIS TEST
     @Test
     public void TestDeclineInviteToEvent() {
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
@@ -616,6 +629,7 @@ public class EntrantTestCases {
     /**
      * User Story US 02.07.02 test case
      */
+    // TODO: FIX THIS TEST
     @Test
     public void TestSendNotifToAllSelected() {
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
@@ -679,7 +693,7 @@ public class EntrantTestCases {
      * User Story US 01.04.03 test case
      */
     @Test
-    public void NotificationsOptOut() {
+    public void TestNotificationsOptOut() {
         // Create and login entrant
         User entrant = accessEntrantDashboard();
         db.SetUserID(entrant.getId());
