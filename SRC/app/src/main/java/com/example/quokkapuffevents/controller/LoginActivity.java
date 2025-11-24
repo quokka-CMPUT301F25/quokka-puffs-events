@@ -87,17 +87,32 @@ public class LoginActivity extends AppCompatActivity {
 
     //Changing activity depending on what the user has selected
     // Note the `Class<?>` means it can be any class
+
+    /**
+     *
+     * @param activity
+     */
     private void SwitchActivity(Class<?> activity){
         Intent intent = new Intent(this, activity);
         startActivity(intent);
     }
 
     //Display's if the Username or password is incorrect
+
+    /**
+     *
+     */
     private void DisplayErrorMsg(){
         Toast.makeText(this, "Email Address / Username or Password is incorrect", Toast.LENGTH_SHORT).show();
     }
 
     //Validates the information entered by the user
+
+    /**
+     * 
+     * @param uNameOrEmail
+     * @param preHash
+     */
     private void ValidateInformation(String uNameOrEmail,  String preHash){
         //Hashing password
         MessageDigest md = null;
@@ -127,12 +142,14 @@ public class LoginActivity extends AppCompatActivity {
                                 SwitchActivity(DashboardActivity.class);
                             }
                         }
+
                         //If password is wrong then we have an error
                         else {
                             DisplayErrorMsg();
                         }
                     });
                 }
+
                 //If the user has typed in a username, check it
                 else {
                     db.ValidateUserUsername(uNameOrEmail, pass, users -> {
@@ -149,14 +166,14 @@ public class LoginActivity extends AppCompatActivity {
                                 SwitchActivity(DashboardActivity.class);
                             }
                         }
-                        //If no user is found then we have an error
+                        //If no then we have an error
                         else {
                             DisplayErrorMsg();
                         }
                     });
                 }
             }
-            // If no
+            // If no then we have an error
             else {
                 DisplayErrorMsg();
             }
