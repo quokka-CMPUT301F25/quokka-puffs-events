@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,114 +54,77 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         notifications.remove(notif);
         notifyDataSetChanged();
     }
-
-    private View view;
     private DashboardActivity activity = (DashboardActivity) getContext();
-
-    private Notif notification;
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Database db = Database.getInstance();
-        notification = getItem(position);
+        Notif notification = getItem(position);
 
-        if (notification.getType() == 1) {
+        View view;
+        if (notification.getType() == 1 && !notification.getChosen()) {
             view = (convertView == null)
                     ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_invite, parent, false)
                     : convertView;
-
-            BindInviteUIAndLogic();
-        }
-        else if(notification.getType() == 0) {
-            view = (convertView == null)
-                    ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_rejected, parent, false)
-                    : convertView;
-
-            BindRejectUIAndLogic();
-        }
-        else if(notification.getType() == -1) {
+            BindInviteUIAndLogic(view, notification);
+        } else {
             view = (convertView == null)
                     ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_message, parent, false)
                     : convertView;
-
-            BindMessageUIAndLogic();
         }
 
-        //--- Universal Notification UI ---
         TextView eventText = view.findViewById(R.id.eventText);
         Button removeButton = view.findViewById(R.id.removeBtn);
+        TextView notificationTitle = view.findViewById(R.id.notificationTitle);
+
+        notificationTitle.setText(notification.getTitle());
+
+        // set placeholder + tag
+        String eventId = notification.getOriginEvent();
+        eventText.setText("Loading...");
+        eventText.setTag(eventId);
+
+        //async load guarded by tag
+        db.GetEvent(eventId, event -> {
+            Object currentTag = eventText.getTag();
+            if (currentTag != null && currentTag.equals(eventId)) {
+                eventText.setText(event.getName());
+            }
+            // else: this view has been recycled for another item, ignore
+        });
 
         removeButton.setOnClickListener(v -> {
             db.DeleteNotification(notification);
             removeNotification(notification);
         });
 
-        db.GetEvent(notification.getOriginEvent(), event -> {
-            eventText.setText(event.getName());
-        });
-
-        return view;
-    }
-
-    /**
-     *  Binds the UI to logic for an invite notification. Clicking the accept button will notify
-     *  the database that the user has accepted the invite, clicking the reject button will notify the
-     *  database that the user has rejected the invite, clicking the details button will show the event details
-     */
-    public void BindInviteUIAndLogic() {
-        Button rejectButton = view.findViewById(R.id.rejectBtn);
-        Button acceptButton = view.findViewById(R.id.acceptBtn);
-        Button detailsButton = view.findViewById(R.id.detailsBtn);
-
-        rejectButton.setOnClickListener(v -> {
-            InvitationButtonClicked(notification, 0);
-        });
-
-        acceptButton.setOnClickListener(v -> {
-            InvitationButtonClicked(notification, 1);
-        });
-
-        detailsButton.setOnClickListener(v -> {
-            db.GetEvent(notification.getOriginEvent(), event -> {
-                EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
-                entrantFrag.setEvent(event);
-                activity.replaceFragment(entrantFrag);
-            });
-        });
-    }
-
-    /**
-     * Binds the UI to logic for a reject notification. Clicking the details button will bring
-     * you to the event details.
-     */
-    private void BindRejectUIAndLogic() {
-        Button detailsButton = view.findViewById(R.id.detailsBtn);
-        detailsButton.setOnClickListener(v -> {
-            db.GetEvent(notification.getOriginEvent(), event -> {
-                EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
-                entrantFrag.setEvent(event);
-                activity.replaceFragment(entrantFrag);
-            });
-        });
-    }
-
-    /**
-     * Binds the UI to logic for a reject notification. Clicking the details button will bring
-     * you to the notification details.
-     */
-    private void BindMessageUIAndLogic() {
         Button detailsButton = view.findViewById(R.id.detailsBtn);
         detailsButton.setOnClickListener(v -> {
             NotificationDetailsFragment notifDetailsFragment = new NotificationDetailsFragment();
             notifDetailsFragment.setNotification(notification);
             activity.replaceFragment(notifDetailsFragment);
         });
+
+        return view;
+    }
+
+
+
+    /**
+     *  Binds the UI to logic for an invite notification. Clicking the accept button will notify
+     *  the database that the user has accepted the invite, clicking the reject button will notify the
+     *  database that the user has rejected the invite, clicking the details button will show the event details
+     */
+    public void BindInviteUIAndLogic(View view, Notif notification) {
+        Button rejectButton = view.findViewById(R.id.rejectBtn);
+        Button acceptButton = view.findViewById(R.id.acceptBtn);
+
+        rejectButton.setOnClickListener(v -> InvitationButtonClicked(notification, 0));
+        acceptButton.setOnClickListener(v -> InvitationButtonClicked(notification, 1));
     }
 
     /**
-     * @param notification -> The notification to update
-     *
      * Changes the status of the user in the database based on selection in the notification.
      * If the user clicks the details button, the notification message will be shown in a new fragment
      */
@@ -178,8 +142,6 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
     }
 
     /**
-     * @param notification -> The notification to update
-     *
      * Updates the notification so that invitations options are not shown more than once after a
      * selection.
      */

@@ -7,7 +7,7 @@
     android:background="@drawable/border_shape">
 
     <TextView
-        android:id="@+id/notificationTypeText"
+        android:id="@+id/notificationTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"

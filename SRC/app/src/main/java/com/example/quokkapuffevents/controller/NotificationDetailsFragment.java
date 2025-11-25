@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class NotificationDetailsFragment extends Fragment {
     private TextView eventNameText;
     private TextView senderText;
     private TextView messageText;
+    private TextView notifTitleText;
     private Button backButton;
     private Button eventDetailsButton;
 
@@ -38,15 +40,26 @@ public class NotificationDetailsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Initializes all the views in the fragment, allows for edits in other functions
+     * @param view The current view, needed to allow access to the UI elements
+     */
     private void initializeViews(View view) {
         eventNameText = view.findViewById(R.id.orgEventNameText);
+        notifTitleText = view.findViewById(R.id.notificationTitle);
         senderText = view.findViewById(R.id.orgNameText);
         messageText = view.findViewById(R.id.notifMessage);
         backButton = view.findViewById(R.id.goBackToDashboardBtn);
         eventDetailsButton = view.findViewById(R.id.viewEventDetails);
     }
 
+
+    /**
+     * Displays the notification details in the fragment i.e. The title, the event it came from,
+     * the sender and the message attached
+     */
     private void displayInfo() {
+        notifTitleText.setText(notification.getTitle());
         db.GetUser(notification.getOriginUser(), user -> {
             senderText.setText(user.getUserName());
         });
@@ -58,6 +71,11 @@ public class NotificationDetailsFragment extends Fragment {
         messageText.setText(notification.getMessage());
     }
 
+    /**
+     * Sets up the button listeners. The back button will return to the notification fragment,
+     * The event details button will open the details of the event from which the message was sent from
+     * @param view The current view, needed to allow button logic to work
+     */
     private void setUpListeners(View view) {
         backButton.setOnClickListener(v ->{
             NotificationFragment notifFragment = new NotificationFragment();
