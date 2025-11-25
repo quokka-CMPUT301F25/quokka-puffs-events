@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.model;
 
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static androidx.core.content.ContextCompat.getSystemService;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
@@ -18,9 +19,10 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import com.example.quokkapuffevents.R;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
@@ -83,6 +85,10 @@ public class Database {
             }
         }
         return instance;
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
     }
 
     // Getters and Setters
@@ -197,22 +203,10 @@ public class Database {
      * @return
      * Returns the notification as a new Class. Ensures that the notification is saved to the cloud
      */
-    public Notif CreateNotification(Integer type, String recipient, String originEvent, String originUser, String message){
+    public Notif CreateNotification(Integer type, String recipient, String originEvent, String originUser, String message, String title){
         String id = notifsRef.document().getId(); //Creates a document and returns the id
-        Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message);
+        Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message, title);
         notifsRef.document(id).set(newNotif);
-
-        if(checkSelfPermission(getApplicationContext(), android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getApplicationContext(), new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
-        }
-
-        NotificationManager notifManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Notification Channel", NotificationManager.IMPORTANCE_HIGH);
-            notifManager.createNotificationChannel(channel);
-        }
-
         return(newNotif);
     }
     public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<String> listener){
@@ -240,7 +234,7 @@ public class Database {
             }
         });
     }
-    
+
     /**
      * Grabs the currently selected event.
      * @param eventID
@@ -626,7 +620,7 @@ public class Database {
         SaveUser(user);
         SaveEvent(event);
 
-        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have joined the waiting list");
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have joined the waiting list", "Notification");
     }
 
     /**
@@ -643,7 +637,7 @@ public class Database {
         SaveUser(user);
         SaveEvent(event);
 
-        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have left the waiting list");
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have left the waiting list", "Notification");
     }
 
 }

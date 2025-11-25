@@ -2,9 +2,15 @@ package com.example.quokkapuffevents.controller;
 
 import static android.view.View.GONE;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.Button;
@@ -14,12 +20,17 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Notif;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -43,6 +54,8 @@ public class DashboardActivity extends AppCompatActivity {
         // GET INSTANCE OF DATABASE AND CURRENT USER ID
         db = Database.getInstance();
         userID = String.valueOf(db.GetCurrentUserID());
+
+        checkNotificationPermission();
 
         db.GetUser(userID, user ->  {
             if (user.getAccountType() == 0) {
@@ -186,5 +199,17 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Ensures that the user has enabled push notifications for this app before sending one
+     */
+    private void checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+    }
 
 }

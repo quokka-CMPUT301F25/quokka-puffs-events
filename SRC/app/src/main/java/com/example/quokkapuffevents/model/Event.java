@@ -232,10 +232,10 @@ public class Event {
 
             SetStatus(chosenUser, "Invited"); //Update map to show that they have been invited
 
-            db.CreateNotification(1, chosenUser, id, org, "You have been drawn for this event.");
+            db.CreateNotification(1, chosenUser, id, org, "You have been drawn for this event.", "Notification");
         }
         for (String user : waitingUsers){
-            db.CreateNotification(0, user, id, org, "This event has been drawn. Unfortunately you were not drawn, there is a chance that you may be drawn in the future.");
+            db.CreateNotification(0, user, id, org, "This event has been drawn. Unfortunately you were not drawn, there is a chance that you may be drawn in the future.", "Notification");
         }
 
         return(chosen); //Return list of ids
