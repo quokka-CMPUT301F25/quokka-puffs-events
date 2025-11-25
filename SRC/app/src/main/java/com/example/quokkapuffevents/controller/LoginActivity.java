@@ -85,44 +85,56 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //Changing activity depending on what the user has selected
-    // Note the `Class<?>` means it can be any class
-
     /**
-     *
+     * Changes currently displayed activity depending on what the user has pressed.
      * @param activity
+     * The new activity class to display.
      */
     private void SwitchActivity(Class<?> activity){
         Intent intent = new Intent(this, activity);
         startActivity(intent);
     }
 
-    //Display's if the Username or password is incorrect
-
     /**
-     *
+     * A toast error message to display for when the Email Address, Username or Password is incorrect.
      */
     private void DisplayErrorMsg(){
         Toast.makeText(this, "Email Address / Username or Password is incorrect", Toast.LENGTH_SHORT).show();
     }
 
-    //Validates the information entered by the user
-
     /**
-     * 
-     * @param uNameOrEmail
-     * @param preHash
+     * Hashes the given password using the SHA-512 algorithm and returns the result as a String.
+     * @param password
+     * The password to hash.
+     * @return
+     * A String of the SHA-512 hash of the input password.
      */
-    private void ValidateInformation(String uNameOrEmail,  String preHash){
-        //Hashing password
+    private String PasswordHashing(String password) {
         MessageDigest md = null;
+
         try {
             md = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        byte[] hashedPasswordByte = md.digest(preHash.getBytes(StandardCharsets.UTF_8));
-        String pass = new String(hashedPasswordByte);
+        byte[] hashedPasswordByte = md.digest(password.getBytes(StandardCharsets.UTF_8));
+
+        return new String(hashedPasswordByte);
+    }
+
+    //Validates the information entered by the user
+
+    /**
+     * Validates that the information entered by the user is fully filled out / available.
+     * @param uNameOrEmail
+     * The user submitted username or email address.
+     * @param preHash
+     * The user submitted password before being hashed.
+     */
+    private void ValidateInformation(String uNameOrEmail,  String preHash){
+
+        // Hashing Password
+        String pass = PasswordHashing(preHash);
 
         db.UserExists(uNameOrEmail, userExists -> {
             if(userExists) {

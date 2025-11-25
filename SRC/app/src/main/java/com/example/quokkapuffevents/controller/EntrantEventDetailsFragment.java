@@ -109,18 +109,22 @@ public class EntrantEventDetailsFragment extends Fragment {
 
 //        Display info to fragment
         orgEventNameText.setText(eventName);
-        db.GetImage(event.getImageID(), new OnSuccessListener<Bitmap>() {
-            @Override
-            public void onSuccess(Bitmap bitmap) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            eventImage.setImageBitmap(bitmap);
-                        }
-                    });
-                }
-            }
+//        db.GetImage(event.getImageID(), new OnSuccessListener<Bitmap>() {
+//            @Override
+//            public void onSuccess(Bitmap bitmap) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            eventImage.setImageBitmap(bitmap);
+//                        }
+//                    });
+//                }
+//            }
+//        });
+        //Changed to improve
+        db.GetImage(event.getImageID(), bitmap -> {
+            eventImage.setImageBitmap(bitmap);
         });
         eventTotalParticiapntsWaitingText.setText(Integer.toString(event.getNumPeopleWaiting()));
         eventDescriptionText.setText(eventDescription);
