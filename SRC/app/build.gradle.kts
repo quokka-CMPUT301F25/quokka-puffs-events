@@ -48,6 +48,8 @@ dependencies {
     androidTestImplementation(libs.runner)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
+    implementation("com.google.firebase:firebase-messaging:23.1.1")
+    implementation("com.squareup.okhttp3:okhttp:3.14.9")
 
 
 

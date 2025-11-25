@@ -14,6 +14,9 @@ public class Notif {
     private Boolean chosen;
     private Integer choice; //-1 for N/A, 0 for Undecided, 1 For no, 2 for yes
     private Date timeStamp;
+    private String title;
+
+
 
     /**
      * Normal constructor for a notification.
@@ -31,7 +34,7 @@ public class Notif {
      * @param message
      * A String containing what the notification's text description contains.
      */
-    public Notif(String id, Integer type, String recipient, String originEvent, String originUser, String message){
+    public Notif(String id, Integer type, String recipient, String originEvent, String originUser, String message, String title){
         this.id = id;
         this.type = type; //If just an alert or a choice
         this.recipient = recipient;
@@ -40,6 +43,7 @@ public class Notif {
         this.message = message;
         this.chosen = false;
         this.timeStamp = new Date();
+        this.title = title;
 
         //If type = 1 then this is an invitation and there must be a choice.
         if (type == 1){
@@ -98,5 +102,13 @@ public class Notif {
 
     public void setChosen(Boolean chosen) {
         this.chosen = chosen;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
