@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -30,6 +31,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -42,6 +46,7 @@ dependencies {
     implementation(libs.espresso.intents)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
+    implementation(libs.play.services.maps)
     // These were changed from implementation to androidTestImplementation
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.runner)

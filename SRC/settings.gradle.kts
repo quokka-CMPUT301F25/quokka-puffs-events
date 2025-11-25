@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "QuokkaPuffEvents"
 include(":app")
- 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
