@@ -157,6 +157,8 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
             eventRegisterBtn_all.setOnClickListener(v -> {
                 registerForEvent(event);
+                events.remove(event);
+                notifyDataSetChanged();
             });
 
             db.GetUser(event.getOrg(), user -> {
