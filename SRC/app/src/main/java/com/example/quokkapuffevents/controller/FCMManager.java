@@ -1,8 +1,13 @@
 package com.example.quokkapuffevents.controller;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 
+import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.controller.NotificationHelper;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -54,7 +59,25 @@ public class FCMManager extends FirebaseMessagingService {
             String title = message.getData().get("title");
             String body = message.getData().get("message");
 
-            NotificationHelper.showNotification(getApplicationContext(), title, body);
+            showNotification(title, body);
         }
+    }
+
+    private void showNotification(String title, String body) {
+        String channelId = "default_channel";
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "Default Channel", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.notifications_icon) // Replace with your notification icon
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true);
+
+        notificationManager.notify(0, builder.build());
     }
 }
