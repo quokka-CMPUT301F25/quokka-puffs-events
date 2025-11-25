@@ -109,7 +109,7 @@ public class NotificationFragment extends Fragment {
 
                             updateNotificationUI(notif);
 
-                            NotificationHelper.showNotification(requireContext(), notif.getTitle(), notif.getMessage());
+                            NotificationHelper.showNotification(getContext(), notif.getTitle(), notif.getMessage());
                         }
                     }
                 });

@@ -63,9 +63,9 @@ public class FCMManager extends FirebaseMessagingService {
         }
     }
 
-    private void showNotification(String title, String body) {
+    public static void showNotification(String title, String body) {
         String channelId = "default_channel";
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) requireConext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId, "Default Channel", NotificationManager.IMPORTANCE_DEFAULT);
