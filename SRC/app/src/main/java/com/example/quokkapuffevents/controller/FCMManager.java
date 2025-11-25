@@ -1,4 +1,4 @@
-package com.example.quokkapuffevents.fcm;
+package com.example.quokkapuffevents.controller;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -50,7 +50,7 @@ public class FCMManager extends FirebaseMessagingService {
 
         // If notification payload exists, Android will show it automatically.
         // If data payload exists, handle it manually:
-        if (!message.getData().isEmpty()) {
+        if (message.getNotification() != null) {
             String title = message.getData().get("title");
             String body = message.getData().get("message");
 
