@@ -51,18 +51,23 @@ public class AdminEventDetailsFrag extends Fragment {
 
         View view = inflater.inflate(R.layout.event_details_fragment, container, false);
         initializeViews(view);
-        displayInfo(view);
-        setUpListeners(view);
+        displayInfo();
+        setUpListeners();
         return view;
 
     }
 
+    // Setter
     public void setEvent(Event event) {
 
         this.event = event;
 
     }
 
+    /**
+     * Finds each view and initializes each one
+     * @param view The view that is accessed to find each view
+     */
     public void initializeViews(View view) {
 
         eventName = view.findViewById(R.id.eventName);
@@ -75,7 +80,10 @@ public class AdminEventDetailsFrag extends Fragment {
 
     }
 
-    public void displayInfo(View view) {
+    /**
+     * Using the initialized views set each one to display each detail of the event
+     */
+    public void displayInfo() {
 
         eventName.setText(event.getName());
         db.GetUser(event.getOrg(), user -> {
@@ -95,7 +103,7 @@ public class AdminEventDetailsFrag extends Fragment {
 
         startEndDate.setText(sdf.format(startDate) + " - " + sdf.format(startDate));
 
-        description.setText(event.getId());
+        description.setText(event.getDescription());
         description.setMovementMethod(new ScrollingMovementMethod());
 
         Map<String, String> userInEvent = event.getEventUsers();
@@ -126,7 +134,10 @@ public class AdminEventDetailsFrag extends Fragment {
 
     }
 
-    public void setUpListeners(View view) {
+    /**
+     * A back button to go back to all the events
+     */
+    public void setUpListeners() {
         goBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

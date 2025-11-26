@@ -20,6 +20,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/border_shape_grey"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -37,14 +38,20 @@
 
             </TextView>
 
+            <View
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+            </View>
+
             <TextView
                 android:id="@+id/notifName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_shape_grey"
                 android:gravity="left"
                 android:maxLines="1"
-                android:text="Notif name"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="40sp"
                 android:textStyle="bold">
@@ -87,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="Jimbob"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
@@ -129,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="Carl"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
@@ -171,7 +178,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="3"
-                android:text="You have joined the waiting list"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
@@ -256,7 +263,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="Sleepover"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp">
 

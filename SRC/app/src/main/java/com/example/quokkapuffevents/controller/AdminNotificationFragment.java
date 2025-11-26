@@ -38,9 +38,11 @@ public class AdminNotificationFragment extends Fragment {
 
         listView = notifFragmentView.findViewById(R.id.adminNotificationsListView);
 
+        // Create an adapter for the notifications
         adapter = new AdminNotifFragAdapter(getContext(), notifList);
         listView.setAdapter(adapter);
 
+        // Add all the notifications to the adapter
         db.ListNotifs( notifs -> {
             // refresh adapter
             notifList.clear();
