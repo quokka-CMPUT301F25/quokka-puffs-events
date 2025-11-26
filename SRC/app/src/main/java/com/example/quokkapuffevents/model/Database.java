@@ -729,12 +729,24 @@ public class Database {
         event.setFinished(true);
         Map<String, String> users = event.getEventUsers();
         for (String key : users.keySet()){
-            if (users.get(key) != "Accepted"){
-
+            if (Objects.equals(users.get(key), "Invited")){
+                event.SetStatus(key, "Cancelled");
+                CreateNotification(0, key, event.getId(), event.getOrg(), "The final list of entrants for this event has been decided, unfortunately you did not accept your invite in time. Better luck next time", "Event Entrant List Finalized");
+            }
+            else if (Objects.equals(users.get(key), "Waiting")){
+                event.SetStatus(key, "Cancelled");
+                CreateNotification(0, key, event.getId(), event.getOrg(), "The final list of entrants for this event has been decided, unfortunately you were not selected. Better luck next time", "Event Entrant List Finalized");
+            }
+            else if (Objects.equals(users.get(key), "Accepted")){
+                CreateNotification(0, key, event.getId(), event.getOrg(), "The final list of entrants for this event has been decided, we look forward to seeing you at the event", "Event Entrant List Finalized");
+            }
+            else {
+                event.SetStatus(key, "Cancelled");
+                CreateNotification(0, key, event.getId(), event.getOrg(), "The final list of entrants for this event has been decided. Better luck next time", "Event Entrant List Finalized");
             }
         }
+        SaveEvent(event);
 
-        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have left the waiting list");
     }
 
 }
