@@ -47,12 +47,12 @@ import java.util.UUID;
 
 public class Database {
     private static volatile Database instance;
-    private String userID; //current id of the user of the app
-    private FirebaseFirestore db;
-    private CollectionReference usersRef;
-    private CollectionReference eventsRef;
-    private CollectionReference notifsRef;
-    private StorageReference imageDB;
+    protected String userID; //current id of the user of the app
+    protected FirebaseFirestore db;
+    protected CollectionReference usersRef;
+    protected CollectionReference eventsRef;
+    protected CollectionReference notifsRef;
+    protected StorageReference imageDB;
 
 
     /**
