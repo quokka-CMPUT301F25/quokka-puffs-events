@@ -167,9 +167,23 @@
             android:text="View Final Participants"
             android:textSize="24dp"
             android:backgroundTint="@color/greenbtn"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginTop="8dp"/>
-
+        <Button
+            android:id="@+id/createFinalParticipantsCSV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create CSV file"
+            android:textSize="24dp"
+            android:backgroundTint="@color/bluebtn"
+            android:layout_marginBottom="12dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:text="(NOTE: CSV is of only of final participants)"
+            android:textColor="@color/white"
+            android:textAlignment="center"/>
 
 
         <LinearLayout
@@ -202,9 +216,7 @@
                 android:textSize="24dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/bluebtn"
-                android:layout_marginTop="8dp"
-                android:visibility="gone"/>
-
+                android:layout_marginTop="8dp"/>
         </LinearLayout>
 
     </LinearLayout>

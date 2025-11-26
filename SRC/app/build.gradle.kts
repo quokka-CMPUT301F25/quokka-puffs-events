@@ -40,6 +40,7 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.opencsv:opencsv:5.9")
     implementation(libs.ext.junit)
     implementation(libs.espresso.core)
     implementation(libs.firebase.database)

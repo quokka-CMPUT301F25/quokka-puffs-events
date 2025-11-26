@@ -3,6 +3,7 @@ package com.example.quokkapuffevents.controller;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +20,12 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class OrganizerEventDetails extends Fragment {
 
@@ -149,6 +155,10 @@ public class OrganizerEventDetails extends Fragment {
 
     }
 
+    /**
+     * Basic getter of getting the current event
+     * @param event
+     */
     public void SetEvent(Event event) {this.event = event; }
 }
 

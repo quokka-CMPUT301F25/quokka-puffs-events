@@ -16,6 +16,10 @@ import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class OrganizerViewParticipantsInformationFragment extends Fragment {
 
     private User user;
@@ -33,16 +37,28 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
     private Button cancelInviteBtn;
 
 
-
+    /**
+     * Sets the current user to view their information
+     * @param u
+     */
     public void SetUser(User u) {
         this.user = u;
     }
 
+    /**
+     * Sets the current user and their status to view their information
+     * @param u
+     * @param status
+     */
     public void SetUser(User u, String status) {
         this.user = u;
         this.status = status;
     }
 
+    /**
+     * sets the current event
+     * @param e
+     */
     public void SetEvent(Event e) {
         this.event = e;
     }
@@ -65,6 +81,10 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
         SetUpListeners(view);
     }
 
+    /**
+     * This sets up the viewables and interactables from the fragment and provides the user's information (given not null)
+     * @param view
+     */
     public void initialize(View view) {
 
         username = view.findViewById(R.id.usernameText);
@@ -85,6 +105,13 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
 
     }
 
+    /**
+     * This method sets up the onclick listeners for the interactables on the fragment.
+     * backBtn: goes back to the viewparticipantsfragment
+     * cancelinviteBtn: Cancel's the users invited status. Changing their status to 'canceled'
+     * #TODO: Find out how to change the information in the firebase and update it to show it in real time.
+     * @param view
+     */
     public void SetUpListeners(View view) {
 
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +128,12 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
         cancelInviteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                TODO: revoke invitatioon
+                db.CancelUserIntoEvent(event, user);  // TS DONT WORK
+
+                OrganizerViewParticipantsFragment orgFrag = new OrganizerViewParticipantsFragment();
+                orgFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(orgFrag);
+
             }
         });
 
