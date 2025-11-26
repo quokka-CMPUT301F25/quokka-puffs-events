@@ -101,7 +101,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
         for (Map.Entry<String, String> entry : eventUsers.entrySet()) {
 
-            if (entry.getValue().equals("Canceled")) {
+            if (entry.getValue().equals("Cancelled")) {
 
                 pending.incrementAndGet();
 
@@ -149,11 +149,9 @@ public class OrganizerViewParticipantsFragment extends Fragment {
     }
 
     /**
+     * Initializes all UI components and references.
      *
-     * This method sets up the itneractables and viewables from the fragment.
-     *
-     * @param view
-     * View returned by {@link #onViewCreated(View, Bundle)}
+     * @param view The root view of the fragment.
      */
     public void initialize(View view) {
 
@@ -172,17 +170,17 @@ public class OrganizerViewParticipantsFragment extends Fragment {
     }
 
     /**
+     * Sets up button listeners for filtering, navigation, participant detail view,
+     * and redrawing users if event spot opens.
      *
-     * This method sets up the click events on the filter types, navigation, and action buttons.
-     *
-     * @param view returned by {@link #initialize(View)}
+     * @param view The root view of the fragment.
      */
     public void SetUpListeners(View view) {
 
         canceledBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeViewType("Canceled", view);
+                changeViewType("Cancelled", view);
             }
         });
 
@@ -241,13 +239,14 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         });
     }
 
+
     /**
+     * Filters the participant list based on their registration status
+     * (e.g. "Invited", "Waiting", "Cancelled", "Accepted").
+     * Loads users asynchronously and updates UI accordingly.
      *
-     * This method filters the users in the event by their status and displays the users applicable to the @param filterType
-     * It also shows interactables based on the filtertype aswell.
-     *
-     * @param filterType retrieved from {@link #SetUpListeners(View)}
-     * @param view retrieved from {@link #SetUpListeners(View)}
+     * @param filterType The status to filter by.
+     * @param view       The root view of the fragment.
      */
     public void changeViewType(String filterType, View view) {
 
@@ -264,7 +263,6 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
                     if (user != null) {
                         userList.add(user);
-
                     }
 
                     if (pending.decrementAndGet() == 0) {
@@ -310,83 +308,4 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
     }
-
-
-    /**
-     * This method grabs the users from the event and creates an arraylist of the ID's of users who are 'Accepted' into the event.
-     * It then sends the arraylist of id's to the writeCSV method
-     */
-    public void createCSV() {
-
-        ArrayList<String> userIDs = new ArrayList<>();
-
-        for (Map.Entry<String, String> entry: event.getEventUsers().entrySet()) {
-            if (entry.getValue().equals("Accepted")) {
-                userIDs.add(entry.getKey());
-            }
-        }
-
-        ArrayList<User> users = new ArrayList<>();
-        AtomicInteger remaining = new AtomicInteger(userIDs.size());
-
-        for (String id : userIDs) {
-            db.GetUser(id, user -> {
-                users.add(user);
-
-                if (remaining.decrementAndGet() == 0) {
-                    writeCSV(users);
-                }
-            });
-        }
-
-    }
-
-    /**
-     * This method grabs from a list of users provided and writes their
-     *  firstname, lastname, email, phone number
-     *  in a csv format and is then saved into their files.
-     * @param users provided by {@link #createCSV()}
-     */
-    public void writeCSV(List<User> users) {
-
-        File file = new File(getContext().getExternalFilesDir(null), event.getName() + "_accepted_participants.csv");
-
-
-        try {
-
-            FileWriter output = new FileWriter(file);
-            CSVWriter writer = new CSVWriter(output);
-
-            String[] header = {"Username", "First Name", "Last Name", "Email", "Phone Number"};
-            writer.writeNext(header);
-
-            for(User u: users) {
-
-                String[] data = {u.getUserName(), u.getFirstName(), u.getLastName(), u.getEmail(),u.getPhoneNumber()};
-                writer.writeNext(data);
-
-            }
-
-            Toast.makeText(
-                    getContext(),
-                    "CSV exported successfully to: " + file.getAbsolutePath(),
-                    Toast.LENGTH_LONG
-            ).show();
-
-            writer.close();
-
-        } catch (IOException e) {
-
-            Toast.makeText(
-                    getContext(),
-                    "Error exporting CSV: " + e.getMessage(),
-                    Toast.LENGTH_LONG
-            ).show();
-
-            throw new RuntimeException(e);
-
-        }
-
-    }
-
-}
+ }

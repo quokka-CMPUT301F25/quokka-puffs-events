@@ -57,7 +57,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
 
 
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

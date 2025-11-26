@@ -39,6 +39,7 @@ public class OrganizerEventDetails extends Fragment {
     ImageView qrcodeView;
 
     Button exitButton;
+    Button sendMessageButton;
 
     @Nullable
     @Override
@@ -56,11 +57,12 @@ public class OrganizerEventDetails extends Fragment {
         SetUpListeners(view);
     }
 
-
     /**
-     * This method initalizes all the interactables and connects them to their variables
-     * @param view
-     * View of the organizer_event_dashboard fragment
+     * Initializes UI components and business logic for the fragment.
+     * This includes displaying the QR code and enabling/disabling the
+     * lottery button depending on the event status.
+     *
+     * @param view The view from which UI components are retrieved
      */
     private void initialize(View view) {
         db = Database.getInstance();
@@ -70,6 +72,7 @@ public class OrganizerEventDetails extends Fragment {
         finishEventButton = view.findViewById(R.id.orgFinishEvent);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
+        sendMessageButton = view.findViewById(R.id.orgSendMessageBtn);
         exitButton = view.findViewById(R.id.orgExitOutEventBtn);
         qrcodeView = view.findViewById((R.id.qrCode));
 
@@ -103,14 +106,11 @@ public class OrganizerEventDetails extends Fragment {
     }
 
     /**
-     * This is a method that sets up the listeners for click events. It sends the user to their respective functions and/or fragment.
-     * @param view
-     * View of the fragment
+     * Sets up button listeners for navigation and event management options.
+     *
+     * @param view The view from which buttons are retrieved
      */
     public void SetUpListeners(View view) {
-
-
-
 //        Goes back to the home view.
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +143,15 @@ public class OrganizerEventDetails extends Fragment {
             }
         });
 
-
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Clicked!");
+                SendMessageFragment newFrag = new SendMessageFragment();
+                newFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
+            }
+        });
 
     }
 
