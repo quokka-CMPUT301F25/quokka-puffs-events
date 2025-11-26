@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -24,6 +25,7 @@ public class AdminActivity extends AppCompatActivity {
     ImageButton usersIcon;
     ImageButton notificationsIcon;
     ImageButton settingIcon;
+    private SharedPreferences.Editor loginPrefsEditor;
 
     public AdminActivity() {
         super(R.layout.activity_admin);
@@ -35,6 +37,9 @@ public class AdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
 
         replaceFragment(new AdminEventFragment());
+
+        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
 
         title = findViewById(R.id.adminTitle);
         imagesIcon = findViewById(R.id.imagesIcon);
@@ -120,6 +125,9 @@ public class AdminActivity extends AppCompatActivity {
         /**
          * Takes user back to login page
          */
+        loginPrefsEditor.clear();
+        loginPrefsEditor.commit();
+
         Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

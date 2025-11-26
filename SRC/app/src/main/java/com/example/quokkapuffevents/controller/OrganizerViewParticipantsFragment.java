@@ -4,7 +4,12 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +17,11 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
@@ -23,10 +30,16 @@ import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 import com.example.quokkapuffevents.view.AdminUserFragAdapter;
 import com.example.quokkapuffevents.view.OrgViewParticipantsFragAdapter;
+import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class OrganizerViewParticipantsFragment extends Fragment {
@@ -45,6 +58,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
     private Button finalParticipantsBtn;
     private Button redrawBtn;
     private Button backBtn;
+    private Button csvCreateBtn;
 
     ListView listView;
     private OrgViewParticipantsFragAdapter adapter;
@@ -54,6 +68,19 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         this.event = event;
     }
 
+
+    /**
+     * Sets up the view, listview/adapters and the default information is displayed
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -92,9 +119,16 @@ public class OrganizerViewParticipantsFragment extends Fragment {
                 });
             }
         }
+
         return userFragmentView;
     }
 
+    /**
+     * Sets up functionality for interactables
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -117,6 +151,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         redrawBtn = view.findViewById(R.id.orgRedrawEntrantBtn);
         backBtn = view.findViewById(R.id.orgViewParticipantsBackToDashboardBtn);
         finalParticipantsBtn = view.findViewById(R.id.viewFinalParticipantsBtn);
+        csvCreateBtn = view.findViewById(R.id.createFinalParticipantsCSV);
 
     }
 
@@ -212,8 +247,13 @@ public class OrganizerViewParticipantsFragment extends Fragment {
                 ((DashboardActivity) getActivity()).replaceFragment(orgFrag);
             }
         });
-
-
+        csvCreateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("CLICKED CSV BTN");
+                createCSV();
+            }
+        });
     }
 
     public void changeViewType(String filterType, View view) {
@@ -232,11 +272,10 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         for (Map.Entry<String, String> entry : eventUsers.entrySet()) {
 
             if (entry.getValue().equals(filterType)) {
-//                Async stuff #annoying
                 pending.incrementAndGet();
 
                 db.GetUser(entry.getKey(), user -> {
-//                    Gett user and add it to the userList
+
                     if (user != null) {
                         userList.add(user);
                     }
@@ -249,7 +288,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
                             }
                         }
                         adapter.notifyDataSetChanged();
-                        //If waiting, view the amount.
+
                         if(filterType.equals("Waiting")) {
                             view.findViewById(R.id.amountWaitingListContainer).setVisibility(VISIBLE);
                             view.findViewById(R.id.redrawContainer).setVisibility(GONE);

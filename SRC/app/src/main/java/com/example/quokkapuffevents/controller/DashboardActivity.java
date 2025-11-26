@@ -8,6 +8,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -46,6 +47,7 @@ public class DashboardActivity extends AppCompatActivity {
     ImageButton settingsButton;
     TextView usernameText;
     TextView userFirstAndLastNameText;
+    private SharedPreferences.Editor loginPrefsEditor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -56,6 +58,9 @@ public class DashboardActivity extends AppCompatActivity {
         userID = String.valueOf(db.GetCurrentUserID());
 
         checkNotificationPermission();
+
+        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
 
         db.GetUser(userID, user ->  {
             if (user.getAccountType() == 0) {
@@ -200,6 +205,9 @@ public class DashboardActivity extends AppCompatActivity {
         /**
          * Takes user back to login page
          */
+        loginPrefsEditor.clear();
+        loginPrefsEditor.commit();
+
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

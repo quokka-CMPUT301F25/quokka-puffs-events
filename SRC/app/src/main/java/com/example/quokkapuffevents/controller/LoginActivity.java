@@ -3,6 +3,7 @@ package com.example.quokkapuffevents.controller;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.User;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -59,7 +61,22 @@ public class LoginActivity extends AppCompatActivity {
         if (saveLogin) {
             username.setText(loginPreferences.getString("username", ""));
             password.setText(loginPreferences.getString("password", ""));
+            String userID = loginPreferences.getString("ID", "");
+            Log.d("USER", userID);
             rememberMe.setChecked(true);
+            db.SetUserID(userID);
+            db.GetUser(userID, user -> {
+                if(user.getAccountType() == -1) {
+                    SwitchActivity(AdminActivity.class);
+                }
+                else {
+                    Intent i = new Intent(this, DashboardActivity.class);
+                    if (possibleEventID != null) {
+                        i.putExtra("EVENT_ID", possibleEventID);
+                    }
+                    SwitchActivity(DashboardActivity.class);
+                }
+            });
         }
 
         signUpButton.setOnClickListener(v -> {
@@ -77,8 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                 loginPrefsEditor.commit();
             } else {
                 //Clear the data if they uncheck it?
-
-                //TODO: Decide if we want to do this or not/if we to even open the activity
                 loginPrefsEditor.clear();
                 loginPrefsEditor.commit();
             }
@@ -140,13 +155,19 @@ public class LoginActivity extends AppCompatActivity {
                         if (!users.isEmpty()) {
                             //Set the current user in the database and change activity
                             db.SetUserID(users.get(0).getId());
-                            if(users.get(0).getAccountType() == -1)
+
+                            if(users.get(0).getAccountType() == -1) {
+                                loginPrefsEditor.putString("ID", users.get(0).getId());
+                                loginPrefsEditor.commit();
                                 SwitchActivity(AdminActivity.class);
+                            }
                             else {
                                 Intent i = new Intent(this, DashboardActivity.class);
                                 if (possibleEventID != null) {
                                     i.putExtra("EVENT_ID", possibleEventID);
                                 }
+                                loginPrefsEditor.putString("ID", users.get(0).getId());
+                                loginPrefsEditor.commit();
                                 SwitchActivity(DashboardActivity.class);
                             }
                         }
@@ -163,13 +184,18 @@ public class LoginActivity extends AppCompatActivity {
                         if (!users.isEmpty()) {
                             //Set the current user in the database and change activity
                             db.SetUserID(users.get(0).getId());
-                            if(users.get(0).getAccountType() == -1)
+                            if(users.get(0).getAccountType() == -1) {
+                                loginPrefsEditor.putString("ID", users.get(0).getId());
+                                loginPrefsEditor.commit();
                                 SwitchActivity(AdminActivity.class);
+                            }
                             else {
                                 Intent i = new Intent(this, DashboardActivity.class);
                                 if (possibleEventID != null) {
                                     i.putExtra("EVENT_ID", possibleEventID);
                                 }
+                                loginPrefsEditor.putString("ID", users.get(0).getId());
+                                loginPrefsEditor.commit();
                                 SwitchActivity(DashboardActivity.class);
                             }
                         }
