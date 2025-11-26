@@ -64,6 +64,14 @@
             android:text="Run Lottery"
             android:textSize="24dp"
             android:backgroundTint="@color/greenbtn"/>
+        <Button
+            android:id="@+id/orgFinishEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Finalize Event"
+            android:textSize="24dp"
+            android:backgroundTint="@color/greenbtn"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/orgExitOutEventBtn"
