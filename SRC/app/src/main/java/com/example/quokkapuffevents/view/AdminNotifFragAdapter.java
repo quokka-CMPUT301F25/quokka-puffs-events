@@ -1,13 +1,11 @@
 package com.example.quokkapuffevents.view;
 
-import android.app.Notification;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,20 +13,18 @@ import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.controller.AdminActivity;
-import com.example.quokkapuffevents.controller.AdminEventDetailsFrag;
 import com.example.quokkapuffevents.controller.AdminNotifDetailsFrag;
 import com.example.quokkapuffevents.model.Database;
-import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for the admin fragment that configures and displays all notifications
+ */
 public class AdminNotifFragAdapter extends ArrayAdapter<Notif> {
-
     private ArrayList<Notif> notifList;
     private final Database db = Database.getInstance();
-
-
     public AdminNotifFragAdapter(@NonNull Context context, ArrayList<Notif> list) {
         super(context, 0, list);
         this.notifList = list;

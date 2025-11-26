@@ -1,7 +1,5 @@
 package com.example.quokkapuffevents.model;
 
-import com.google.type.DateTime;
-
 import java.util.Date;
 
 public class Notif {
@@ -13,7 +11,7 @@ public class Notif {
     private String message;
     private Boolean chosen;
     private Integer choice; //-1 for N/A, 0 for Undecided, 1 For no, 2 for yes
-    private Date timeStamp;
+    private Date timeStamp; //Kept just in case
     private String title;
 
 
@@ -33,6 +31,8 @@ public class Notif {
      * A String detailing who sent out this notification.
      * @param message
      * A String containing what the notification's text description contains.
+     * @param title
+     * Title for the notification
      */
     public Notif(String id, Integer type, String recipient, String originEvent, String originUser, String message, String title){
         this.id = id;
