@@ -11,7 +11,7 @@ public class Notif {
     private String message = "";
     private Boolean chosen = false;
     private Integer choice; //-1 for N/A, 0 for Undecided, 1 For no, 2 for yes
-    private Date timeStamp;
+    private Date timeStamp; //Kept just in case
     private String title;
 
 

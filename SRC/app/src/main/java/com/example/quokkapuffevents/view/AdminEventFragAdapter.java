@@ -26,10 +26,8 @@ import java.util.Date;
  * Adapter for the admin fragment that configures and displays all events
  */
 public class AdminEventFragAdapter extends ArrayAdapter<Event> {
-
     private ArrayList<Event> eventList;
     private Database db;
-
     public AdminEventFragAdapter(@NonNull Context context, ArrayList<Event> list) {
         super(context, 0, list);
         this.eventList = list;

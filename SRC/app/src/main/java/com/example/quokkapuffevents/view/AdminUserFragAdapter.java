@@ -29,7 +29,6 @@ public class AdminUserFragAdapter extends ArrayAdapter<User> {
 
     private ArrayList<User> userList;
     private Database db;
-
     public AdminUserFragAdapter(@NonNull Context context, ArrayList<User> list) {
         super(context, 0, list);
         this.userList = list;

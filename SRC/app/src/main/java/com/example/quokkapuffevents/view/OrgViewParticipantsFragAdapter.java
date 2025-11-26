@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class OrgViewParticipantsFragAdapter extends ArrayAdapter<User> {
 
     private ArrayList<User> userList;
-    private Database db;
 
     public OrgViewParticipantsFragAdapter(@NonNull Context context, ArrayList<User> list) {
         super(context, 0, list);
@@ -39,8 +38,6 @@ public class OrgViewParticipantsFragAdapter extends ArrayAdapter<User> {
         if(listItem == null)
             listItem = LayoutInflater.from(getContext()).inflate(
                     R.layout.organizer_view_participants_content, parent,false);
-
-        db = Database.getInstance();
 
         User currentUser = userList.get(position);
         TextView userTexts = (TextView) listItem.findViewById(R.id.entrantName);
