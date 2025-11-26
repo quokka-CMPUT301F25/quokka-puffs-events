@@ -64,6 +64,7 @@
             android:background="@drawable/border_shape_grey"
             android:hint="Username"
             android:inputType="text"
+            android:maxLength="20"
             android:padding="6px"
             android:textAlignment="center" />
 
@@ -90,6 +91,7 @@
             android:background="@drawable/border_shape_grey"
             android:hint="First Name"
             android:inputType="textPersonName"
+            android:maxLength="10"
             android:padding="6px"
             android:textAlignment="center" />
 
@@ -103,6 +105,7 @@
             android:background="@drawable/border_shape_grey"
             android:hint="Last Name"
             android:inputType="textPersonName"
+            android:maxLength="10"
             android:padding="6px"
             android:textAlignment="center" />
 
@@ -116,6 +119,7 @@
             android:background="@drawable/border_shape_grey"
             android:hint="Phone Number (Optional)"
             android:inputType="phone"
+            android:maxLength="14"
             android:padding="6px"
             android:textAlignment="center" />
 

@@ -1,15 +1,13 @@
 package com.example.quokkapuffevents.model;
 
-import android.content.Context;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.example.quokkapuffevents.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,18 +17,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 
 
 public class Database {
@@ -188,6 +179,12 @@ public class Database {
         notifsRef.document(id).set(newNotif);
         return(newNotif);
     }
+
+    /**
+     *
+     * @param bitmap
+     * @param listener
+     */
     public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<String> listener){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -205,6 +202,11 @@ public class Database {
         });
     }
 
+    /**
+     * Grabs the currently selected User from the database.
+     * @param userID
+     * @param listener
+     */
     public void GetUser(String userID, OnSuccessListener<User> listener) {
         usersRef.document(userID).get().addOnSuccessListener(document -> {
             if(document.exists()){
@@ -213,11 +215,9 @@ public class Database {
             }
         });
     }
-
-    //TODO Make these prettier. They stink right now
-
+    
     /**
-     * Grabs the currently selected event.
+     * Grabs the currently selected event from the database.
      * @param eventID
      *
      * @param listener
@@ -262,14 +262,25 @@ public class Database {
 //        });
 //    }
 
+    /**
+     *
+     * @param path
+     * @param listener
+     */
     public void GetImage(String path, OnSuccessListener<Bitmap> listener) {
-        StorageReference refImage = imageDB.child(path);
-        refImage.getBytes(1000000000).addOnSuccessListener(bytes -> {
-            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            listener.onSuccess(bmp);
-        }).addOnFailureListener(e -> {
-            Log.e("IMAGES", "Download failed", e);
-        });
+        if (path == null){
+            //Commented out cause if no image is uploaded it crashes
+//            Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.all_images);
+//            listener.onSuccess(bitmap);
+        } else{
+            StorageReference refImage = imageDB.child(path);
+            refImage.getBytes(1000000000).addOnSuccessListener(bytes -> {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                listener.onSuccess(bmp);
+            }).addOnFailureListener(e -> {
+                Log.e("IMAGES", "Download failed", e);
+            });
+        }
     }
 
     /**
@@ -337,18 +348,18 @@ public class Database {
     }
 
     /**
-     * Deletes the provided notif from the firebase database using the specified object.
+     * Deletes the provided notification from the firebase database using the specified object.
      * @param notif
-     * This is the notif that is being deleted.
+     * This is the notification that is being deleted.
      */
     public void DeleteNotification(Notif notif){
         notifsRef.document(notif.getId()).delete();
     }
 
     /**
-     * Deletes the provided notif from the firebase database using the notification id.
+     * Deletes the provided notification from the firebase database using the notification id.
      * @param id
-     * This is the id of the notif that is being deleted.
+     * This is the id of the notification that is being deleted.
      */
     public void DeleteNotification(String id){
         notifsRef.document(id).delete();
@@ -364,7 +375,7 @@ public class Database {
     //TODO: Test all of these:
 
     /**
-     * This method provides a list of every event that is in the database
+     * Provides a list of every event that is in the database
      */
     public void ListEvents(OnSuccessListener<ArrayList<Event>> listener){
         //Collects the data for every user with an id in the above list
@@ -383,7 +394,7 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every user that is in the database
+     * Provides a list of every user that is in the database.
      */
     public void ListUsers(OnSuccessListener<ArrayList<User>> listener){
         //Collects the data for every user with an id in the above list
@@ -402,7 +413,7 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every notification that is in the database
+     * Provides a list of every notification that is in the database.
      */
     public void ListNotifs(OnSuccessListener<ArrayList<Notif>> listener){
         //Collects the data for every user with an id in the above list
@@ -421,9 +432,10 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every user that is signed up to an event
+     * Provides a list of every user that is signed up to an event.
      * @param event
-     * This is the event that is being looked at. The users returned will have signed up to this event
+     * This is the event that is being looked at. The users returned will have signed up to this
+     * event.
      */
     public void UsersInEvent(Event event, OnSuccessListener<ArrayList<User>> listener){
         //List of all users in the event
@@ -452,9 +464,9 @@ public class Database {
     }
 
     /**
-     * This method provides a list of every event that a user has signed up for
+     * Provides a list of every event that a user has signed up for.
      * @param user
-     * This is the user that is being looked at
+     * This is the user that is being looked at.
      */
     public void GetEventsFromUser(User user, OnSuccessListener<ArrayList<Event>> listener){
         //List of all users in the event
@@ -476,57 +488,30 @@ public class Database {
                 });
     }
 
-    //TODO Add logic for sending out notifications. Need Testing
     /**
-     * This method draws the correct number of people for an event. It is the random raffle mechanism
+     * Draws the correct number of people for an event. It is the random raffle mechanism.
      * @param event
-     * The event that is randomly selecting participants from its waiting list
+     * The event that is randomly selecting participants from its waiting list.
      */
-    public void DrawUsers(Event event, OnSuccessListener<ArrayList<User>> listener){
+    public void DrawUsers(Event event){
         //Collect User IDs
-        ArrayList<String> userID = event.drawUsers(-1);
-        //Make into Users
-        usersRef.whereIn("id", (List) userID).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<User> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            users.add(doc.toObject(User.class));
-                        }
-                        listener.onSuccess(users);
-                    } else {
-                        Log.e("Firestore", "Error getting notifications", task.getException());
-                    }
-                });
+        ArrayList<String> userIDs = event.drawUsers(-1);
+        event.setDrawn(true);
+        SaveEvent(event);
     }
-
     /**
-     * This method is used to redraw a specific number of participants. It is used after an event as already drawn the majority of its users
-     * It allows for gaps caused by people cancelling or rejecting to be filled
+     * Used to redraw a specific number of participants. Used after an event has already drawn the
+     * majority of its users. Allows for gaps caused by people cancelling or rejecting to be filled.
      * @param event
-     * The event that is randomly selecting participants from its waiting list
+     * The event that is randomly selecting participents from its waiting list
      * @param numToDraw
      * The number of new users from the waiting list to be drawn
      */
-    public void RedrawUsers(Event event, Integer numToDraw, OnSuccessListener<ArrayList<User>> listener){
+    public void RedrawUsers(Event event, Integer numToDraw){
         //Collect User IDs
-        ArrayList<String> userID = event.drawUsers(numToDraw);
-        //Make into Users
-        usersRef.whereIn("id", (List) userID).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<User> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            users.add(doc.toObject(User.class));
-                        }
-                        listener.onSuccess(users);
-                    } else {
-                        Log.e("Firestore", "Error getting notifications", task.getException());
-                    }
-                });
+        ArrayList<String> userIDs = event.drawUsers(numToDraw);
+        SaveEvent(event);
     }
-
-    //Notif Methods
 
     /**
      * This method collects and returns all of the notifications that have been sent to a user
@@ -644,18 +629,37 @@ public class Database {
         }
     }
 
-    public void BlockThreadUntilCompleted(CollectionReference ref, String id, Object obj) {
-        CountDownLatch latch = new CountDownLatch(1);
+    /**
+     * This method is used to streamline all of the required changes of a user joining an event.
+     * Updates both the event and the user
+     * @param event
+     * The event that the user is joining
+     * @param user
+     * The user that us joining the event
+     */
+    public void RegisterUserIntoEvent(Event event, User user){
+        user.addEvent(event.getId());
+        event.SetStatus(user.getId(), "Waiting");
+        SaveUser(user);
+        SaveEvent(event);
 
-        ref.document(id).set(obj)
-                .addOnSuccessListener(unused -> latch.countDown())
-                .addOnFailureListener(e -> latch.countDown());
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have joined the waiting list");
+    }
 
-        try {
-            latch.await();
-        } catch (InterruptedException e){
-            throw new RuntimeException(e);
-        }
+    /**
+     * This method is used to streamline all of the required changes of a user cancelling joining an event.
+     * Updates both the event and the user
+     * @param event
+     * The event that the user is cancelling for
+     * @param user
+     * The user that us cancelling from the event
+     */
+    public void CancelUserIntoEvent(Event event, User user){
+        event.SetStatus(user.getId(), "Cancelled");
+        SaveUser(user);
+        SaveEvent(event);
+
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have left the waiting list");
     }
 
 }

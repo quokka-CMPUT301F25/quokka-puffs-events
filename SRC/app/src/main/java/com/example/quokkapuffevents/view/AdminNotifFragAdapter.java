@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -13,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
+import com.example.quokkapuffevents.controller.AdminActivity;
+import com.example.quokkapuffevents.controller.AdminEventDetailsFrag;
+import com.example.quokkapuffevents.controller.AdminNotifDetailsFrag;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
@@ -40,20 +44,12 @@ public class AdminNotifFragAdapter extends ArrayAdapter<Notif> {
 
         Notif currentNotif = notifList.get(position);
 
-        TextView notifTitles = (TextView) listItem.findViewById(R.id.notifTitle);
-        notifTitles.setText(currentNotif.getMessage());
+        TextView notifTitles = (TextView) listItem.findViewById(R.id.originUser);
+        db.GetUser(currentNotif.getOriginUser(), user -> {
+            notifTitles.setText(user.getFirstName());
+        });
 
-        TextView notifSubtitles1 = (TextView) listItem.findViewById(R.id.notifSubtitle);
-        String originUser;
-        db.GetUser(currentNotif.getOriginUser(), user ->
-                notifSubtitles1.setText(String.format("%s sent this notification to ",
-                        user.getUserName())));
-
-        TextView notifSubtitles2 = (TextView) listItem.findViewById(R.id.notifSubtitle2);
-        db.GetUser(currentNotif.getRecipient(), user ->
-                notifSubtitles2.setText(String.format("%s", user.getUserName())));
-
-        ImageButton deleteButton = listItem.findViewById(R.id.deleteButton);
+        Button deleteButton = listItem.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +57,23 @@ public class AdminNotifFragAdapter extends ArrayAdapter<Notif> {
                 db.DeleteNotification(notif);
                 notifList.remove(notif);
                 notifyDataSetChanged();
+            }
+        });
+
+        Button detailsButton = listItem.findViewById(R.id.detailsButton);
+        detailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdminNotifDetailsFrag detailsFrag = new AdminNotifDetailsFrag();
+                detailsFrag.setNotif(currentNotif);
+
+                AdminActivity activity = (AdminActivity) getContext();
+
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.adminFragmentContainer, detailsFrag)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
