@@ -155,10 +155,13 @@ public class EventCreateFragment extends Fragment {
                         event.setQrcodeID(uri);
                         db.SaveEvent(event);
                     });
-                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
-                        event.setImageID(uri);
-                        db.SaveEvent(event);
-                    });
+                    if (selectedImageBitmap != null){
+                        db.UploadImageToDatabase(selectedImageBitmap,uri -> {
+                            event.setImageID(uri);
+                            db.SaveEvent(event);
+                        });
+                    }
+
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
                     Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
