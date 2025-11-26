@@ -17,6 +17,7 @@ import com.example.quokkapuffevents.controller.DashboardActivity;
 import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
 import com.example.quokkapuffevents.controller.NotificationDetailsFragment;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
 
     private final List<Notif> notifications;   // adapter owns the list
     private final Database db = Database.getInstance();
+    private Event event;
 
     public NotificationArrayAdapter(Context context, ArrayList<Notif> notifications) {
         super(context, 0, notifications);
@@ -61,9 +63,12 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Database db = Database.getInstance();
         Notif notification = getItem(position);
+        db.GetEvent(notification.getOriginEvent(), orgEvent -> {
+            event = orgEvent;
+        });
 
         View view;
-        if (notification.getType() == 1 && !notification.getChosen()) {
+        if (notification.getType() == 1 && !notification.getChosen() && event.getFinished() == false) {
             view = (convertView == null)
                     ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content_invite, parent, false)
                     : convertView;
