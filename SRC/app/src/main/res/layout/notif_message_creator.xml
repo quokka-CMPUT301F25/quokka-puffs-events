@@ -44,7 +44,7 @@
                 android:background="@drawable/border_shape_grey"
                 android:gravity="left"
                 android:maxLines="1"
-                android:text="Notif name"
+                android:hint="Notification Title"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold">
@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="3"
-                android:text="You have joined the waiting list"
+                android:hint="Write your message here..."
                 android:textColor="@color/white"
                 android:textSize="20sp">
 
