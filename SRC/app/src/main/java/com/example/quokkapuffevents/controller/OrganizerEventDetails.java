@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class OrganizerEventDetails extends Fragment {
     Event event;
 
     Button runLottoButton;
+    Button finishEventButton;
     Button viewParticipantsButton;
     Button changeDetailsButton;
     ImageView qrcodeView;
@@ -65,6 +67,7 @@ public class OrganizerEventDetails extends Fragment {
 
         //Button
         runLottoButton = view.findViewById(R.id.orgRunLotteryBtn);
+        finishEventButton = view.findViewById(R.id.orgFinishEvent);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
         exitButton = view.findViewById(R.id.orgExitOutEventBtn);
@@ -75,10 +78,18 @@ public class OrganizerEventDetails extends Fragment {
             runLottoButton.setOnClickListener(v -> {
                 db.DrawUsers(event);
                 runLottoButton.setVisibility(INVISIBLE);
+
             });
         }
         else {
             runLottoButton.setVisibility(INVISIBLE);
+            if (event.getFinished() == false){
+                finishEventButton.setVisibility(VISIBLE);
+                finishEventButton.setOnClickListener(v -> {
+                    db.FinishEvent();
+                    finishEventButton.setVisibility(INVISIBLE);
+                });
+            }
         }
 
         //QRCode
