@@ -86,7 +86,7 @@ public class OrganizerEventDetails extends Fragment {
             if (event.getFinished() == false){
                 finishEventButton.setVisibility(VISIBLE);
                 finishEventButton.setOnClickListener(v -> {
-                    db.FinishEvent();
+                    db.FinishEvent(event);
                     finishEventButton.setVisibility(INVISIBLE);
                 });
             }

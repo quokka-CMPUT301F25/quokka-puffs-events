@@ -59,25 +59,25 @@ public class FCMManager extends FirebaseMessagingService {
             String title = message.getData().get("title");
             String body = message.getData().get("message");
 
-            showNotification(title, body);
+            //showNotification(title, body);
         }
     }
 
-    public static void showNotification(String title, String body) {
-        String channelId = "default_channel";
-        NotificationManager notificationManager = (NotificationManager) requireConext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, "Default Channel", NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.notifications_icon) // Replace with your notification icon
-                .setContentTitle(title)
-                .setContentText(body)
-                .setAutoCancel(true);
-
-        notificationManager.notify(0, builder.build());
-    }
+//    public static void showNotification(String title, String body) {
+//        String channelId = "default_channel";
+//        NotificationManager notificationManager = (NotificationManager) requireConext().getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(channelId, "Default Channel", NotificationManager.IMPORTANCE_DEFAULT);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+//                .setSmallIcon(R.drawable.notifications_icon) // Replace with your notification icon
+//                .setContentTitle(title)
+//                .setContentText(body)
+//                .setAutoCancel(true);
+//
+//        notificationManager.notify(0, builder.build());
+//    }
 }
