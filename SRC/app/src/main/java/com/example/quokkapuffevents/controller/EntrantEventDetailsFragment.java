@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
@@ -38,9 +39,14 @@ public class EntrantEventDetailsFragment extends Fragment {
     TextView eventTotalParticiapntsWaitingText;
     TextView eventDrawDateText;
     TextView eventDrawn;
+    TextView eventFinished;
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
+    Button goBackAdminBtn;
+    int waitingParticipants = 0;
+
+
 
 
     @Override
@@ -56,6 +62,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         initializeViews(view);
         displayInfo();
         setUpListeners(view);
+        checkAdmin(view);
         return view;
     }
 
@@ -74,6 +81,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
         eventDrawDateText = view.findViewById(R.id.eventDrawDateText);
         eventDrawn = view.findViewById(R.id.eventDrawn);
+        eventFinished = view.findViewById(R.id.eventFinished);
         eventDescriptionText = view.findViewById(R.id.eventDescriptionText);
         entrantRegisterForEventBtn = view.findViewById(R.id.entrantRegisterForEventBtn);
         goBackToDashboardBtn = view.findViewById(R.id.goBackToDashboardBtn);
@@ -86,6 +94,16 @@ public class EntrantEventDetailsFragment extends Fragment {
         String eventDescription = event.getDescription();
         String eventName = event.getName();
         Date eventDrawDateObj = event.getDrawnDate();
+        Map<String, String> participants = event.getEventUsers();
+
+        participants.forEach((user, status) -> {
+            if(status.equals("Waitlist")) {
+                waitingParticipants++;
+            }
+        });
+
+
+
 
 //        Format the date into DD/MM/YYYY
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -102,6 +120,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
         eventDrawn.setText(event.getDrawn().toString());
+        eventFinished.setText(event.getFinished().toString());
 
         //Removing button if after end or full
         if (event.getEventDate().before(new Date())){
@@ -114,6 +133,9 @@ public class EntrantEventDetailsFragment extends Fragment {
             if (!Objects.equals(event.getEventUsers().get(db.GetCurrentUserID()), "Cancelled")){
                 entrantRegisterForEventBtn.setVisibility(INVISIBLE);
             }
+        }
+        if (event.getFinished() == true){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
 
     }
@@ -148,6 +170,21 @@ public class EntrantEventDetailsFragment extends Fragment {
             }
         });
 
+    }
+
+    public void checkAdmin(View view) {
+        db.GetUser(db.GetCurrentUserID(), user -> {
+            if (user.getAccountType() == -1) {
+                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+
+                goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getParentFragmentManager().popBackStack();
+                    }
+                });
+            }
+        });
     }
 
 }

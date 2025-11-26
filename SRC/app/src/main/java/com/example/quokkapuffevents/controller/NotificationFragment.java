@@ -1,5 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +18,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.view.NotificationArrayAdapter;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -53,10 +58,12 @@ public class NotificationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initializeUI(view);
         loadNotifications();
+        listenForNotificationsLive(db.GetCurrentUserID());
     }
 
     /**
      * Initializes UI elements like ListView and its adapter.
+     * @param view The root view of the fragment.
      */
     private void initializeUI(@NonNull View view) {
         listView = view.findViewById(R.id.NotifList);
@@ -83,5 +90,37 @@ public class NotificationFragment extends Fragment {
             userId = "TEST_USER_ID";
         }
         return userId;
+    }
+
+    /**
+     * Listens for new notifications created in firebase and updates the UI accordingly.
+     * @param userId Takes in the current user ID to listen for notifications for.
+     */
+    public void listenForNotificationsLive(String userId) {
+        FirebaseFirestore.getInstance()
+                .collection("notifications")
+                .whereEqualTo("recipient", userId)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null || value == null) return;
+
+                    for (DocumentChange dc : value.getDocumentChanges()) {
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            Notif notif = dc.getDocument().toObject(Notif.class);
+
+                            updateNotificationUI(notif);
+
+                            NotificationHelper.showNotification(getContext(), notif.getTitle(), notif.getMessage());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Updates the UI with a new notification.
+     * @param notif The notification to be updated
+     */
+    private void updateNotificationUI(Notif notif) {
+        adapter.add(notif);
+        adapter.notifyDataSetChanged();
     }
 }

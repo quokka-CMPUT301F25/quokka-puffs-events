@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -26,11 +27,13 @@ public class OrganizerEventDetails extends Fragment {
     Event event;
 
     Button runLottoButton;
+    Button finishEventButton;
     Button viewParticipantsButton;
     Button changeDetailsButton;
     ImageView qrcodeView;
 
     Button exitButton;
+    Button sendMessageButton;
 
     @Nullable
     @Override
@@ -48,13 +51,22 @@ public class OrganizerEventDetails extends Fragment {
         SetUpListeners(view);
     }
 
+    /**
+     * Initializes UI components and business logic for the fragment.
+     * This includes displaying the QR code and enabling/disabling the
+     * lottery button depending on the event status.
+     *
+     * @param view The view from which UI components are retrieved
+     */
     private void initialize(View view) {
         db = Database.getInstance();
 
         //Button
         runLottoButton = view.findViewById(R.id.orgRunLotteryBtn);
+        finishEventButton = view.findViewById(R.id.orgFinishEvent);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);
         changeDetailsButton = view.findViewById(R.id.orgChangeDetailsBtn);
+        sendMessageButton = view.findViewById(R.id.orgSendMessageBtn);
         exitButton = view.findViewById(R.id.orgExitOutEventBtn);
         qrcodeView = view.findViewById((R.id.qrCode));
 
@@ -63,10 +75,18 @@ public class OrganizerEventDetails extends Fragment {
             runLottoButton.setOnClickListener(v -> {
                 db.DrawUsers(event);
                 runLottoButton.setVisibility(INVISIBLE);
+
             });
         }
         else {
             runLottoButton.setVisibility(INVISIBLE);
+            if (event.getFinished() == false){
+                finishEventButton.setVisibility(VISIBLE);
+                finishEventButton.setOnClickListener(v -> {
+                    db.FinishEvent(event);
+                    finishEventButton.setVisibility(INVISIBLE);
+                });
+            }
         }
 
         //QRCode
@@ -79,10 +99,12 @@ public class OrganizerEventDetails extends Fragment {
         });
     }
 
+    /**
+     * Sets up button listeners for navigation and event management options.
+     *
+     * @param view The view from which buttons are retrieved
+     */
     public void SetUpListeners(View view) {
-
-
-
 //        Goes back to the home view.
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +137,15 @@ public class OrganizerEventDetails extends Fragment {
             }
         });
 
-
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Clicked!");
+                SendMessageFragment newFrag = new SendMessageFragment();
+                newFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
+            }
+        });
 
     }
 

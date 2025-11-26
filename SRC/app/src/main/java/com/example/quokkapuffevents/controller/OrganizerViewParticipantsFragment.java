@@ -74,7 +74,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
         for (Map.Entry<String, String> entry : eventUsers.entrySet()) {
 
-            if (entry.getValue().equals("Canceled")) {
+            if (entry.getValue().equals("Cancelled")) {
 
                 pending.incrementAndGet();
 
@@ -118,6 +118,11 @@ public class OrganizerViewParticipantsFragment extends Fragment {
         SetUpListeners(view);
     }
 
+    /**
+     * Initializes all UI components and references.
+     *
+     * @param view The root view of the fragment.
+     */
     public void initialize(View view) {
 
 
@@ -133,12 +138,18 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
     }
 
+    /**
+     * Sets up button listeners for filtering, navigation, participant detail view,
+     * and redrawing users if event spot opens.
+     *
+     * @param view The root view of the fragment.
+     */
     public void SetUpListeners(View view) {
 
         canceledBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeViewType("Canceled", view);
+                changeViewType("Cancelled", view);
             }
         });
 
@@ -192,6 +203,15 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
     }
 
+
+    /**
+     * Filters the participant list based on their registration status
+     * (e.g. "Invited", "Waiting", "Cancelled", "Accepted").
+     * Loads users asynchronously and updates UI accordingly.
+     *
+     * @param filterType The status to filter by.
+     * @param view       The root view of the fragment.
+     */
     public void changeViewType(String filterType, View view) {
 
         Map<String, String> eventUsers = event.getEventUsers();
@@ -209,7 +229,6 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
                     if (user != null) {
                         userList.add(user);
-
                     }
 
                     if (pending.decrementAndGet() == 0) {
@@ -256,7 +275,4 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
     }
-
-
-
  }

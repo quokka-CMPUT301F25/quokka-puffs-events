@@ -82,7 +82,32 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Draw Date:"
+                        android:text="Drawn Status:"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:id="@+id/eventDrawn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="STATUS"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"
+                        android:textAlignment="textEnd"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Drawn Date:"
                         android:textColor="@color/white"
                         android:textSize="16dp"
                         android:layout_weight="2"/>
@@ -107,13 +132,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Drawn Status:"
+                        android:text="Event Completed:"
                         android:textColor="@color/white"
                         android:textSize="16dp"
                         android:layout_weight="2"/>
 
                     <TextView
-                        android:id="@+id/eventDrawn"
+                        android:id="@+id/eventFinished"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="STATUS"
