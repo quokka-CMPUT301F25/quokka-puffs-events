@@ -38,6 +38,7 @@ public class EntrantEventDetailsFragment extends Fragment {
     TextView eventTotalParticiapntsWaitingText;
     TextView eventDrawDateText;
     TextView eventDrawn;
+    TextView eventFinished;
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
@@ -74,6 +75,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
         eventDrawDateText = view.findViewById(R.id.eventDrawDateText);
         eventDrawn = view.findViewById(R.id.eventDrawn);
+        eventFinished = view.findViewById(R.id.eventFinished);
         eventDescriptionText = view.findViewById(R.id.eventDescriptionText);
         entrantRegisterForEventBtn = view.findViewById(R.id.entrantRegisterForEventBtn);
         goBackToDashboardBtn = view.findViewById(R.id.goBackToDashboardBtn);
@@ -102,6 +104,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
         eventDrawn.setText(event.getDrawn().toString());
+        eventFinished.setText(event.getFinished().toString());
 
         //Removing button if after end or full
         if (event.getEventDate().before(new Date())){
@@ -114,6 +117,9 @@ public class EntrantEventDetailsFragment extends Fragment {
             if (!Objects.equals(event.getEventUsers().get(db.GetCurrentUserID()), "Cancelled")){
                 entrantRegisterForEventBtn.setVisibility(INVISIBLE);
             }
+        }
+        if (event.getFinished() == true){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
 
     }
