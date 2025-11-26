@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private Database db;
     private SharedPreferences.Editor loginPrefsEditor;
     private String possibleEventID = null;
+    private Boolean clearRememberMe = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +212,10 @@ public class LoginActivity extends AppCompatActivity {
                 DisplayErrorMsg();
             }
         });
+    }
+
+    public void setClearRememberMe(Boolean clearRememberMe) {
+        this.clearRememberMe = clearRememberMe;
     }
 }
 
