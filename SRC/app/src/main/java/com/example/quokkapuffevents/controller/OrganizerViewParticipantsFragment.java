@@ -273,4 +273,81 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
     }
+
+    /**
+     * This method grabs the users from the event and creates an arraylist of the ID's of users who are 'Accepted' into the event.
+     * It then sends the arraylist of id's to the writeCSV method
+     */
+    public void createCSV() {
+
+        ArrayList<String> userIDs = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry: event.getEventUsers().entrySet()) {
+            if (entry.getValue().equals("Accepted")) {
+                userIDs.add(entry.getKey());
+            }
+        }
+
+        ArrayList<User> users = new ArrayList<>();
+        AtomicInteger remaining = new AtomicInteger(userIDs.size());
+
+        for (String id : userIDs) {
+            db.GetUser(id, user -> {
+                users.add(user);
+
+                if (remaining.decrementAndGet() == 0) {
+                    writeCSV(users);
+                }
+            });
+        }
+
+    }
+
+    /**
+     * This method grabs from a list of users provided and writes their
+     *  firstname, lastname, email, phone number
+     *  in a csv format and is then saved into their files.
+     * @param users provided by {@link #createCSV()}
+     */
+    public void writeCSV(List<User> users) {
+
+        File file = new File(getContext().getExternalFilesDir(null), event.getName() + "_accepted_participants.csv");
+
+
+        try {
+
+            FileWriter output = new FileWriter(file);
+            CSVWriter writer = new CSVWriter(output);
+
+            String[] header = {"Username", "First Name", "Last Name", "Email", "Phone Number"};
+            writer.writeNext(header);
+
+            for(User u: users) {
+
+                String[] data = {u.getUserName(), u.getFirstName(), u.getLastName(), u.getEmail(),u.getPhoneNumber()};
+                writer.writeNext(data);
+
+            }
+
+            Toast.makeText(
+                    getContext(),
+                    "CSV exported successfully to: " + file.getAbsolutePath(),
+                    Toast.LENGTH_LONG
+            ).show();
+
+            writer.close();
+
+        } catch (IOException e) {
+
+            Toast.makeText(
+                    getContext(),
+                    "Error exporting CSV: " + e.getMessage(),
+                    Toast.LENGTH_LONG
+            ).show();
+
+            throw new RuntimeException(e);
+
+        }
+
+    }
  }
