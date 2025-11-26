@@ -22,8 +22,6 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
     private Event event;
     private Database db;
 
-    private String status;
-
     private TextView username;
     private TextView firstname;
     private TextView lastname;
@@ -32,15 +30,8 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
     private Button backBtn;
     private Button cancelInviteBtn;
 
-
-
     public void SetUser(User u) {
         this.user = u;
-    }
-
-    public void SetUser(User u, String status) {
-        this.user = u;
-        this.status = status;
     }
 
     public void SetEvent(Event e) {
@@ -60,13 +51,16 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initialize(view);
-        SetUpListeners(view);
+        setUpListeners();
     }
 
     public void initialize(View view) {
-
+        /**
+         * Initializes all UI components and references.
+         *
+         * @param view The root view of the fragment.
+         */
         username = view.findViewById(R.id.usernameText);
         firstname = view.findViewById(R.id.userFirstNameText);
         lastname = view.findViewById(R.id.userLastNameText);
@@ -85,8 +79,10 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
 
     }
 
-    public void SetUpListeners(View view) {
-
+    public void setUpListeners() {
+        /**
+         * Sets up button listeners for navigation
+         */
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,13 +101,6 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
             }
         });
 
-
-
     }
-
-
-
-
-
 
 }

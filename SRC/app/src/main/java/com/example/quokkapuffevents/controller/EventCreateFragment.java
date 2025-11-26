@@ -79,7 +79,7 @@ public class EventCreateFragment extends Fragment {
         userID = db.GetCurrentUserID();
         registerImagePickerLauncher();
         initializeViews(view);
-        setUpListeners(view);
+        setUpListeners();
     }
 
     public void initializeViews(View view) {
@@ -101,10 +101,15 @@ public class EventCreateFragment extends Fragment {
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
     }
 
-    public void setUpListeners(View view) {
-
-        // opens ui which allows user to select where they want theyre images pulled from
+    public void setUpListeners() {
+        /**
+         * Adds functionality to buttons in fragment
+         */
         addImagesBtn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Opens ui which allows user to select where they want theyre images pulled from
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -115,10 +120,12 @@ public class EventCreateFragment extends Fragment {
         });
 
         createEvent.setOnClickListener(new View.OnClickListener(){
+            /**
+             * Allows organizer to create event
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v){
-
-
                // Getting input values
                 String title = eventTitle.getText().toString().trim();
                 String desc = eventDesc.getText().toString().trim();
@@ -179,13 +186,15 @@ public class EventCreateFragment extends Fragment {
                         });
                     }
                 }
-
-
                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
         });
 
         cancelEvent.setOnClickListener(new View.OnClickListener(){
+            /**
+             * Allows organizer to cancel creating event
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v){
                 ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
@@ -197,6 +206,7 @@ public class EventCreateFragment extends Fragment {
         /**
          * Registers the activity result launcher for image picking
          */
+        //This code format is taken from : https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -225,7 +235,6 @@ public class EventCreateFragment extends Fragment {
                 inputStream.close();
             }
             selectedImageBitmap = bitmap;
-
         } catch (Exception e) {
             Log.e("ImageHandling", "Error converting URI to Bitmap", e);
             Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT).show();
@@ -273,8 +282,10 @@ public class EventCreateFragment extends Fragment {
     }
 
     //This code was adapted from GeeksForGeeks. https://www.geeksforgeeks.org/android/how-to-generate-qr-code-in-android/
-    private Bitmap generateQRCode(String text)
-    {
+    private Bitmap generateQRCode(String text) {
+        /**
+         * generates QR code for event
+         */
         BarcodeEncoder barcodeEncoder
                 = new BarcodeEncoder();
         try {

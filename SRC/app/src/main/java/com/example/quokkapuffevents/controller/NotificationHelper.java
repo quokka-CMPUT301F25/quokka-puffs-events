@@ -11,18 +11,17 @@ import androidx.core.app.NotificationCompat;
 import com.example.quokkapuffevents.R;
 
 public class NotificationHelper {
-
-    /**
-     * Displays a notification with the provided title and message.
-     * If running on Android Oreo (API 26) or higher, a notification channel is created
-     * before sending the notification. A unique notification ID based on the current
-     * timestamp is used to ensure each notification is shown separately.
-     *
-     * @param context The context used to access system services.
-     * @param title   The title displayed in the notification.
-     * @param message The body text displayed in the notification.
-     */
     public static void showNotification(Context context, String title, String message) {
+        /**
+         * Displays a notification with the provided title and message.
+         * If running on Android Oreo (API 26) or higher, a notification channel is created
+         * before sending the notification. A unique notification ID based on the current
+         * timestamp is used to ensure each notification is shown separately.
+         *
+         * @param context The context used to access system services.
+         * @param title   The title displayed in the notification.
+         * @param message The body text displayed in the notification.
+         */
         String CHANNEL_ID = "notificationChannelID";
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -37,7 +36,7 @@ public class NotificationHelper {
         }
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.notifications_icon) // your icon
+                .setSmallIcon(R.drawable.notifications_icon)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)

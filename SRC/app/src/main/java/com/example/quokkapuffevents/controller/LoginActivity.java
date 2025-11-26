@@ -85,33 +85,32 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Changes currently displayed activity depending on what the user has pressed.
-     * @param activity
-     * The new activity class to display.
-     */
     private void SwitchActivity(Class<?> activity){
+        /**
+         * Changes currently displayed activity depending on what the user has pressed.
+         * @param activity
+         * The new activity class to display.
+         */
         Intent intent = new Intent(this, activity);
         startActivity(intent);
     }
 
-    /**
-     * A toast error message to display for when the Email Address, Username or Password is incorrect.
-     */
     private void DisplayErrorMsg(){
+        /**
+         * A toast error message to display for when the Email Address, Username or Password is incorrect.
+         */
         Toast.makeText(this, "Email Address / Username or Password is incorrect", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Hashes the given password using the SHA-512 algorithm and returns the result as a String.
-     * @param password
-     * The password to hash.
-     * @return
-     * A String of the SHA-512 hash of the input password.
-     */
     private String PasswordHashing(String password) {
+        /**
+         * Hashes the given password using the SHA-512 algorithm and returns the result as a String.
+         * @param password
+         * The password to hash.
+         * @return
+         * A String of the SHA-512 hash of the input password.
+         */
         MessageDigest md = null;
-
         try {
             md = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
@@ -122,17 +121,14 @@ public class LoginActivity extends AppCompatActivity {
         return new String(hashedPasswordByte);
     }
 
-    //Validates the information entered by the user
-
-    /**
-     * Validates that the information entered by the user is fully filled out / available.
-     * @param uNameOrEmail
-     * The user submitted username or email address.
-     * @param preHash
-     * The user submitted password before being hashed.
-     */
     private void ValidateInformation(String uNameOrEmail,  String preHash){
-
+        /**
+         * Validates that the information entered by the user is fully filled out / available.
+         * @param uNameOrEmail
+         * The user submitted username or email address.
+         * @param preHash
+         * The user submitted password before being hashed.
+         */
         // Hashing Password
         String pass = PasswordHashing(preHash);
 
@@ -154,7 +150,6 @@ public class LoginActivity extends AppCompatActivity {
                                 SwitchActivity(DashboardActivity.class);
                             }
                         }
-
                         //If password is wrong then we have an error
                         else {
                             DisplayErrorMsg();
