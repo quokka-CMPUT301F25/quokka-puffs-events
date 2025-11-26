@@ -26,6 +26,7 @@ public class Event {
     private String qrcodeID;
     //Add geo data?
     private Boolean drawn;
+    private Boolean finished;
 
     // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
 
@@ -50,6 +51,7 @@ public class Event {
         this.drawnDate = drawnDate;
         this.eventDate = eventDate;
         this.drawn = false;
+        this.finished = false;
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
@@ -77,6 +79,7 @@ public class Event {
         this.drawnDate = drawnDate;
         this.eventDate = eventDate;
         this.drawn = false;
+        this.finished = false;
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
@@ -162,6 +165,13 @@ public class Event {
     }
     public void setToBeDrawn(Integer toBeDrawn){
         this.toBeDrawn = toBeDrawn;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 
     public Map<String, String> getEventUsers() {
