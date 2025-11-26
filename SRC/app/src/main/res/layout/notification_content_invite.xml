@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
+    android:padding="8dp"
     android:background="@drawable/border_shape">
 
     <TextView
@@ -12,67 +13,67 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:text="Congratulations!"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/eventText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading..."
+        android:layout_marginTop="6dp"
+        android:textColor="@color/bluebtn"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center">
-
-        <TextView
-            android:id="@+id/eventText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="{Event name}"
-            android:textAlignment="4"
-            android:textColor="@color/bluebtn"
-            android:layout_weight="1"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/removeBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:layout_marginHorizontal="4dp"
-            android:backgroundTint="@color/greybtn"
-            android:text="X" />
+        android:gravity="center"
+        android:layout_marginTop="10dp">
 
         <Button
             android:id="@+id/rejectBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:layout_marginHorizontal="4dp"
+            android:text="Reject"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
             android:backgroundTint="@color/redbtn"
-            android:text="Reject"/>
+            android:padding="8dp"
+            android:minWidth="0dp" />
 
         <Button
             android:id="@+id/acceptBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:layout_marginHorizontal="4dp"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Accept"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
             android:backgroundTint="@color/bluebtn"
-            android:text="Accept" />
+            android:padding="8dp"
+            android:minWidth="0dp" />
 
         <Button
             android:id="@+id/detailsBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:layout_marginHorizontal="4dp"
+            android:layout_height="48dp"
+            android:text="Details"
+            android:textSize="16sp"
             android:backgroundTint="@color/greybtn"
-            android:text="Details" />
+            android:layout_marginHorizontal="4dp" />
+
+        <Button
+            android:id="@+id/removeBtn"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="X"
+            android:textSize="12sp"
+            android:backgroundTint="@color/greybtn"
+            android:layout_marginHorizontal="4dp" />
 
     </LinearLayout>
 </LinearLayout>

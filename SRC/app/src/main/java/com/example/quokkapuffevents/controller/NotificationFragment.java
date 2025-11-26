@@ -76,8 +76,11 @@ public class NotificationFragment extends Fragment {
      */
     private void loadNotifications() {
         String userId = ensureUserId();
-        db.GetUser(userId, user -> db.GetUserNotifications(user, adapter::setNotifications));
+        db.GetUser(userId, user -> {
+            db.GetUserNotifications(user, notifs -> adapter.setNotifications(notifs));
+        });
     }
+
 
     /**
      * Ensures a valid user ID is set (injects a test ID if null during testing).
@@ -97,7 +100,7 @@ public class NotificationFragment extends Fragment {
      * @param userId Takes in the current user ID to listen for notifications for.
      */
     public void listenForNotificationsLive(String userId) {
-        FirebaseFirestore.getInstance()
+        db.getDb().getInstance()
                 .collection("notifications")
                 .whereEqualTo("recipient", userId)
                 .addSnapshotListener((value, error) -> {
@@ -109,7 +112,7 @@ public class NotificationFragment extends Fragment {
 
                             updateNotificationUI(notif);
 
-                            NotificationHelper.showNotification(getContext(), notif.getTitle(), notif.getMessage());
+                            NotificationHelper.showNotification(requireContext(), notif.getTitle(), notif.getMessage());
                         }
                     }
                 });
