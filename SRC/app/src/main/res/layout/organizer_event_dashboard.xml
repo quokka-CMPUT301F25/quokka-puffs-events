@@ -25,6 +25,15 @@
             android:layout_marginBottom="24dp"/>
 
         <Button
+            android:id="@+id/orgSendMessageBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Message to Participants"
+            android:textSize="24dp"
+            android:backgroundTint="@color/bluebtn"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
             android:id="@+id/orgChangeDetailsBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

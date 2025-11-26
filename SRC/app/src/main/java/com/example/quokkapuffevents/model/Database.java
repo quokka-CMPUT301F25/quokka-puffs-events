@@ -1,12 +1,31 @@
 package com.example.quokkapuffevents.model;
 
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static androidx.core.content.ContextCompat.getSystemService;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
 import com.example.quokkapuffevents.R;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
@@ -63,6 +82,10 @@ public class Database {
             }
         }
         return instance;
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
     }
 
     // Getters and Setters
@@ -175,9 +198,9 @@ public class Database {
      * @return
      * Returns the notification as a new Class. Ensures that the notification is saved to the cloud
      */
-    public Notif CreateNotification(Integer type, String recipient, String originEvent, String originUser, String message){
+    public Notif CreateNotification(Integer type, String recipient, String originEvent, String originUser, String message, String title){
         String id = notifsRef.document().getId(); //Creates a document and returns the id
-        Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message);
+        Notif newNotif = new Notif(id, type, recipient, originEvent, originUser, message, title);
         notifsRef.document(id).set(newNotif);
         return(newNotif);
     }
@@ -217,7 +240,7 @@ public class Database {
             }
         });
     }
-    
+
     /**
      * Grabs the currently selected event from the database.
      * @param eventID
@@ -645,7 +668,7 @@ public class Database {
         SaveUser(user);
         SaveEvent(event);
 
-        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have joined the waiting list");
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have joined the waiting list", "Notification");
     }
 
     /**
@@ -661,7 +684,7 @@ public class Database {
         SaveUser(user);
         SaveEvent(event);
 
-        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have left the waiting list");
+        CreateNotification(0, user.getId(), event.getId(), event.getOrg(), "You have left the waiting list", "Notification");
     }
 
     /**
