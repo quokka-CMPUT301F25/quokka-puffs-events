@@ -17,6 +17,9 @@ import com.example.quokkapuffevents.model.User;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter to configure and display users that have joined an event to the organiser of that event.
+ */
 public class OrgViewParticipantsFragAdapter extends ArrayAdapter<User> {
 
     private ArrayList<User> userList;

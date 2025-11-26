@@ -21,6 +21,9 @@ import com.example.quokkapuffevents.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * General adapter that is used whenever events need to be used in a list view. Excluding admin fragments.
+ */
 public class EventListFragAdapter extends ArrayAdapter<Event> {
 
     private final List<Event> events;   // adapter owns the list
