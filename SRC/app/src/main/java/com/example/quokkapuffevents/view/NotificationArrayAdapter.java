@@ -23,6 +23,9 @@ import com.example.quokkapuffevents.model.Notif;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Array adapter to configure and display notifications for all users. Excluding admin fragments.
+ */
 public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
 
     private final List<Notif> notifications;

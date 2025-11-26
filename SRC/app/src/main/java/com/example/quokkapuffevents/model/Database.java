@@ -1,30 +1,10 @@
 package com.example.quokkapuffevents.model;
 
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
-import static androidx.core.content.ContextCompat.checkSelfPermission;
-import static androidx.core.content.ContextCompat.getSystemService;
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
-
-import com.example.quokkapuffevents.R;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -38,7 +18,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -206,9 +185,11 @@ public class Database {
     }
 
     /**
-     *
+     * Uploads an image to the firebase storage and returns a listener that returns the id/location of the image to update an event
      * @param bitmap
+     * Bitmap of the image being uploaded
      * @param listener
+     * Listener so that the upload can be asynchronous
      */
     public void UploadImageToDatabase(Bitmap bitmap, OnSuccessListener<String> listener){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -228,9 +209,11 @@ public class Database {
     }
 
     /**
-     * Grabs the currently selected User from the database.
+     * Collects a user's info from their user id
      * @param userID
+     * ID of the user being collected
      * @param listener
+     * Listener so that the upload can be asynchronous
      */
     public void GetUser(String userID, OnSuccessListener<User> listener) {
         usersRef.document(userID).get().addOnSuccessListener(document -> {
@@ -244,9 +227,9 @@ public class Database {
     /**
      * Grabs the currently selected event from the database.
      * @param eventID
-     *
+     * ID of the event being collected
      * @param listener
-     *
+     * Listener so that the download can be asynchronous
      */
     public void GetEvent(String eventID, OnSuccessListener<Event> listener) {
         eventsRef.document(eventID).get().addOnSuccessListener(document -> {
@@ -261,6 +244,8 @@ public class Database {
      * Collects the most up to date data from the database of notif based on their notification id.
      * @param notifID
      * The id of the notif being searched for
+     * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void CheckNotification(String notifID, OnSuccessListener<Notif> listener) {
         notifsRef.document(notifID).get().addOnSuccessListener(document -> {
@@ -271,33 +256,15 @@ public class Database {
         });
     }
 
-//    public void GetImage(String uri, OnSuccessListener<Bitmap> listener) {
-//        /**
-//         * This method collects the image from an event
-//         * @param event
-//         * The event that the image is from
-//         * @return
-//         * Returns the notification in a Notif class. The return will have the most up to date data for the notification id
-//         */
-//        StorageReference refImage = imageDB.getReference(uri);
-//        final File localfile = new File(UUID.randomUUID() + ".jpeg");
-//        refImage.getFile(localfile).addOnSuccessListener(taskSnapshot -> {
-//            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
-//            listener.onSuccess(bitmap);
-//        });
-//    }
-
     /**
-     *
+     * Collects an image from the storage using it's location/id
      * @param path
+     * ID/Path to the image in the storage
      * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void GetImage(String path, OnSuccessListener<Bitmap> listener) {
-        if (path == null){
-            //Commented out cause if no image is uploaded it crashes
-//            Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.all_images);
-//            listener.onSuccess(bitmap);
-        } else{
+        if (path != null){
             StorageReference refImage = imageDB.child(path);
             refImage.getBytes(1000000000).addOnSuccessListener(bytes -> {
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -309,24 +276,27 @@ public class Database {
     }
 
     /**
-     *
+     * Overwrites the values of a user. Updates the values in the database
      * @param user
+     * User class with the updated values
      */
     public void SaveUser(User user){
         usersRef.document(user.getId()).set(user);
     }
 
     /**
-     *
+     * Overwrites the values of a event. Updates the values in the database
      * @param event
+     * Event class with the updated values
      */
     public void SaveEvent(Event event){
         eventsRef.document(event.getId()).set(event);
     }
 
     /**
-     *
+     * Overwrites the values of a user. Updates the values in the database
      * @param notif
+     * Notif class with the updated values
      */
     public void SaveNotif(Notif notif){
         notifsRef.document(notif.getId()).set(notif);
@@ -390,17 +360,21 @@ public class Database {
         notifsRef.document(id).delete();
     }
 
+    /**
+     * Deletes the provided image from the firebase storage using the image id.
+     * @param path
+     * ID/Location to the image in the storage
+     */
     public void DeleteImage(String path){
         if (path != null) {
             imageDB.child(path).delete();
         }
     }
 
-    //Extrapolated Date Methods
-    //TODO: Test all of these:
-
     /**
      * Provides a list of every event that is in the database
+     * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void ListEvents(OnSuccessListener<ArrayList<Event>> listener){
         //Collects the data for every user with an id in the above list
@@ -420,6 +394,8 @@ public class Database {
 
     /**
      * Provides a list of every user that is in the database.
+     * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void ListUsers(OnSuccessListener<ArrayList<User>> listener){
         //Collects the data for every user with an id in the above list
@@ -439,6 +415,8 @@ public class Database {
 
     /**
      * Provides a list of every notification that is in the database.
+     * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void ListNotifs(OnSuccessListener<ArrayList<Notif>> listener){
         //Collects the data for every user with an id in the above list
@@ -459,8 +437,9 @@ public class Database {
     /**
      * Provides a list of every user that is signed up to an event.
      * @param event
-     * This is the event that is being looked at. The users returned will have signed up to this
-     * event.
+     * This is the event that is being looked at. The users returned will have signed up to this event
+     * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void UsersInEvent(Event event, OnSuccessListener<ArrayList<User>> listener){
         //List of all users in the event
@@ -472,7 +451,6 @@ public class Database {
             return;
         }
         //Collects the data for every user with an id in the above list
-
 
         usersRef.whereIn("id", usersInEvent).get() // edited it as well -- KYLE
                 .addOnCompleteListener(task -> {
@@ -492,10 +470,12 @@ public class Database {
      * Provides a list of every event that a user has signed up for.
      * @param user
      * This is the user that is being looked at.
+     * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void GetEventsFromUser(User user, OnSuccessListener<ArrayList<Event>> listener){
         //List of all users in the event
-        List eventsOfUser = user.getEvents();
+        List<String> eventsOfUser = user.getEvents();
         eventsOfUser.add("Dummy");
 
         //Collects the data for every user with an id in the above list
@@ -515,11 +495,13 @@ public class Database {
 
     /**
      * Draws the correct number of people for an event. It is the random raffle mechanism.
+     * This method is called when the event is first drawn.
+     * Tries to invite as many users as possible
      * @param event
      * The event that is randomly selecting participants from its waiting list.
      */
     public void DrawUsers(Event event){
-        //Collect User IDs
+        //Collect User IDs. Not directly used for anything but could be in the future
         ArrayList<String> userIDs = event.drawUsers(-1);
         event.setDrawn(true);
         SaveEvent(event);
@@ -528,7 +510,7 @@ public class Database {
      * Used to redraw a specific number of participants. Used after an event has already drawn the
      * majority of its users. Allows for gaps caused by people cancelling or rejecting to be filled.
      * @param event
-     * The event that is randomly selecting participents from its waiting list
+     * The event that is randomly selecting participants from its waiting list
      * @param numToDraw
      * The number of new users from the waiting list to be drawn
      */
@@ -542,6 +524,8 @@ public class Database {
      * This method collects and returns all of the notifications that have been sent to a user
      * @param user
      * The user that the notifications have been sent to
+     * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void GetUserNotifications(User user, OnSuccessListener<ArrayList<Notif>> listener) {
         notifsRef.whereEqualTo("recipient", user.getId()).get()
@@ -559,19 +543,13 @@ public class Database {
     }
 
     /**
-     *
-     * @param user
-     */
-    public void ToggleNotifsForUser(User user){
-        user.setSendNotifications(!(user.getSendNotifications()));
-        SaveUser(user);
-    }
-
-    /**
-     *
+     * Method to find and return a user based on an email and password
      * @param email
+     * Email of the user being looked for
      * @param password
+     * Password of the user being looked for
      * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void ValidatePasswordByEmail(String email, String password, OnSuccessListener<ArrayList<User>> listener){
         usersRef.whereEqualTo("email", email)
@@ -591,10 +569,13 @@ public class Database {
     }
 
     /**
-     *
+     * Method to find and return a user based on a username and password
      * @param username
+     * Email of the user being looked for
      * @param password
+     * Password of the user being looked for
      * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void ValidateUserUsername(String username, String password, OnSuccessListener<ArrayList<User>> listener){
         usersRef.whereEqualTo("userName", username)
@@ -614,9 +595,11 @@ public class Database {
     }
 
     /**
-     *
+     * Checks if a user exists in the database based on a username or email
      * @param val
+     * Email or username of a possible user
      * @param listener
+     * Listener so that the boolean can be returned asynchronously
      */
     public void UserExists(String val, OnSuccessListener<Boolean> listener){
         usersRef.where(Filter.or(
@@ -634,10 +617,13 @@ public class Database {
     }
 
     /**
-     *
+     * Method to find all events where a given user has a specific status
      * @param user
+     * User that we are filtering based on
      * @param status
+     * Status that the user must have within an event fro the event to be returned
      * @param listener
+     * Listener so that the download can be asynchronous
      */
     public void FilteredEventsForUser(User user, String status, OnSuccessListener<ArrayList<Event>> listener){
         ArrayList<Event> waitingEvents = new ArrayList<>(); //Create empty list to hold users that are still on the waiting list
@@ -688,7 +674,7 @@ public class Database {
     }
 
     /**
-     * This method is used to close off an event, and event will be "finished"
+     * This method is used to close off an event, the event will be "finished". It creates notifications to notify users that the event is sign up is completed.
      * @param event
      * The event that is being finalized
      */

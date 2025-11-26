@@ -22,6 +22,9 @@ import com.example.quokkapuffevents.model.User;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for the admin fragment that configures and displays all users
+ */
 public class AdminUserFragAdapter extends ArrayAdapter<User> {
 
     private ArrayList<User> userList;

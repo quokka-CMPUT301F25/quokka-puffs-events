@@ -25,6 +25,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for the admin fragment that configures and displays all images
+ */
 public class AdminPhotoFragAdapter extends ArrayAdapter<Event> {
 
     private ArrayList<Event> eventList;

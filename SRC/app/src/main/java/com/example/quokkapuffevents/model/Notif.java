@@ -1,7 +1,5 @@
 package com.example.quokkapuffevents.model;
 
-import com.google.type.DateTime;
-
 import java.util.Date;
 
 public class Notif {
@@ -33,6 +31,8 @@ public class Notif {
      * A String detailing who sent out this notification.
      * @param message
      * A String containing what the notification's text description contains.
+     * @param title
+     * Title for the notification
      */
     public Notif(String id, Integer type, String recipient, String originEvent, String originUser, String message, String title){
         this.id = id;
