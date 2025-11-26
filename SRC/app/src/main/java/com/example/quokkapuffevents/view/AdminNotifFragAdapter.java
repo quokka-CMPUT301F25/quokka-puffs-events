@@ -23,11 +23,8 @@ import java.util.ArrayList;
  * Adapter for the admin fragment that configures and displays all notifications
  */
 public class AdminNotifFragAdapter extends ArrayAdapter<Notif> {
-
     private ArrayList<Notif> notifList;
     private final Database db = Database.getInstance();
-
-
     public AdminNotifFragAdapter(@NonNull Context context, ArrayList<Notif> list) {
         super(context, 0, list);
         this.notifList = list;

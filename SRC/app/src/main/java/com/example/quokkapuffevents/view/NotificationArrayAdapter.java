@@ -119,7 +119,6 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
             } else {
                 event.SetStatus(db.GetCurrentUserID(), "Rejected");
             }
-
             db.SaveEvent(event);
         });
     }
