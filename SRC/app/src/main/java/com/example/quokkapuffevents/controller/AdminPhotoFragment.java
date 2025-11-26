@@ -18,16 +18,12 @@ import com.example.quokkapuffevents.view.AdminPhotoFragAdapter;
 import java.util.ArrayList;
 
 public class AdminPhotoFragment extends Fragment {
-
     ListView listView;
     private AdminPhotoFragAdapter adapter;
     private Database db;
     private ArrayList<Event> eventList = new ArrayList<>();
-    private ArrayList<Event> tempEventsList = new ArrayList<>();
 
-    public AdminPhotoFragment() {
-
-    }
+    public AdminPhotoFragment() {}
 
     @Nullable
     @Override
@@ -52,12 +48,9 @@ public class AdminPhotoFragment extends Fragment {
                     eventList.add(event);
                 }
             }
-
             adapter.notifyDataSetChanged();
         });
 
         return imageFragmentView;
     }
-
-
 }

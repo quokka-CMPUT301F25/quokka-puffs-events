@@ -40,11 +40,11 @@ public class NotificationDetailsFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Initializes all the views in the fragment, allows for edits in other functions
-     * @param view The current view, needed to allow access to the UI elements
-     */
     private void initializeViews(View view) {
+        /**
+         * Initializes all the views in the fragment, allows for edits in other functions
+         * @param view The current view, needed to allow access to the UI elements
+         */
         eventNameText = view.findViewById(R.id.orgEventNameText);
         notifTitleText = view.findViewById(R.id.notificationTitle);
         senderText = view.findViewById(R.id.orgNameText);
@@ -53,12 +53,11 @@ public class NotificationDetailsFragment extends Fragment {
         eventDetailsButton = view.findViewById(R.id.viewEventDetails);
     }
 
-
-    /**
-     * Displays the notification details in the fragment i.e. The title, the event it came from,
-     * the sender and the message attached
-     */
     private void displayInfo() {
+        /**
+         * Displays the notification details in the fragment i.e. The title, the event it came from,
+         * the sender and the message attached
+         */
         notifTitleText.setText(notification.getTitle());
         db.GetUser(notification.getOriginUser(), user -> {
             senderText.setText(user.getUserName());
@@ -71,12 +70,12 @@ public class NotificationDetailsFragment extends Fragment {
         messageText.setText(notification.getMessage());
     }
 
-    /**
-     * Sets up the button listeners. The back button will return to the notification fragment,
-     * The event details button will open the details of the event from which the message was sent from
-     * @param view The current view, needed to allow button logic to work
-     */
     private void setUpListeners(View view) {
+        /**
+         * Sets up the button listeners. The back button will return to the notification fragment,
+         * The event details button will open the details of the event from which the message was sent from
+         * @param view The current view, needed to allow button logic to work
+         */
         backButton.setOnClickListener(v ->{
             NotificationFragment notifFragment = new NotificationFragment();
             ((DashboardActivity) getActivity()).replaceFragment(notifFragment);
@@ -94,5 +93,4 @@ public class NotificationDetailsFragment extends Fragment {
     public void setNotification(Notif notification) {
         this.notification = notification;
     }
-
 }

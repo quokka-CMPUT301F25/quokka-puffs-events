@@ -26,7 +26,6 @@ public class RegisterEventsFragment extends Fragment {
     private ListView listView;
     private EventListFragAdapter adapter;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,6 +44,9 @@ public class RegisterEventsFragment extends Fragment {
     }
 
     private void initializeUI(@NonNull View view) {
+        /**
+         * Initializes all events available to register
+         */
         listView = view.findViewById(R.id.findEventsListView);
     }
 

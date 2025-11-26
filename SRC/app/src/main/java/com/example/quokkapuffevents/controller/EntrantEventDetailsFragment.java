@@ -28,12 +28,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class EntrantEventDetailsFragment extends Fragment {
-
-
 //    Set up variables
     private Database db;
     private Event event;
-
     TextView orgEventNameText;
     ImageView eventImage;
     TextView eventTotalParticiapntsWaitingText;
@@ -43,11 +40,7 @@ public class EntrantEventDetailsFragment extends Fragment {
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
-    Button goBackAdminBtn;
     int waitingParticipants = 0;
-
-
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
@@ -61,21 +54,24 @@ public class EntrantEventDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.entrant_view_event_fragment, container, false);
         initializeViews(view);
         displayInfo();
-        setUpListeners(view);
-        checkAdmin(view);
+        setUpListeners();
+        checkAdmin();
         return view;
     }
 
     public void setEvent(Event event) {
-
-//        Set the current event
+        /**
+         * Sets current event
+         * @param event
+         */
         this.event = event;
 
     }
 
     public void initializeViews(View view) {
-
-//        Grab all the ids to the corresponding variable
+        /**
+         * initializes all buttons/views/edits in fragment
+         */
         orgEventNameText = view.findViewById(R.id.orgEventNameText);
         eventImage = view.findViewById(R.id.eventImageView);
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
@@ -89,7 +85,9 @@ public class EntrantEventDetailsFragment extends Fragment {
     }
 
     public void displayInfo() {
-
+        /**
+         * displays all information to entrant in fragment
+         */
 //        Get values from event object
         String eventDescription = event.getDescription();
         String eventName = event.getName();
@@ -102,17 +100,12 @@ public class EntrantEventDetailsFragment extends Fragment {
             }
         });
 
-
-
-
-//        Format the date into DD/MM/YYYY
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String eventDrawnDate = formatter.format(eventDrawDateObj);
 
-
 //        Display info to fragment
         orgEventNameText.setText(eventName);
-        //Changed to improve
+
         db.GetImage(event.getImageID(), bitmap -> {
             eventImage.setImageBitmap(bitmap);
         });
@@ -140,17 +133,27 @@ public class EntrantEventDetailsFragment extends Fragment {
 
     }
 
-    public void setUpListeners(View view) {
+    public void setUpListeners() {
+        /**
+         * Adds functionality to buttons in fragment
+         */
         goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Takes Entrant to register events fragment
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
-
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
             }
         });
 
         entrantRegisterForEventBtn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Allows entrant to register for event and takes them back to register events fragment
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
 
@@ -172,11 +175,13 @@ public class EntrantEventDetailsFragment extends Fragment {
 
     }
 
-    public void checkAdmin(View view) {
+    public void checkAdmin() {
+        /**
+         * Checks whether user is an admin and sets up respectful button
+         */
         db.GetUser(db.GetCurrentUserID(), user -> {
             if (user.getAccountType() == -1) {
                 entrantRegisterForEventBtn.setVisibility(INVISIBLE);
-
                 goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

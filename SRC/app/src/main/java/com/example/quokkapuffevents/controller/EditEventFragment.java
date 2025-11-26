@@ -58,8 +58,11 @@ public class EditEventFragment extends Fragment {
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private Bitmap selectedImageBitmap;
 
-    String maxParts;
     public void SetEvent(Event event) {
+        /**
+         * sets event
+         * @param event
+         */
         this.event = event;
     }
 
@@ -105,7 +108,6 @@ public class EditEventFragment extends Fragment {
          * @param view
          * View of the EditEventFragment
          */
-
         if(event != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             String eventEventDate = formatter.format(event.getEventDate());
@@ -167,6 +169,9 @@ public class EditEventFragment extends Fragment {
     }
 
     public boolean validateInput() {
+        /**
+         * Checks whether organizer has implemented all required fields
+         */
         Map<EditText, String> requiredFields = new HashMap<>();
         requiredFields.put(eventTitle, "Event Title Is Required");
         requiredFields.put(eventDesc, "Event Description Is Required");
@@ -242,6 +247,9 @@ public class EditEventFragment extends Fragment {
     }
 
     public void saveEventChanges() {
+        /**
+         * Saves all changes organizer made to event edits
+         */
         // Getting input values
         String title = eventTitle.getText().toString().trim();
         String desc = eventDesc.getText().toString().trim();

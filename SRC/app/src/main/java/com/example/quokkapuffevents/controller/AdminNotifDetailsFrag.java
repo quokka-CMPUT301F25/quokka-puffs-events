@@ -25,10 +25,8 @@ import com.example.quokkapuffevents.model.User;
 import java.util.ArrayList;
 
 public class AdminNotifDetailsFrag extends Fragment {
-
     private Database db;
     private Notif notif;
-
     TextView notifName;
     TextView sender;
     TextView recipient;
@@ -40,37 +38,33 @@ public class AdminNotifDetailsFrag extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
-
         super.onCreate(savedInstanceState);
         // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.notif_details_fragment, container, false);
         initializeViews(view);
         displayInfo();
         setUpListeners();
         return view;
-
     }
 
-    // Setter
     public void setNotif(Notif notif) {
-
+        /**
+         * Sets notification (setter function)
+         * @param notif
+         */
         this.notif = notif;
-
     }
 
-    /**
-     * Finds each view and initializes each one
-     * @param view The view that is accessed to find each view
-     */
     public void initializeViews(View view) {
-
+        /**
+         * Finds each view and initializes each one
+         * @param view The view that is accessed to find each view
+         */
         notifName = view.findViewById(R.id.notifName);
         sender = view.findViewById(R.id.sender);
         recipient = view.findViewById(R.id.recipient);
@@ -87,11 +81,10 @@ public class AdminNotifDetailsFrag extends Fragment {
 
     }
 
-    /**
-     * Using the initialized views set each one to display each detail of the notification
-     */
     public void displayInfo( ) {
-
+        /**
+         * Using the initialized views set each one to display each detail of the notification
+         */
         db.GetUser(notif.getOriginUser(), user -> {
             notifName.setText(user.getFirstName());
             sender.setText(user.getFirstName());
@@ -124,15 +117,13 @@ public class AdminNotifDetailsFrag extends Fragment {
             else {
                 status.setText("Recipient has not been chosen");
             }
-
         }
-
     }
 
-    /**
-     * A back button to go back to all the notifications
-     */
     public void setUpListeners() {
+        /**
+         * A back button to go back to all the notifications
+         */
         goBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

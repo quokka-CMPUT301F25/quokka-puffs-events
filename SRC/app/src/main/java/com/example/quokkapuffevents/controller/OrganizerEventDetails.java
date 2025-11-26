@@ -31,13 +31,11 @@ public class OrganizerEventDetails extends Fragment {
 
     Database db;
     Event event;
-
     Button runLottoButton;
     Button finishEventButton;
     Button viewParticipantsButton;
     Button changeDetailsButton;
     ImageView qrcodeView;
-
     Button exitButton;
     Button sendMessageButton;
 
@@ -57,14 +55,14 @@ public class OrganizerEventDetails extends Fragment {
         SetUpListeners(view);
     }
 
-    /**
-     * Initializes UI components and business logic for the fragment.
-     * This includes displaying the QR code and enabling/disabling the
-     * lottery button depending on the event status.
-     *
-     * @param view The view from which UI components are retrieved
-     */
     private void initialize(View view) {
+        /**
+         * Initializes UI components and business logic for the fragment.
+         * This includes displaying the QR code and enabling/disabling the
+         * lottery button depending on the event status.
+         *
+         * @param view The view from which UI components are retrieved
+         */
         db = Database.getInstance();
 
         //Button
@@ -105,14 +103,17 @@ public class OrganizerEventDetails extends Fragment {
         });
     }
 
-    /**
-     * Sets up button listeners for navigation and event management options.
-     *
-     * @param view The view from which buttons are retrieved
-     */
     public void SetUpListeners(View view) {
-//        Goes back to the home view.
+        /**
+         * Sets up button listeners for navigation and event management options.
+         *
+         * @param view The view from which buttons are retrieved
+         */
         exitButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Organizer goes back to home view
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
 
@@ -121,9 +122,11 @@ public class OrganizerEventDetails extends Fragment {
             }
         });
 
-//        This goes to the event details for organizer to change details.
-
         changeDetailsButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Organizer goes to change event details
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 System.out.println("Clicked!");
@@ -134,6 +137,10 @@ public class OrganizerEventDetails extends Fragment {
         });
 
         viewParticipantsButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Organizer can view participants in event
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 System.out.println("Clicked!");
@@ -144,6 +151,10 @@ public class OrganizerEventDetails extends Fragment {
         });
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Organizer can sent message to entrants
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 System.out.println("Clicked!");
