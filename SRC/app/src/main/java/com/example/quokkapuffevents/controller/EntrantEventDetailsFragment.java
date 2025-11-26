@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 public class EntrantEventDetailsFragment extends Fragment {
 
@@ -93,19 +94,6 @@ public class EntrantEventDetailsFragment extends Fragment {
 
 //        Display info to fragment
         orgEventNameText.setText(eventName);
-//        db.GetImage(event.getImageID(), new OnSuccessListener<Bitmap>() {
-//            @Override
-//            public void onSuccess(Bitmap bitmap) {
-//                if (getActivity() != null) {
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            eventImage.setImageBitmap(bitmap);
-//                        }
-//                    });
-//                }
-//            }
-//        });
         //Changed to improve
         db.GetImage(event.getImageID(), bitmap -> {
             eventImage.setImageBitmap(bitmap);
@@ -119,8 +107,13 @@ public class EntrantEventDetailsFragment extends Fragment {
         if (event.getEventDate().before(new Date())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
-        if ((event.getNumPeopleWaiting() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
+        if ((event.getMaxNumWaitlist() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+        }
+        if (event.getEventUsers().get(db.GetCurrentUserID()) != null){
+            if (!Objects.equals(event.getEventUsers().get(db.GetCurrentUserID()), "Cancelled")){
+                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+            }
         }
 
     }
