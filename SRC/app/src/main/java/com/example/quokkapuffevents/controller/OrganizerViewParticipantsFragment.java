@@ -311,7 +311,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
         }
 //      Show view type:
-        String temp = "View by type: " + filterType;
+        String temp = "Currently Viewing: " + filterType;
         viewType.setText(temp);
         adapter.notifyDataSetChanged();
     }

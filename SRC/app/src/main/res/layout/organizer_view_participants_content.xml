@@ -4,27 +4,74 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/border_shape"
-    android:paddingVertical="4dp">
+    android:background="@color/white"
+    android:paddingVertical="8dp"
+    android:layout_margin="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        >
 
-        <TextView
-            android:id="@+id/entrantName"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Entrant "
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/entrantName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User "
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textAlignment="textStart"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/entrantFirstName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FirstName "
+                    android:textColor="@color/black"
+                    android:textAlignment="textStart"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" "
+                    android:textColor="@color/black"
+                    android:textAlignment="textStart"
+                    android:textSize="20sp"/>
 
+                <TextView
+                    android:id="@+id/entrantLastName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LastName "
+                    android:textColor="@color/black"
+                    android:textAlignment="textStart"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIEW DETAILS"
+                android:textSize="16dp"
+                android:paddingHorizontal="36dp"
+                android:paddingVertical="8dp"
+                android:background="@color/bluebtn"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
     </LinearLayout>
 

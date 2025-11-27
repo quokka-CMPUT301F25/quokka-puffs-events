@@ -113,7 +113,7 @@ public class EntrantEventDetailsFragment extends Fragment {
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
         eventDrawn.setText(event.getDrawn().toString());
-        eventFinished.setText(event.getFinished().toString());
+        eventFinished.setText(String.valueOf(event.getFinished()));
 
         //Removing button if after end or full
         if (event.getEventDate().before(new Date())){
