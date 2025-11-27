@@ -48,6 +48,7 @@ public class DashboardActivity extends AppCompatActivity {
     TextView usernameText;
     TextView userFirstAndLastNameText;
     private SharedPreferences.Editor loginPrefsEditor;
+    private boolean hasNotifications = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -70,6 +71,11 @@ public class DashboardActivity extends AppCompatActivity {
             }
             // Load initial fragment
             replaceFragment(new HomeFragment());
+            db.GetUserNotifications(user, notifs -> {
+                // Check if there are any notifications at all
+                hasNotifications = !notifs.isEmpty();
+                updateNotificationIcon();
+            });
         });
 
         //Handling QR Code events
@@ -90,6 +96,7 @@ public class DashboardActivity extends AppCompatActivity {
          */
         //Initialize Buttons
         initializeViews();
+        updateNotificationIcon();
 
         homeButton.setOnClickListener(View -> {
             /**
@@ -141,6 +148,7 @@ public class DashboardActivity extends AppCompatActivity {
          */
         //Initialize Buttons
         initializeViews();
+        updateNotificationIcon();
         viewEventsButton.setVisibility(GONE);
 
         homeButton.setOnClickListener(View -> {
@@ -255,5 +263,34 @@ public class DashboardActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void updateNotificationIcon() {
+        /**
+         * Update notification icon based on whether there are any notifications
+         */
+        if (notificationButton != null) {
+            if (hasNotifications) {
+                // User has notifications - show active icon
+                notificationButton.setImageResource(R.drawable.notifs);
+            } else {
+                // No notifications - show normal icon
+                notificationButton.setImageResource(R.drawable.empty_notifs);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh notification status every time the activity comes to foreground
+        db.GetUser(userID, user ->  {
+            db.GetUserNotifications(user, notifs -> {
+                // Check if there are any notifications at all
+                hasNotifications = !notifs.isEmpty();
+                updateNotificationIcon();
+            });
+        });
+    }
+
 
 }
