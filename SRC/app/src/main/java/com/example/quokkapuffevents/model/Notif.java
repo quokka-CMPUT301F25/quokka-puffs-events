@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class Notif {
     private String id;
-    private Integer type; //If just an alert or a choice. 0 or alert, 1 for choice.
+    private Integer type = 0; //If just an alert or a choice. 0 or alert, 1 for choice.
     private String recipient;
     private String originEvent;
     private String originUser;
-    private String message;
-    private Boolean chosen;
+    private String message = "";
+    private Boolean chosen = false;
     private Integer choice; //-1 for N/A, 0 for Undecided, 1 For no, 2 for yes
     private Date timeStamp; //Kept just in case
     private String title;

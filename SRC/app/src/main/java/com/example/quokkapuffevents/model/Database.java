@@ -11,6 +11,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -101,8 +102,24 @@ public class Database {
     public User CreateUser(String email, Integer type, String hashPass, String userName, String firstName, String lastName, String phoneNumber){
         String id = usersRef.document().getId(); //Creates a document and returns the id
         User newUser = new User(id, email, type, hashPass, userName, firstName, lastName, phoneNumber); //Creates new User class
+        GenerateTokenForUser(newUser);
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
+    }
+
+    private void GenerateTokenForUser(User newUser){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener((task) -> {
+                    if (!task.isSuccessful()) {
+                        newUser.setFcmToken(task.getException().getMessage());
+                        Log.e("FCM", "Fetching FCM registration token failed", task.getException());
+                    } else {
+                        newUser.setFcmToken(task.getResult());
+                        Log.d("FCM", "FCM registration token: " + task.getResult());
+                    }
+
+                    SaveUser(newUser);
+                });
     }
 
     /**
