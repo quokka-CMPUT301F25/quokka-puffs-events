@@ -370,6 +370,10 @@ public class OrganizerViewParticipantsFragment extends Fragment {
                 writer.writeNext(data);
 
             }
+            System.out.println(file.getAbsolutePath());
+            System.out.println(file.getAbsolutePath());
+            System.out.println(file.getAbsolutePath());
+            System.out.println(file.getAbsolutePath());
 
             Toast.makeText(
                     getContext(),
