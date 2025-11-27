@@ -1,7 +1,8 @@
 package com.example.quokkapuffevents.controller;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment responsible for displaying notifications for the current user.
@@ -75,9 +77,11 @@ public class NotificationFragment extends Fragment {
      * Retrieves and displays the current user’s notifications.
      */
     private void loadNotifications() {
-        String userId = ensureUserId();
-        db.GetUser(userId, user -> {
-            db.GetUserNotifications(user, notifs -> adapter.setNotifications(notifs));
+        db.GetUser(ensureUserId(), user -> {
+            db.GetUserNotifications(user, notifs -> {
+                adapter.setNotifications(notifs);
+                adapter.notifyDataSetChanged();  // Important
+            });
         });
     }
 
@@ -108,22 +112,13 @@ public class NotificationFragment extends Fragment {
 
                     for (DocumentChange dc : value.getDocumentChanges()) {
                         if (dc.getType() == DocumentChange.Type.ADDED) {
+
                             Notif notif = dc.getDocument().toObject(Notif.class);
 
-                            updateNotificationUI(notif);
-
-                            NotificationHelper.showNotification(requireContext(), notif.getTitle(), notif.getMessage());
+                            adapter.add(notif);
+                            adapter.notifyDataSetChanged();
                         }
                     }
                 });
-    }
-
-    /**
-     * Updates the UI with a new notification.
-     * @param notif The notification to be updated
-     */
-    private void updateNotificationUI(Notif notif) {
-        adapter.add(notif);
-        adapter.notifyDataSetChanged();
     }
 }

@@ -37,12 +37,18 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
     @Override
     public int getItemViewType(int position) {
         Notif notification = getItem(position);
-        if (notification.getType() == 1 && !notification.getChosen()) {
-            return 1;  // invite layout
-        } else {
-            return 0;  // message layout
+
+        // 🔥 Avoid crash:
+        if (notification == null) return 0;
+        if (notification.getType() == null) return 0;
+
+        if (notification.getType() == 1 && !Boolean.TRUE.equals(notification.getChosen())) {
+            return 1; // invite layout
         }
+        return 0; // message layout
     }
+
+
 
     @Override
     public int getViewTypeCount() {
@@ -127,8 +133,8 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
     }
 
     public void setNotifications(List<Notif> newNotifs) {
-        notifications.clear();
-        notifications.addAll(newNotifs);
+        clear();                // CLEAR ArrayAdapter list
+        addAll(newNotifs);      // ADD new data
         notifyDataSetChanged();
     }
 }

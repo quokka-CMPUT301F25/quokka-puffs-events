@@ -18,6 +18,7 @@ public class Event {
     private Integer toBeDrawn;
     private Integer maxNumWaitlist;
     private Integer numPeopleWaiting;
+    private int numInvitedAccepted;
     private Map<String, String> eventUsers = new HashMap<>(); //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
     private Date drawnDate;
@@ -189,6 +190,10 @@ public class Event {
         return org;
     }
 
+    public void setNumInvitedAccepted(int numInvitedAccepted) {
+        this.numInvitedAccepted = numInvitedAccepted;
+    }
+
     public Integer getNumInvitedAccepted(){
         Integer total = 0;
         for (String entry : eventUsers.keySet()) {
@@ -198,6 +203,7 @@ public class Event {
         }
         return(total);
     }
+
     //Actual methods
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user

@@ -13,11 +13,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -31,6 +33,7 @@ import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Notif;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -51,11 +54,12 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_dashboard);
+
+        checkNotificationPermission();
+
         // GET INSTANCE OF DATABASE AND CURRENT USER ID
         db = Database.getInstance();
         userID = String.valueOf(db.GetCurrentUserID());
-
-        checkNotificationPermission();
 
         db.GetUser(userID, user ->  {
             if (user.getAccountType() == 0) {
@@ -77,6 +81,14 @@ public class DashboardActivity extends AppCompatActivity {
                 replaceFragment(frag);
             });
         }
+
+        try {
+            Class.forName("com.example.quokkapuffevents.controller.FCMManager");
+            Log.d("FCM_TEST", "FCMManager FOUND in APK!");
+        } catch (Exception e) {
+            Log.e("FCM_TEST", "FCMManager NOT FOUND in APK!", e);
+        }
+
     }
 
     public void entrantDashboard() {
@@ -212,4 +224,19 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Notifications are disabled! Enable them in Settings.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }

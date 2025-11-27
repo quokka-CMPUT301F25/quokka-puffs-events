@@ -1,36 +1,17 @@
 package com.example.quokkapuffevents.model;
 
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
-import static androidx.core.content.ContextCompat.checkSelfPermission;
-import static androidx.core.content.ContextCompat.getSystemService;
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
-
-import com.example.quokkapuffevents.R;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -38,7 +19,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -122,8 +102,24 @@ public class Database {
     public User CreateUser(String email, Integer type, String hashPass, String userName, String firstName, String lastName, String phoneNumber){
         String id = usersRef.document().getId(); //Creates a document and returns the id
         User newUser = new User(id, email, type, hashPass, userName, firstName, lastName, phoneNumber); //Creates new User class
+        GenerateTokenForUser(newUser);
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);
+    }
+
+    private void GenerateTokenForUser(User newUser){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener((task) -> {
+                    if (!task.isSuccessful()) {
+                        newUser.setFcmToken(task.getException().getMessage());
+                        Log.e("FCM", "Fetching FCM registration token failed", task.getException());
+                    } else {
+                        newUser.setFcmToken(task.getResult());
+                        Log.d("FCM", "FCM registration token: " + task.getResult());
+                    }
+
+                    SaveUser(newUser);
+                });
     }
 
     /**

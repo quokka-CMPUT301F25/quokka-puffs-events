@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services")   // REQUIRED for Firebase
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.quokkapuffevents"
-        minSdk = 24
+        minSdk = 33
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -20,6 +20,7 @@ android {
 
     buildTypes {
         release {
+            // OPTIONAL – disable for debugging
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -27,10 +28,12 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding = true
     }
@@ -38,38 +41,38 @@ android {
 
 dependencies {
 
+    // ➤ Only ONE Firebase BOM – controls the versions automatically
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
-    implementation("com.google.firebase:firebase-storage")
-    implementation(libs.ext.junit)
-    implementation(libs.espresso.core)
-    implementation(libs.firebase.database)
-    implementation(libs.espresso.intents)
-    implementation(libs.firebase.storage)
-    implementation(libs.firebase.messaging)
-    implementation(libs.play.services.maps)
-    // These were changed from implementation to androidTestImplementation
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.runner)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
-    implementation("com.google.firebase:firebase-messaging:23.1.1")
-    implementation("com.squareup.okhttp3:okhttp:3.14.9")
+
+    // ➤ Core Firebase dependencies – SO important for notifications!
+    implementation("com.google.firebase:firebase-messaging")      // FCM
+    implementation("com.google.firebase:firebase-firestore")      // Firestore DB
+    implementation("com.google.firebase:firebase-analytics")      // Analytics (OK to keep)
+    implementation("com.google.firebase:firebase-storage")        // Storage (OK to keep)
+    implementation("com.google.firebase:firebase-database")       // Realtime DB (if used)
+
+    implementation("com.google.android.gms:play-services-base:18.4.0")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")  // only if using Google Sign-In
 
 
+    // AndroidX Core Dependencies
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.firebase.firestore)
 
-    // For local unit tests (in src/test/java)
+    // Maps API (SAFE TO KEEP)
+    implementation(libs.play.services.maps)
+
+    // QR Code Scanner (SAFE TO KEEP)
+    implementation("com.journeyapps:zxing-android-embedded:4.1.0")
+
+    // For unit testing
     testImplementation(libs.junit)
 
-    // For instrumented tests (in src/androidTest/java)
-    // You might have duplicates after the change, you can keep just one set
+    // For instrumented testing
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    //For QR Codes
-    implementation("com.journeyapps:zxing-android-embedded:4.1.0")
+    androidTestImplementation(libs.runner)
+    androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
 }

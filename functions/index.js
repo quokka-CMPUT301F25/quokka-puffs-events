@@ -1,49 +1,61 @@
-// index.js (Firebase v2 Cloud Function)
-
 const {onDocumentCreated} = require("firebase-functions/v2/firestore");
-const {initializeApp} = require("firebase-admin/app");
-const {getFirestore} = require("firebase-admin/firestore");
-const {getMessaging} = require("firebase-admin/messaging");
+const admin = require("firebase-admin");
+const {google} = require("googleapis");
 
-initializeApp();
+admin.initializeApp();
+
+// REPLACE THIS WITH YOUR ACTUAL PROJECT ID
+const PROJECT_ID = "quokka-puff-events";
+const SCOPES = ["https://www.googleapis.com/auth/firebase.messaging"];
+
+// LOAD THE SERVICE ACCOUNT FILE YOU DOWNLOADED
+const auth = new google.auth.GoogleAuth({
+  keyFilename: "quokka-puff-events-firebase-adminsdk-fbsvc-a99c0e86dd.json",
+  scopes: SCOPES,
+});
 
 exports.sendNotificationOnCreate = onDocumentCreated("notifications/{notifId}",
     async (event) => {
-      const notif = event.data.data(); // this is your Firestore document data
+      const notif = event.data.data();
+      if (!notif) return;
 
-      if (!notif || !notif.recipient) {
-        console.log("No recipient found — skipping");
-        return;
-      }
+      // Get recipient's FCM token
+      const userDoc = await admin.firestore()
+          .collection("users")
+          .doc(notif.recipient)
+          .get();
 
-      const db = getFirestore();
+      if (!userDoc.exists) return console.log("User not found.");
 
-      // Fetch recipient token
-      const userDoc = await db.collection("users").doc(notif.recipient).get();
-      if (!userDoc.exists) {
-        console.log("User not found:", notif.recipient);
-        return;
-      }
+      const fcmToken = userDoc.data().fcmToken;
+      if (!fcmToken) return console.log("No FCM token for user.");
 
-      const token = userDoc.get("fcmToken");
-      if (!token) {
-        console.log("No FCM token for user:", notif.recipient);
-        return;
-      }
+      // Authorization for HTTP v1 API
+      const client = await auth.getClient();
+      const accessToken = await client.getAccessToken();
 
-      // Send push notification
       const message = {
-        token,
-        notification: {
-          title: notif.title || "New Notification",
-          body: notif.message || "",
+        message: {
+          token: fcmToken,
+          data: {
+            title: notif.title,
+            message: notif.message,
+          },
         },
       };
 
-      try {
-        const response = await getMessaging().send(message);
-        console.log("SUCCESS:", response);
-      } catch (err) {
-        console.error("ERROR sending FCM:", err);
-      }
+      // Send the push notification
+      await fetch(
+          `https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send`,
+          {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${accessToken.token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(message),
+          },
+      );
+
+      console.log("FCM sent to:", notif.recipient);
     });
