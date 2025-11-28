@@ -24,8 +24,9 @@ public class Event {
     private Date eventDate;
     private String imageID;
     private String qrcodeID;
-    //Add geo data?
     private Boolean drawn;
+    private Boolean geoEnabled;
+    private ArrayList<Double> location;
 
     // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
 
@@ -38,8 +39,9 @@ public class Event {
      * @param toBeDrawn
      * @param drawnDate
      * @param eventDate
+     * @param geoEnabled
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate, Boolean geoEnabled){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -53,6 +55,7 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.geoEnabled = geoEnabled;
     }
 
     /**
@@ -66,7 +69,7 @@ public class Event {
      * @param drawnDate
      * @param eventDate
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate, Boolean geoEnabled){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -80,6 +83,7 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.geoEnabled = geoEnabled;
     }
 
     /**
@@ -163,20 +167,29 @@ public class Event {
     public void setToBeDrawn(Integer toBeDrawn){
         this.toBeDrawn = toBeDrawn;
     }
-
     public Map<String, String> getEventUsers() {
         return eventUsers;
     }
-
     public String getDescription() {
         return description;
     }
     public void setDescription(String desc) {
         this.description = desc;
     }
-
     public String getOrg() {
         return org;
+    }
+    public Boolean getGeoEnabled() {
+        return geoEnabled;
+    }
+    public void setGeoEnabled(Boolean geoEnabled) {
+        this.geoEnabled = geoEnabled;
+    }
+    public ArrayList<Double> getLocation() {
+        return location;
+    }
+    public void setLocation(ArrayList<Double> location) {
+        this.location = location;
     }
 
     public Integer getNumInvitedAccepted(){

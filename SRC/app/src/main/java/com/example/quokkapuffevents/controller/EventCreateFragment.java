@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -54,7 +55,7 @@ public class EventCreateFragment extends Fragment {
     //the switch in XML file that determines whether organizer would like to limit the numb of participants
     EditText numbPar; //not in views yet, number of participants to be chosen
     EditText maxPar; // max number of participants to join waiting list
-    Switch addGeo; //TODO: idek???
+    Switch addGeo; //TODO: idek??? I'm Doing this now
     Button cancelEvent; //button to cancel event
     Button createEvent; //button to initialize creating the event
     String userID; //current user id
@@ -102,6 +103,14 @@ public class EventCreateFragment extends Fragment {
     }
 
     public void setUpListeners(View view) {
+        addGeo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    //TODO Button will show up, then if the they click said button it will switch fragments to the choose location fragment
+                }
+            }
+        });
 
         // opens ui which allows user to select where they want theyre images pulled from
         addImagesBtn.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +156,7 @@ public class EventCreateFragment extends Fragment {
 
                 //Create event in database
                 if (maxParts.isEmpty()){
-                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
+                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate, false);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
@@ -161,7 +170,7 @@ public class EventCreateFragment extends Fragment {
                     });
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
-                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
+                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate, false);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster

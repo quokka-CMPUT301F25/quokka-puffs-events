@@ -89,7 +89,7 @@ public class OrganizerTestCases {
             db.SetUserID(mockOrg.getId());
 
             Event event = db.CreateEvent("TestDrawSpecificAttendees", mockOrg.getId(),
-                    "Testing specified number of attendees sampling", 5, 1, new Date(), new Date());
+                    "Testing specified number of attendees sampling", 5, 1, new Date(), new Date(), false);
             Thread.sleep(1500);
 
             List<User> attendees = new ArrayList<>();

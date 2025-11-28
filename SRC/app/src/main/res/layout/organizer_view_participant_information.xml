@@ -112,10 +112,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="Geolocation"
+            android:text="Geolocation Disabled For This Event"
             android:textAlignment="textStart"
-            android:textSize="24dp"
-            android:layout_marginTop="8dp"/>
+            android:textSize="20dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/mapView"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            />
+
 
 
         <LinearLayout

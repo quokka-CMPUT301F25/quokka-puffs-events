@@ -15,8 +15,11 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 
-public class OrganizerViewParticipantsInformationFragment extends Fragment {
+public class OrganizerViewParticipantsInformationFragment extends Fragment implements OnMapReadyCallback {
 
     private User user;
     private Event event;
@@ -63,8 +66,21 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
 
         initialize(view);
         SetUpListeners(view);
+
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView);
+
+        if(mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap p0) {
+        if(event != null && event.getGeoEnabled()) {
+            //TODO: Show the map and pin point the location of the event
+        }
+    }
     public void initialize(View view) {
 
         username = view.findViewById(R.id.usernameText);

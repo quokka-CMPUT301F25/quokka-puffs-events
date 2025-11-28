@@ -6,6 +6,7 @@ espressoCore = "3.7.0"
 appcompat = "1.7.1"
 material = "1.13.0"
 activity = "1.11.0"
+googlemaps = "17.0.0"
 constraintlayout = "2.2.1"
 firebaseFirestore = "26.0.2"
 runner = "1.7.0"
@@ -13,7 +14,7 @@ firebaseDatabase = "22.0.1"
 espressoIntents = "3.7.0"
 firebaseStorage = "22.0.1"
 firebaseMessaging = "25.0.1"
-googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
+mapsSecret = "2.0.1"
 playServicesMaps = "18.1.0"
 
 [libraries]
@@ -23,6 +24,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+google-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googlemaps" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
@@ -34,5 +36,5 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-google-android-libraries-mapsplatform-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleAndroidLibrariesMapsplatformSecretsGradlePlugin" }
+map-secret = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "mapsSecret" }
 

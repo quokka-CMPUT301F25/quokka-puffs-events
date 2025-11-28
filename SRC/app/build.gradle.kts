@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    alias(libs.plugins.map.secret)
 }
 
 android {
@@ -33,6 +33,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -47,6 +48,10 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
     implementation(libs.play.services.maps)
+
+    // Location
+    implementation(libs.google.maps)
+
     // These were changed from implementation to androidTestImplementation
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.runner)

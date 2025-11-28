@@ -96,7 +96,7 @@ public class AdminTest {
     }
 
     public Event createMockEvent(Date eventDate) {
-        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, false);
     }
 
     public void deleteMockEvent(Event event) {

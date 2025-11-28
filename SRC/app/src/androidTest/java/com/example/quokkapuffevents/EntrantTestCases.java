@@ -127,7 +127,7 @@ public class EntrantTestCases {
      * A mock event for entrants to register for
      */
     public Event createMockEvent(Date eventDate) {
-        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, false);
     }
 
     public static void assertDoesNotExist(ViewInteraction viewInteraction) {
@@ -468,7 +468,7 @@ public class EntrantTestCases {
 
             mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
             Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), false);
             Thread.sleep(1500);
 
 
@@ -511,7 +511,7 @@ public class EntrantTestCases {
             User mockEntrant = accessEntrantDashboard();
             mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
             Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), false);
             Thread.sleep(1500);
             event.addUser(mockEntrant.getId());
             //Check no notification exists
@@ -550,7 +550,7 @@ public class EntrantTestCases {
 
             mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
             Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), false);
             Thread.sleep(1500);
 
             event.addUser(mockEntrant.getId());
@@ -593,7 +593,7 @@ public class EntrantTestCases {
 
             mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
             Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), false);
             Thread.sleep(1500);
 
             event.addUser(mockEntrant.getId());
@@ -635,7 +635,7 @@ public class EntrantTestCases {
             User mockEntrant2 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest2", "John", "Test", "0");
             mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
             Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date(), false);
             Thread.sleep(1500);
 
             event.addUser(mockEntrant1.getId());
