@@ -1,40 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Input + Search -->
-    <LinearLayout
-        android:id="@+id/searchContainer"
-        android:layout_width="match_parent"
+    <!-- Location input -->
+    <EditText
+        android:id="@+id/editTextLocation"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent">
+        android:hint="Enter a location"
+        android:padding="8dp"
+        android:background="@drawable/border_shape_grey"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonSearch"
+        app:layout_constraintWidth_percent="0.75"/>
 
-        <EditText
-            android:id="@+id/locationInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Enter a location"
-            android:padding="8dp"/>
+    <!-- Search button -->
+    <Button
+        android:id="@+id/buttonSearch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/editTextLocation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.25"/>
 
-        <Button
-            android:id="@+id/searchBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search"/>
-    </LinearLayout>
-
-    <!-- Google Map -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mapView"
+    <!-- Map -->
+    <fragment
+        android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/searchContainer"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_height="500dp"
+        app:layout_constraintTop_toBottomOf="@id/editTextLocation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="103dp"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintWidth_percent="0.25" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

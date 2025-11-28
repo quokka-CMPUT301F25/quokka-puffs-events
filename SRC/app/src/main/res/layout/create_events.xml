@@ -250,7 +250,11 @@
                 android:textSize="20dp"
                 android:textColor="@color/white"
                 android:text="Geolocked Event" />
-
+            <Button
+                android:id="@+id/setLocationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Set Location"/>
         </LinearLayout>
 
         <LinearLayout
@@ -258,6 +262,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/confirmEventCreationBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/greenbtn"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:text="Create"/>
 
             <Button
                 android:id="@+id/cancelEventCreationBtn"
@@ -271,23 +285,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/confirmEventCreationBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/greenbtn"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:textSize="20dp"
-                android:text="Create">
-            </Button>
-
-
-
         </LinearLayout>
-
-
-
 
     </LinearLayout>
 

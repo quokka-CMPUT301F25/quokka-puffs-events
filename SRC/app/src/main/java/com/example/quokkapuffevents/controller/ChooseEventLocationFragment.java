@@ -8,19 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,69 +22,70 @@ import java.util.List;
 public class ChooseEventLocationFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private EditText locationInput;
-    private Button searchBtn;
+    private EditText editTextLocation;
+    private Button buttonSearch;
+    private Button confirmButton;
+    private Event event;
+    private LatLng latLong;
+    private Database db = Database.getInstance();
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.choose_event_location_fragment, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        editTextLocation = view.findViewById(R.id.editTextLocation);
+        buttonSearch = view.findViewById(R.id.buttonSearch);
 
-        locationInput = view.findViewById(R.id.locationInput);
-        searchBtn = view.findViewById(R.id.searchBtn);
-
-        // Load map
+        // Initialize Map
         SupportMapFragment mapFragment = (SupportMapFragment)
-                getChildFragmentManager().findFragmentById(R.id.mapView);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        }
+                getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) mapFragment.getMapAsync(this);
 
-        // Search location
-        searchBtn.setOnClickListener(v -> {
-            String location = locationInput.getText().toString().trim();
+        // Search Button Click
+        buttonSearch.setOnClickListener(v -> {
+            String location = editTextLocation.getText().toString();
             if (!location.isEmpty()) {
                 searchLocation(location);
-            } else {
-                Toast.makeText(getContext(), "Enter a location", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        confirmButton.setOnClickListener(v->{
+            event.setLocation(latLong);
+            db.SaveEvent(event);
         });
     }
 
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng defaultLocation = new LatLng(-33.8688, 151.2093); // Sydney as default
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10f));
+
+        // Default location = Edmonton
+        LatLng defaultLocation = new LatLng(53.5461, -113.4938);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
     }
 
-    /** Search and zoom to location */
-    private void searchLocation(String location) {
+    private void searchLocation(String locationName) {
         Geocoder geocoder = new Geocoder(getContext());
         try {
-            List<Address> addresses = geocoder.getFromLocationName(location, 1);
+            List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
+            if (!addressList.isEmpty()) {
+                Address address = addressList.get(0);
+                latLong = new LatLng(address.getLatitude(), address.getLongitude());
 
-            if (addresses == null || addresses.isEmpty()) {
-                Toast.makeText(getContext(), "Location not found", Toast.LENGTH_SHORT).show();
-                return;
+                mMap.clear(); // remove old marker
+                mMap.addMarker(new MarkerOptions().position(latLong).title(locationName));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLong, 15));
             }
-
-            Address address = addresses.get(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-
         } catch (IOException e) {
-            Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 }

@@ -64,7 +64,7 @@ public class DashboardActivity extends AppCompatActivity {
                 organizerDashboard();
             }
             // Load initial fragment
-            replaceFragment(new ChooseEventLocationFragment());
+            replaceFragment(new HomeFragment());
         });
 
         //Handling QR Code events

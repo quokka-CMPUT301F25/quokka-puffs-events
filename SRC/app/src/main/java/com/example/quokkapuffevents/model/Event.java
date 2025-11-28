@@ -3,6 +3,8 @@ package com.example.quokkapuffevents.model;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +28,7 @@ public class Event {
     private String qrcodeID;
     private Boolean drawn;
     private Boolean geoEnabled;
-    private ArrayList<Double> location;
+    private LatLng location;
 
     // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
 
@@ -185,10 +187,10 @@ public class Event {
     public void setGeoEnabled(Boolean geoEnabled) {
         this.geoEnabled = geoEnabled;
     }
-    public ArrayList<Double> getLocation() {
+    public LatLng getLocation() {
         return location;
     }
-    public void setLocation(ArrayList<Double> location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 
