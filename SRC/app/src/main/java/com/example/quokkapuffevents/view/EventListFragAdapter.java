@@ -1,6 +1,13 @@
 package com.example.quokkapuffevents.view;
 
+import android.Manifest;
 import android.content.Context;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +18,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.controller.DashboardActivity;
 import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
 import com.example.quokkapuffevents.controller.OrganizerEventDetails;
 import com.example.quokkapuffevents.model.*;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +38,13 @@ import java.util.List;
 public class EventListFragAdapter extends ArrayAdapter<Event> {
 
     private final List<Event> events;   // adapter owns the list
+    private Event event;
     private final Database db = Database.getInstance();
     private String type;
     private DashboardActivity activity;
     private User user;
+    private Double Ulat;
+    private Double Ulng;
 
     //region --Waiting UI Elements--
     private LinearLayout pastEvents;
@@ -64,6 +78,13 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
         this.type = type;
     }
 
+    public EventListFragAdapter(Context context, ArrayList<Event> events, String type, DashboardActivity activity) {
+        super(context, 0, events);
+        this.events = new ArrayList<>(events);
+        this.type = type;
+        this.activity = activity;
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -71,7 +92,7 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
                 ? LayoutInflater.from(getContext()).inflate(R.layout.event_list_content, parent, false)
                 : convertView;
 
-        Event event = getItem(position);
+        event = getItem(position);
 
         db.GetUser(db.GetCurrentUserID(), currUser -> {
             user = currUser;
@@ -166,6 +187,8 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
             db.GetUser(event.getOrg(), user -> {
                 originUserText_all.setText(user.getUserName().toString() + "'s     ");
             });
+
+            GetLocation(LocationServices.getFusedLocationProviderClient(activity));
         }
 
         return view;
@@ -200,7 +223,38 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void registerForEvent(Event event) {
-        db.RegisterUserIntoEvent(event, user);
+        if(event.getLockRadius() == -1)
+            db.RegisterUserIntoEvent(event, user);
+        else{
+            db.GetUser(db.GetCurrentUserID(), user ->{
+                Double Elat = event.getLat();
+                Double Elng = event.getLng();
+
+                Double distance = Math.sqrt(Math.pow(Ulat - Elat, 2) + Math.pow(Ulng - Elng, 2));
+                if(distance <= event.getLockRadius())
+                    db.RegisterUserIntoEvent(event, user);
+            });
+        }
+    }
+
+    private void GetLocation(FusedLocationProviderClient fusedLocationClient) {
+        if(ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            return;
+        }
+
+        Task<Location> task = fusedLocationClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    Ulat = location.getLatitude();
+                    Ulng = location.getLongitude();
+                }
+            }
+        });
     }
 
     public void leaveWaitingList(Event event) {

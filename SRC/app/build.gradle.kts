@@ -68,7 +68,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
 
     implementation("com.google.android.gms:play-services-base:18.4.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")  // only if using Google Sign-In
+    implementation("com.google.android.gms:play-services-location:15.0.1")
+
 
 
     // AndroidX Core Dependencies

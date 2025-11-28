@@ -68,7 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
                 organizerDashboard();
             }
             // Load initial fragment
-            replaceFragment(new ChooseEventLocationFragment());
+            replaceFragment(new HomeFragment());
         });
 
         //Handling QR Code events
@@ -106,7 +106,9 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         viewEventsButton.setOnClickListener(View -> {
-            replaceFragment(new FindEventsFrag());
+            FindEventsFrag frag = new FindEventsFrag();
+            frag.setActivity(this);
+            replaceFragment(frag);
         });
 
         addEventButton.setOnClickListener(View -> {

@@ -65,7 +65,7 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        // TODO: Get event, get lat and lng, set the marker there
         // Default location = Edmonton
         LatLng defaultLocation = new LatLng(53.5461, -113.4938);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
