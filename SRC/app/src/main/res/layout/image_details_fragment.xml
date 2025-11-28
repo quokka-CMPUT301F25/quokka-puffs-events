@@ -8,137 +8,110 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:background="@drawable/content_border"
-        android:backgroundTint="@color/mainblue">
+        android:layout_height="match_parent"
+        android:background="@color/fragmentBackground">
 
-        <LinearLayout
-            android:id="@+id/titleLayout"
+        <TextView
+            android:id="@+id/imageNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_shape_grey"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="Image From"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-            <View
-                android:layout_width="10sp"
-                android:layout_height="match_parent">
-
-            </View>
-
-            <TextView
-                android:id="@+id/eventName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_shape_grey"
-                android:gravity="left"
-                android:maxLines="1"
-                android:text=""
-                android:textColor="@color/white"
-                android:textSize="40sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-        </LinearLayout>
+            android:gravity="center_horizontal"
+            android:text="Image Details"
+            android:textColor="@color/UIBackground"
+            android:textSize="18pt"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/imageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="90dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/UIBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleLayout">
+            app:layout_constraintTop_toBottomOf="@+id/imageNameTextView">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="The image that has been selected"
-                android:src="@drawable/image_temp"
+            <ScrollView
+                android:id="@+id/scrollView2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-            </ImageView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ImageView
+                        android:id="@+id/posterImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:padding="12dp"
+                        android:src="@drawable/image_temp">
 
+                    </ImageView>
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageLayout">
+                    <LinearLayout
+                        android:id="@+id/createdLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Image Submitted by:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Created By:"
+                            android:textSize="8pt"
+                            android:textStyle="bold">
 
-            </TextView>
+                        </TextView>
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent">
+
+                        </View>
+
+                        <TextView
+                            android:id="@+id/organizerNameTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Organizer"
+                            android:textSize="8pt">
+
+                        </TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
 
             <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/UIBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView2">
 
             </View>
 
-            <TextView
-                android:id="@+id/organizerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text=""
-                android:textColor="@color/white"
-                android:textSize="20sp">
-
-            </TextView>
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/goBackBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="110dp"
             android:backgroundTint="@color/redbtn"
             android:focusable="false"
             android:text="Back"
@@ -147,7 +120,5 @@
             app:layout_constraintStart_toStartOf="parent">
 
         </Button>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </FrameLayout>

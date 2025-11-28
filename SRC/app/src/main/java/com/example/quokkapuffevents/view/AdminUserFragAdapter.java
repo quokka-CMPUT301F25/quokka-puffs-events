@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,11 +46,26 @@ public class AdminUserFragAdapter extends ArrayAdapter<User> {
         db = Database.getInstance();
 
         User currentUser = userList.get(position);
-        TextView userTexts = (TextView) listItem.findViewById(R.id.firstName);
-        userTexts.setText(currentUser.getFirstName());
 
-        TextView emailTexts = (TextView) listItem.findViewById(R.id.lastName);
-        emailTexts.setText(currentUser.getLastName());
+        TextView userTexts = (TextView) listItem.findViewById(R.id.UserNameTextView);
+        userTexts.setText(currentUser.getUserName());
+
+        TextView firstAndLastNameText = (TextView) listItem.findViewById(R.id.FirstAndLastNameTextView);
+        String firstLast = currentUser.getFirstName() + " " + currentUser.getLastName();
+        firstAndLastNameText.setText(firstLast);
+
+        ImageView accountImg = (ImageView) listItem.findViewById(R.id.imageView);
+
+        Integer type = currentUser.getAccountType();
+        if (type == -1) {
+            System.out.println("ADMIN");
+        }
+        else if (type == 0) {
+            System.out.println("ENTRANT");
+        }
+        else if (type == 1) {
+            System.out.println("ORG");
+        }
 
         Button deleteButton = listItem.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
