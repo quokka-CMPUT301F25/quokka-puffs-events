@@ -58,6 +58,7 @@ public class EventCreateFragment extends Fragment {
     EditText numbPar; //not in views yet, number of participants to be chosen
     EditText maxPar; // max number of participants to join waiting list
     Switch addGeo; //TODO: idek???
+    Boolean enabledGeo= true;
     Button cancelEvent; //button to cancel event
     Button createEvent; //button to initialize creating the event
     Button addInterests;
@@ -106,6 +107,7 @@ public class EventCreateFragment extends Fragment {
         createEvent = view.findViewById(R.id.confirmEventCreationBtn);
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
         addInterests = view.findViewById(R.id.addInterestsBtn);
+        //setLocation = view.findViewById(R.id.setLocationButton);
     }
 
     public void setUpListeners(View view) {
@@ -148,8 +150,6 @@ public class EventCreateFragment extends Fragment {
                 if (limitParts){
                     maxParts = maxPar.getText().toString().trim();
                 }
-
-//                boolean addGeolocate = addGeo.isChecked(); //TODO: IDK YET???
                   //Validating inputs
                 if (!validateInputs()) {
                     return;
@@ -161,7 +161,7 @@ public class EventCreateFragment extends Fragment {
 
                 //Create event in database
                 if (maxParts.isEmpty()){
-                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
+                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate, enabledGeo);
                     event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
@@ -179,7 +179,7 @@ public class EventCreateFragment extends Fragment {
                     }
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
-                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
+                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate, enabledGeo);
                     event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
@@ -207,6 +207,10 @@ public class EventCreateFragment extends Fragment {
                 ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
         });
+
+//        setLocation.setOnClickListener(v ->{
+//
+//        });
     }
 
     public void registerImagePickerLauncher() {
