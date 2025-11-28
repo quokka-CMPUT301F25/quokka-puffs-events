@@ -278,6 +278,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
                     if (user != null) {
                         userList.add(user);
+
                     }
                     if (pending.decrementAndGet() == 0) {
                         if (userList.isEmpty()) {
@@ -311,7 +312,7 @@ public class OrganizerViewParticipantsFragment extends Fragment {
 
         }
 //      Show view type:
-        String temp = "View by type: " + filterType;
+        String temp = "Currently Viewing: " + filterType;
         viewType.setText(temp);
         adapter.notifyDataSetChanged();
     }

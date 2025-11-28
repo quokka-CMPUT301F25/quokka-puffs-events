@@ -8,39 +8,50 @@
     android:id="@+id/notifications_fragment">
 
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="Notifications"
-        android:textSize="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/mainblue"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:paddingVertical="12dp"/>
 
 
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="500dp"
-        android:background="@drawable/border_shape_general"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mainblue"
+        android:padding="8dp"
+        android:orientation="vertical"
         >
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Notifications"
+            android:textSize="24dp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"
+            android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/greyaccent"
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <ListView
             android:id="@+id/NotifList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/lightblue"
+            android:layout_height="625dp"
+            android:background="@color/white"
             android:padding="8dp"/>
+    </LinearLayout>
+    </LinearLayout>
+
 
 
     </LinearLayout>

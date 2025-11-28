@@ -5,14 +5,16 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="8dp"
-    android:background="@drawable/border_shape">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/notificationTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:text="You've Received a Message"
+        android:textStyle="bold"
         android:textSize="20sp" />
 
     <TextView
@@ -21,8 +23,7 @@
         android:layout_height="wrap_content"
         android:text="Loading..."
         android:layout_marginTop="6dp"
-        android:textColor="@color/bluebtn"
-        android:textStyle="bold"
+        android:textColor="@color/black"
         android:textSize="18sp" />
 
     <LinearLayout
@@ -31,21 +32,30 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_marginTop="10dp">
+        <Button
+            android:id="@+id/removeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:layout_weight="1"
+            android:backgroundTint="@color/greybtn"
+            style="@style/SquareButton"
+            android:layout_marginHorizontal="4dp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/detailsBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Details"
+            android:text="View Details"
             android:backgroundTint="@color/greybtn"
+            style="@style/SquareButton"
+            android:layout_weight="5"
             android:layout_marginHorizontal="4dp" />
 
-        <Button
-            android:id="@+id/removeBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X"
-            android:backgroundTint="@color/greybtn"
-            android:layout_marginHorizontal="4dp" />
+
     </LinearLayout>
 </LinearLayout>

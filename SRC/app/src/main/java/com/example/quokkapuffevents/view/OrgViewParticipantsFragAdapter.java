@@ -41,8 +41,11 @@ public class OrgViewParticipantsFragAdapter extends ArrayAdapter<User> {
 
         User currentUser = userList.get(position);
         TextView userTexts = (TextView) listItem.findViewById(R.id.entrantName);
+        TextView userFirstName = (TextView) listItem.findViewById(R.id.entrantFirstName);
+        TextView userLastName = (TextView) listItem.findViewById(R.id.entrantLastName);
         userTexts.setText(currentUser.getUserName());
-
+        userFirstName.setText(currentUser.getFirstName());
+        userLastName.setText(currentUser.getLastName());
 
         return listItem;
     }

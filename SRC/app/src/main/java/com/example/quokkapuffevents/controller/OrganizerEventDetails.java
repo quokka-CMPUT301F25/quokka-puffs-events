@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +39,7 @@ public class OrganizerEventDetails extends Fragment {
     ImageView qrcodeView;
     Button exitButton;
     Button sendMessageButton;
+    TextView description;
 
     @Nullable
     @Override
@@ -64,8 +66,11 @@ public class OrganizerEventDetails extends Fragment {
          * @param view The view from which UI components are retrieved
          */
         db = Database.getInstance();
+        description = view.findViewById(R.id.eventDescriptionText);
+        description.setText(event.getDescription());
 
         //Button
+
         runLottoButton = view.findViewById(R.id.orgRunLotteryBtn);
         finishEventButton = view.findViewById(R.id.orgFinishEvent);
         viewParticipantsButton = view.findViewById(R.id.orgViewParticipantsBtn);

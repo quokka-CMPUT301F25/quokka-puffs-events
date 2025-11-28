@@ -69,6 +69,11 @@ public class DashboardActivity extends AppCompatActivity {
             }
             // Load initial fragment
             replaceFragment(new HomeFragment());
+            db.GetUserNotifications(user, notifs -> {
+                // Check if there are any notifications at all
+                hasNotifications = !notifs.isEmpty();
+                updateNotificationIcon();
+            });
         });
 
         //Handling QR Code events
@@ -97,6 +102,7 @@ public class DashboardActivity extends AppCompatActivity {
          */
         //Initialize Buttons
         initializeViews();
+        updateNotificationIcon();
 
         homeButton.setOnClickListener(View -> {
             /**
@@ -145,6 +151,7 @@ public class DashboardActivity extends AppCompatActivity {
          */
         //Initialize Buttons
         initializeViews();
+        updateNotificationIcon();
         viewEventsButton.setVisibility(GONE);
 
         homeButton.setOnClickListener(View -> {
