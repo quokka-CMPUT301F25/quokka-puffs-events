@@ -80,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         signUpButton.setOnClickListener(v -> {
+            loginPrefsEditor.clear();
+            loginPrefsEditor.commit();
             SwitchActivity(RegisterActivity.class);
         });
 
