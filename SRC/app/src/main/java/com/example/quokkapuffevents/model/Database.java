@@ -122,10 +122,9 @@ public class Database {
      * @return
      * Returns the event as a new Class. Ensures that the event is saved to the cloud
      */
-    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn,
-                             Integer maxNumWaitlist, Date drawnDate, Date endDate, ArrayList<String> interests){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date endDate){
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org, description, toBeDrawn, maxNumWaitlist, drawnDate, endDate, interests); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, maxNumWaitlist, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
 
         GetUser(userID, user -> {
@@ -150,10 +149,10 @@ public class Database {
      * @return
      * Returns the event as a new Class. Ensures that the event is saved to the cloud
      */
-    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date endDate, ArrayList<String> interests){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date endDate){
         Log.d("Test", "Testing something");
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org, description, toBeDrawn, drawnDate, endDate, interests); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, drawnDate, endDate); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
 
         GetUser(userID, user -> {
@@ -604,8 +603,8 @@ public class Database {
      */
     public void UserExists(String val, OnSuccessListener<Boolean> listener){
         usersRef.where(Filter.or(
-                Filter.equalTo("username", val),
-                Filter.equalTo("email", val)
+                        Filter.equalTo("username", val),
+                        Filter.equalTo("email", val)
                 ))
                 .get()
                 .addOnCompleteListener(task -> {

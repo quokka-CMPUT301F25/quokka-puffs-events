@@ -161,7 +161,8 @@ public class EventCreateFragment extends Fragment {
 
                 //Create event in database
                 if (maxParts.isEmpty()){
-                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate, interests);
+                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
+                    event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
@@ -178,7 +179,8 @@ public class EventCreateFragment extends Fragment {
                     }
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
-                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate, interests);
+                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
+                    event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
