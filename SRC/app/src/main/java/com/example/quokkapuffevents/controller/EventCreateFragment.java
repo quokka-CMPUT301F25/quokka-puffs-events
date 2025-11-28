@@ -1,6 +1,8 @@
 package com.example.quokkapuffevents.controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -37,6 +38,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -55,11 +57,12 @@ public class EventCreateFragment extends Fragment {
     //the switch in XML file that determines whether organizer would like to limit the numb of participants
     EditText numbPar; //not in views yet, number of participants to be chosen
     EditText maxPar; // max number of participants to join waiting list
-    Switch addGeo; //TODO: idek??? I'm Doing this now
+    Switch addGeo; //TODO: idek???
     Button cancelEvent; //button to cancel event
     Button createEvent; //button to initialize creating the event
-    Button setLocation
+    Button addInterests;
     String userID; //current user id
+    ArrayList<String> interests;
 
     String maxParts;
 
@@ -79,6 +82,7 @@ public class EventCreateFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = Database.getInstance();
         userID = db.GetCurrentUserID();
+        interests = new ArrayList<>();
         registerImagePickerLauncher();
         initializeViews(view);
         setUpListeners(view);
@@ -101,17 +105,10 @@ public class EventCreateFragment extends Fragment {
         cancelEvent = view.findViewById(R.id.cancelEventCreationBtn);
         createEvent = view.findViewById(R.id.confirmEventCreationBtn);
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
+        addInterests = view.findViewById(R.id.addInterestsBtn);
     }
 
     public void setUpListeners(View view) {
-        addGeo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    //TODO Button will show up, then if the they click said button it will switch fragments to the choose location fragment
-                }
-            }
-        });
 
         // opens ui which allows user to select where they want theyre images pulled from
         addImagesBtn.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +118,13 @@ public class EventCreateFragment extends Fragment {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 imagePickerLauncher.launch(Intent.createChooser(intent, "Select Event Poster Image"));
+            }
+        });
+
+        addInterests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addingInterests();
             }
         });
 
@@ -157,21 +161,26 @@ public class EventCreateFragment extends Fragment {
 
                 //Create event in database
                 if (maxParts.isEmpty()){
-                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate, false);
+                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
+                    event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
+
                     db.UploadImageToDatabase(bitmap, uri -> {
                         event.setQrcodeID(uri);
                         db.SaveEvent(event);
                     });
-                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
-                        event.setImageID(uri);
-                        db.SaveEvent(event);
-                    });
+                    if (selectedImageBitmap != null) {
+                        db.UploadImageToDatabase(selectedImageBitmap,uri -> {
+                            event.setImageID(uri);
+                            db.SaveEvent(event);
+                        });
+                    }
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
-                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate, false);
+                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
+                    event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
@@ -179,10 +188,12 @@ public class EventCreateFragment extends Fragment {
                         event.setQrcodeID(uri);
                         db.SaveEvent(event);
                     });
-                    db.UploadImageToDatabase(selectedImageBitmap,uri -> {
-                        event.setImageID(uri);
-                        db.SaveEvent(event);
-                    });
+                    if (selectedImageBitmap != null) {
+                        db.UploadImageToDatabase(selectedImageBitmap, uri -> {
+                            event.setImageID(uri);
+                            db.SaveEvent(event);
+                        });
+                    }
                 }
 
 
@@ -292,6 +303,54 @@ public class EventCreateFragment extends Fragment {
             e.printStackTrace();
         }
         return(null);
+    }
+
+    public void addingInterests() {
+
+        String[] templateInterests = {
+                "Birthdays", "Weddings", "Concerts", "Lectures",
+                "Tournaments", "Games", "Ceremonies",
+                "Fundraisers", "Theater", "Party"
+        };
+
+        boolean[] checkedItems = new boolean[templateInterests.length];
+
+        // Pre-check previously selected interests
+        for (int i = 0; i < templateInterests.length; i++) {
+            checkedItems[i] = interests.contains(templateInterests[i]);
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Select interests");
+
+        builder.setMultiChoiceItems(templateInterests, checkedItems,
+                (dialog, which, isChecked) -> {
+                    if (isChecked) {
+                        if (!interests.contains(templateInterests[which])) {
+                            interests.add(templateInterests[which]);
+                        }
+                    } else {
+                        interests.remove(templateInterests[which]);
+                    }
+                });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        builder.setNeutralButton("Clear All", (dialog, which) -> {
+            interests.clear();
+            for (int i = 0; i < checkedItems.length; i++) {
+                checkedItems[i] = false;
+                ((AlertDialog) dialog).getListView().setItemChecked(i, false);
+            }
+        });
+
+        builder.setPositiveButton("Add Interests", (dialog, which) -> {
+            Toast.makeText(getActivity(),
+                    "Selected: " + interests.toString(),
+                    Toast.LENGTH_SHORT).show();
+        });
+
+        builder.show();
     }
 
 }

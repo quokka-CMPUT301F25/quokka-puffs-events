@@ -17,10 +17,12 @@ import com.example.quokkapuffevents.model.User;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter to configure and display users that have joined an event to the organiser of that event.
+ */
 public class OrgViewParticipantsFragAdapter extends ArrayAdapter<User> {
 
     private ArrayList<User> userList;
-    private Database db;
 
     public OrgViewParticipantsFragAdapter(@NonNull Context context, ArrayList<User> list) {
         super(context, 0, list);
@@ -37,12 +39,13 @@ public class OrgViewParticipantsFragAdapter extends ArrayAdapter<User> {
             listItem = LayoutInflater.from(getContext()).inflate(
                     R.layout.organizer_view_participants_content, parent,false);
 
-        db = Database.getInstance();
-
         User currentUser = userList.get(position);
         TextView userTexts = (TextView) listItem.findViewById(R.id.entrantName);
+        TextView userFirstName = (TextView) listItem.findViewById(R.id.entrantFirstName);
+        TextView userLastName = (TextView) listItem.findViewById(R.id.entrantLastName);
         userTexts.setText(currentUser.getUserName());
-
+        userFirstName.setText(currentUser.getFirstName());
+        userLastName.setText(currentUser.getLastName());
 
         return listItem;
     }

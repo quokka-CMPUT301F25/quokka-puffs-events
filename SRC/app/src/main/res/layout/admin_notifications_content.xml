@@ -2,89 +2,85 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingVertical="1dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="141dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/content_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/greyaccent"
+        android:backgroundTint="@color/white">
 
-        <LinearLayout
-            android:id="@+id/NotifTitleLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/eventLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="Notification from">
+                android:orientation="vertical"
+                android:padding="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            </TextView>
+                <TextView
+                    android:id="@+id/notifName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notification Name (Message)"
+                    android:textSize="22sp"
+                    android:textStyle="bold"/>
 
-            <View
-                android:layout_width="8dp"
-                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/originUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username of organizer"
+                    android:textSize="16sp"/>
 
-            </View>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/originUser"
-                android:gravity="left"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                android:text="Origin User">
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/eventLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-            </TextView>
+                <Button
+                    android:id="@+id/detailsButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="View Details"
+                    android:layout_marginEnd="12dp"
+                    android:backgroundTint="@color/positiveBtn"
+                    app:cornerRadius="12dp"/>
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/deleteButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Delete"
+                    android:backgroundTint="@color/negativeBtn"
+                    app:cornerRadius="12dp"/>
 
-        <Button
-            android:id="@+id/deleteButton"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="48dp"
-            android:backgroundTint="@color/redbtn"
-            android:text="Delete"
-            app:layout_constraintBottom_toBottomOf="@+id/detailsButton"
-            app:layout_constraintEnd_toEndOf="parent">
+            </LinearLayout>
 
-        </Button>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/detailsButton"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginBottom="24dp"
-            android:backgroundTint="@color/greybtn"
-            android:text="Details"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/deleteButton"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent">
+    </com.google.android.material.card.MaterialCardView>
 
-        </Button>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

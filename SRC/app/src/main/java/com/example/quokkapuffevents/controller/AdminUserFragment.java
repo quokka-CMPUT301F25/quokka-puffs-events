@@ -19,15 +19,12 @@ import com.example.quokkapuffevents.view.AdminUserFragAdapter;
 import java.util.ArrayList;
 
 public class AdminUserFragment extends Fragment {
-
     ListView listView;
     private AdminUserFragAdapter adapter;
     private Database db;
     private ArrayList<User> userList = new ArrayList<>();
 
-    public AdminUserFragment() {
-
-    }
+    public AdminUserFragment() {}
 
     @Nullable
     @Override
@@ -38,16 +35,17 @@ public class AdminUserFragment extends Fragment {
 
         listView = userFragmentView.findViewById(R.id.adminUsersListView);
 
+        // Create an adapter for the users
         adapter = new AdminUserFragAdapter(requireContext(), userList);
         listView.setAdapter(adapter);
 
+        // Add all the users to the adapter
         db.ListUsers( users -> {
             // refresh adapter
             userList.clear();
             userList.addAll(users);
             adapter.notifyDataSetChanged();
         });
-
         return userFragmentView;
     }
 }

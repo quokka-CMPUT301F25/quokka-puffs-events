@@ -2,290 +2,280 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:background="@drawable/content_border"
-        android:backgroundTint="@color/mainblue">
+        android:layout_height="match_parent"
+        android:background="@color/fragmentBackground">
 
         <TextView
-            android:id="@+id/firstAndLastName"
+            android:id="@+id/usernameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:gravity="center"
-            android:text="NAME"
-            android:textColor="@color/white"
-            android:textSize="40sp"
+            android:gravity="center_horizontal"
+            android:text="Event Details"
+            android:textColor="@color/UIBackground"
+            android:textSize="18pt"
             android:textStyle="bold"
-            android:maxLines="1"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        </TextView>
-
-        <LinearLayout
-            android:id="@+id/linearLayout2"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/firstAndLastName">
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="90dp"
+            android:background="@color/UIBackground"
+            app:layout_constraintTop_toBottomOf="@id/usernameTextView"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
+            <ScrollView
+                android:id="@+id/dataLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:layout_marginBottom="105dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            </TextView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/createdLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Full Name:"
+                            android:textSize="8pt"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent">
+
+                        </View>
+
+                        <TextView
+                            android:id="@+id/firstLastNameTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Organizer"
+                            android:textSize="8pt">
+
+                        </TextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/dateLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Email:"
+                            android:textSize="8pt"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent">
+
+                        </View>
+
+                        <TextView
+                            android:id="@+id/emailTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text="Email"
+                            android:textSize="8pt">
+
+                        </TextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/accountTypeLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Account Type:"
+                            android:textSize="8pt"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent">
+
+                        </View>
+
+                        <TextView
+                            android:id="@+id/accountTypeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text="Admin"
+                            android:textSize="8pt">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/phoneNumberLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Phone Number:"
+                            android:textSize="8pt"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent">
+
+                        </View>
+
+                        <TextView
+                            android:id="@+id/phoneNumberTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text="XXXXXXX"
+                            android:textSize="8pt">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/idLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ID:"
+                            android:textSize="8pt"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent">
+
+                        </View>
+
+                        <TextView
+                            android:id="@+id/idTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text=""
+                            android:textSize="8pt">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/EventsLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/eventCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Events:"
+                            android:textSize="8pt"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                        <ListView
+                            android:id="@+id/eventsListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:listSelector="@android:color/transparent">
+
+                        </ListView>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
 
             <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/UIBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dataLayout">
 
             </View>
 
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="EMAIL@DOMAIN.ca"
-                android:textColor="@color/white"
-                android:textSize="20sp">
-
-            </TextView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Username:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
-
-            </View>
-
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="XxxKyleLovaxxX"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:maxLines="1">
-
-            </TextView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Account ID:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
-
-            </View>
-
-            <TextView
-                android:id="@+id/userid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="id"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:maxLines="1">
-
-            </TextView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Phone Number:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
-
-            </View>
-
-            <TextView
-                android:id="@+id/phoneNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(xxx)-xxx-xxxx"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:maxLines="1">
-
-            </TextView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Account Type:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
-
-            </View>
-
-            <TextView
-                android:id="@+id/accountType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="Admin"
-                android:textColor="@color/white"
-                android:textSize="20sp">
-
-            </TextView>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Events:"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
-
-        </TextView>
-
-        <ListView
-            android:id="@+id/allEventsUser"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="27dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView2">
-
-        </ListView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/goBackBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="110dp"
             android:backgroundTint="@color/redbtn"
+            android:focusable="false"
             android:text="Back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/allEventsUser">
+            app:layout_constraintStart_toStartOf="parent">
 
         </Button>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </FrameLayout>

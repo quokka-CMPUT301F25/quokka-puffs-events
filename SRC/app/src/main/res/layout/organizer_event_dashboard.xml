@@ -1,58 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/dashboardEventsContainer"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/border_shape_general"
+        android:background="@color/mainblue"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="24dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
+        android:paddingBottom="24dp"
+        android:paddingTop="8dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="12dp"
             android:text="Event Details"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="32dp"
+            android:textSize="24dp"
             android:textStyle="bold"
-            android:layout_marginBottom="24dp"/>
-
-        <Button
-            android:id="@+id/orgSendMessageBtn"
+            android:layout_marginBottom="4dp"/>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send Message to Participants"
-            android:textSize="24dp"
-            android:backgroundTint="@color/bluebtn"
-            android:layout_marginBottom="8dp"/>
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp">
 
-        <Button
-            android:id="@+id/orgChangeDetailsBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Change Details"
-            android:textSize="24dp"
-            android:backgroundTint="@color/bluebtn"
-            android:layout_marginBottom="8dp"/>
+            <LinearLayout
+                android:id="@+id/start_end_date_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
 
-        <Button
-            android:id="@+id/orgViewParticipantsBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View Participants"
-            android:textSize="24dp"
-            android:backgroundTint="@color/bluebtn"
-            android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Start / End Dates: "
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="normal"/>
+
+                <TextView
+                    android:id="@+id/orgEventDatesText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="2"
+                    android:text="DD/MM/YYYY-DD/MM/YYYY"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:textStyle="normal" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/descriptionContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="Description:"
+                    android:textSize="20dp"
+                    android:textStyle="normal" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/white"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:id="@+id/eventDescriptionText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="place holder description"
+                        android:textSize="16dp" />
+                </ScrollView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/eventPosterContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Event Poster"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="normal   "></TextView>
+
+                <Button
+                    android:id="@+id/viewEventPosterBtn"
+                    style="@style/SquareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/bluebtn"
+                    android:text="View Poster" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/QRCodeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="QR Code"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="normal"></TextView>
+
+                <Button
+                    android:id="@+id/viewQRCodeBtn"
+                    style="@style/SquareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/bluebtn"
+                    android:text="View QRCode" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/changeDetailsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp">
+
+                <Button
+                    android:id="@+id/orgChangeDetailsBtn"
+                    style="@style/SquareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/bluebtn"
+                    android:paddingHorizontal="50dp"
+                    android:text="Change Details" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/notificationsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/greyaccent"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="1"
+                    android:text="Notification"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/white"
+                    android:text="Title"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    android:background="@color/white"
+                    android:gravity="start"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="8dp"
+                    android:text="Message"
+                    android:textAlignment="viewStart" />
+
+<!--                <Button-->
+<!--                    android:id="@+id/orgSendMessageBtn"-->
+<!--                    style="@style/SquareButton"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:backgroundTint="@color/bluebtn"-->
+<!--                    android:paddingHorizontal="50dp"-->
+<!--                    android:text="Send"-->
+<!--                    android:textAlignment="center" />-->
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/orgSendMessageBtn"
+                style="@style/SquareButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/bluebtn"
+                android:text="Send Notification To Entrants"
+                android:textAlignment="center" />
+            <Button
+                android:id="@+id/orgViewParticipantsBtn"
+                style="@style/SquareButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/bluebtn"
+                android:paddingHorizontal="50dp"
+                android:text="View Participants"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/orgRunLotteryBtn"
+                style="@style/SquareButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/bluebtn"
+                android:paddingHorizontal="50dp"
+                android:text="Run Lottery"
+                android:textAlignment="center" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/orgExitOutEventBtn"
+                    style="@style/SquareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/redbtn"
+                    android:paddingHorizontal="50dp"
+                    android:text="Back"
+                    android:textAlignment="center" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <Button
+                    android:id="@+id/orgFinishEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Finalize Event"
+                    style="@style/SquareButton"
+                    android:backgroundTint="@color/bluebtn"
+                    android:visibility="visible"/>
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+        <!--        <Button-->
+<!--            android:id="@+id/orgSendMessageBtn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Send Message to Participants"-->
+<!--            android:textSize="24dp"-->
+<!--            android:backgroundTint="@color/bluebtn"-->
+<!--            android:layout_marginBottom="8dp"/>-->
+
+<!--        <Button-->
+<!--            android:id="@+id/orgChangeDetailsBtn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Change Details"-->
+<!--            android:textSize="24dp"-->
+<!--            android:backgroundTint="@color/bluebtn"-->
+<!--            android:layout_marginBottom="8dp"/>-->
+
+<!--        <Button-->
+<!--            android:id="@+id/orgViewParticipantsBtn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="View Participants"-->
+<!--            android:textSize="24dp"-->
+<!--            android:backgroundTint="@color/bluebtn"-->
+<!--            android:layout_marginBottom="8dp"/>-->
 
         <ImageView
             android:id="@+id/qrCode"
@@ -60,22 +324,30 @@
             android:layout_height="280dp"
             android:layout_marginBottom="8dp"/>
 
-        <Button
-            android:id="@+id/orgRunLotteryBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Run Lottery"
-            android:textSize="24dp"
-            android:backgroundTint="@color/greenbtn"/>
+<!--        <Button-->
+<!--            android:id="@+id/orgRunLotteryBtn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Run Lottery"-->
+<!--            android:textSize="24dp"-->
+<!--            android:backgroundTint="@color/greenbtn"/>-->
+<!--        <Button-->
+<!--            android:id="@+id/orgFinishEvent"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Finalize Event"-->
+<!--            android:textSize="24dp"-->
+<!--            android:backgroundTint="@color/greenbtn"-->
+<!--            android:visibility="gone"/>-->
 
-        <Button
-            android:id="@+id/orgExitOutEventBtn"
-            android:layout_marginTop="24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24dp"
-            android:text="X"
-            android:backgroundTint="@color/redbtn"/>
+<!--        <Button-->
+<!--            android:id="@+id/orgExitOutEventBtn"-->
+<!--            android:layout_marginTop="24dp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="24dp"-->
+<!--            android:text="X"-->
+<!--            android:backgroundTint="@color/redbtn"/>-->
 
     </LinearLayout>
 

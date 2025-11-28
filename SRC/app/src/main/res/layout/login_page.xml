@@ -34,7 +34,7 @@
         android:id="@+id/login_information_container"
         android:layout_width="350dp"
         android:layout_height="220dp"
-        android:background="@drawable/border_shape_general"
+        android:background="@color/mainblue"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
-            android:background="@drawable/border_shape_grey"
+            android:background="@color/white"
             android:hint="Email Address / Username"
             android:inputType="textEmailAddress"
             android:padding="6px"
@@ -61,7 +61,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
-            android:background="@drawable/border_shape_grey"
+            android:background="@color/white"
             android:hint="Password"
             android:inputType="textPassword"
             android:padding="6px"
@@ -86,10 +86,11 @@
         android:layout_height="wrap_content"
         android:text="Sign Up"
         android:textColor="@color/white"
-        android:backgroundTint="@color/lightblue"
+        android:backgroundTint="@color/bluebtn"
         app:layout_constraintTop_toBottomOf="@id/login_information_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/sign_in_button"
+        style="@style/SquareButton"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
@@ -98,10 +99,11 @@
         android:layout_height="wrap_content"
         android:text="Sign In"
         android:textColor="@color/white"
-        android:backgroundTint="@color/lightblue"
+        android:backgroundTint="@color/bluebtn"
         app:layout_constraintTop_toBottomOf="@id/login_information_container"
         app:layout_constraintStart_toEndOf="@id/register_page_button"
         app:layout_constraintEnd_toEndOf="parent"
+        style="@style/SquareButton"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

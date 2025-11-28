@@ -8,18 +8,52 @@
     android:background="@color/black"
     android:padding="0dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mainblue"
+        android:padding="8dp"
+        android:orientation="vertical"
+        >
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Profile Settings"
+        android:textSize="24dp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="8dp"
+        android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="8dp">
+
 
     <LinearLayout
         android:id="@+id/userProfileInformationContainer"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_shape_general"
+        android:background="@color/greyaccent"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:text="Information"
+            android:textColor="@color/black"
+            android:textSize="24dp"/>
 
         <LinearLayout
             android:id="@+id/accountNameAndEmail"
@@ -32,12 +66,12 @@
                 android:id="@+id/usernameText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_shape_grey"
+                android:background="@color/white"
                 android:padding="6px"
-                android:text="{Username}"
+                android:textSize="16dp"
+                android:text="Username"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/userFirstAndLastNameText"
@@ -45,12 +79,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/border_shape_grey"
+                android:background="@color/white"
+                android:textSize="16dp"
                 android:padding="6px"
-                android:text="{First} {LastName}"
+                android:text="FirstName LastName"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,10 +98,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/border_shape_grey"
+                android:background="@color/white"
+                android:textSize="16dp"
                 android:padding="6px"
-                android:text="{Email@gmail.com}"
-                android:textColor="@color/white" />
+                android:text="email@example.com"
+                android:textColor="@color/black" />
 
             <View
                 android:layout_width="0dp"
@@ -79,11 +114,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/border_shape_grey"
+                android:background="@color/white"
                 android:padding="6px"
                 android:text="(XXX)-XXX-XXXX"
+                android:textSize="16dp"
                 android:textAlignment="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -98,6 +134,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/redbtn"
+                style="@style/SquareButton"
                 android:text="Sign Out" />
 
             <View
@@ -111,6 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/bluebtn"
+                style="@style/SquareButton"
 
                 android:text="Edit Profile" />
 
@@ -121,33 +159,30 @@
 
     <LinearLayout
         android:id="@+id/pastEventsContainer"
-        android:layout_width="400dp"
-        android:layout_height="424dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/border_shape_general"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/greyaccent"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileInformationContainer">
+        android:padding="8dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="12dp"
             android:text="Past Events"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp"
+            android:textSize="24dp"/>
         <ListView
             android:id="@+id/past_events_listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="12dp"
-            android:background="@drawable/border_shape_grey"
+            android:layout_height="400dp"
+            android:background="@color/white"
             android:padding="8dp" />
+    </LinearLayout>
 
     </LinearLayout>
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

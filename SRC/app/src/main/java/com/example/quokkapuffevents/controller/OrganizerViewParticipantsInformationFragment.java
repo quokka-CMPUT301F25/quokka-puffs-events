@@ -15,11 +15,12 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 
-public class OrganizerViewParticipantsInformationFragment extends Fragment implements OnMapReadyCallback {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class OrganizerViewParticipantsInformationFragment extends Fragment {
 
     private User user;
     private Event event;
@@ -36,16 +37,28 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment imple
     private Button cancelInviteBtn;
 
 
-
+    /**
+     * Sets the current user to view their information
+     * @param u
+     */
     public void SetUser(User u) {
         this.user = u;
     }
 
+    /**
+     * Sets the current user and their status to view their information
+     * @param u
+     * @param status
+     */
     public void SetUser(User u, String status) {
         this.user = u;
         this.status = status;
     }
 
+    /**
+     * sets the current event
+     * @param e
+     */
     public void SetEvent(Event e) {
         this.event = e;
     }
@@ -63,26 +76,16 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment imple
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initialize(view);
-        SetUpListeners(view);
-
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView);
-
-        if(mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        }
+        setUpListeners();
     }
 
-    @Override
-    public void onMapReady(@NonNull GoogleMap p0) {
-        if(event != null && event.getGeoEnabled()) {
-            //TODO: Show the map and pin point the location of the event
-        }
-    }
     public void initialize(View view) {
-
+        /**
+         * Initializes all UI components and references.
+         *
+         * @param view The root view of the fragment.
+         */
         username = view.findViewById(R.id.usernameText);
         firstname = view.findViewById(R.id.userFirstNameText);
         lastname = view.findViewById(R.id.userLastNameText);
@@ -101,8 +104,14 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment imple
 
     }
 
-    public void SetUpListeners(View view) {
-
+    public void setUpListeners() {
+        /**
+         * This method sets up the onclick listeners for the interactables on the fragment.
+         * backBtn: goes back to the viewparticipantsfragment
+         * cancelinviteBtn: Cancel's the users invited status. Changing their status to 'canceled'
+         * #TODO: Find out how to change the information in the firebase and update it to show it in real time.
+         * @param view
+         */
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,17 +126,15 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment imple
         cancelInviteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                TODO: revoke invitatioon
+                db.CancelUserIntoEvent(event, user);  // TS DONT WORK
+
+                OrganizerViewParticipantsFragment orgFrag = new OrganizerViewParticipantsFragment();
+                orgFrag.SetEvent(event);
+                ((DashboardActivity) getActivity()).replaceFragment(orgFrag);
+
             }
         });
 
-
-
     }
-
-
-
-
-
 
 }

@@ -20,27 +20,37 @@ public class Event {
     private Integer toBeDrawn;
     private Integer maxNumWaitlist;
     private Integer numPeopleWaiting;
+    private int numInvitedAccepted;
     private Map<String, String> eventUsers = new HashMap<>(); //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
     private Date drawnDate;
     private Date eventDate;
     private String imageID;
     private String qrcodeID;
+    private ArrayList<String> interests;
     private Boolean drawn;
     private Boolean geoEnabled;
     private LatLng location;
+    private Boolean finished;
 
     // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
 
     /**
      * The default constructor for Event. Does not have a limit on the max waitlist capacity.
      * @param id
+     * ID for the event
      * @param name
+     * Name for the event
      * @param org
+     * The event's organaizer's ID
      * @param description
+     * A description of the event
      * @param toBeDrawn
+     * The number of people to be drawn
      * @param drawnDate
+     * The date when the event is supposed to be drawn
      * @param eventDate
+     * The date the event is supposed to happen
      * @param geoEnabled
      */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate, Boolean geoEnabled){
@@ -54,22 +64,32 @@ public class Event {
         this.drawnDate = drawnDate;
         this.eventDate = eventDate;
         this.drawn = false;
+        this.finished = false;
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.interests = interests;
         this.geoEnabled = geoEnabled;
     }
 
     /**
      * The altered constructor for Event. Contains a limit on the max waitlist capacity.
      * @param id
+     * ID for the event
      * @param name
+     * Name for the event
      * @param org
+     * The event's organaizer's ID
      * @param description
+     * A description of the event
      * @param toBeDrawn
+     * The number of people to be drawn
      * @param maxNumWaitlist
+     * An upper cap on how many people can join the waitlist
      * @param drawnDate
+     * The date when the event is supposed to be drawn
      * @param eventDate
+     * The date the event is supposed to happen
      */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate, Boolean geoEnabled){
         this.name = name;
@@ -82,10 +102,12 @@ public class Event {
         this.drawnDate = drawnDate;
         this.eventDate = eventDate;
         this.drawn = false;
+        this.finished = false;
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
         this.geoEnabled = geoEnabled;
+        this.interests = interests;
     }
 
     /**
@@ -169,6 +191,14 @@ public class Event {
     public void setToBeDrawn(Integer toBeDrawn){
         this.toBeDrawn = toBeDrawn;
     }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
+
     public Map<String, String> getEventUsers() {
         return eventUsers;
     }
@@ -194,6 +224,18 @@ public class Event {
         this.location = location;
     }
 
+    public ArrayList<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
+    }
+
+    public void setNumInvitedAccepted(int numInvitedAccepted) {
+        this.numInvitedAccepted = numInvitedAccepted;
+    }
+
     public Integer getNumInvitedAccepted(){
         Integer total = 0;
         for (String entry : eventUsers.keySet()) {
@@ -203,7 +245,15 @@ public class Event {
         }
         return(total);
     }
+
     //Actual methods
+    /**
+     * Changes the status of a user within the event. Updating meta variables like number of people in the waiting list
+     * @param userID
+     * Id of the user to update
+     * @param newStatus
+     * The status that the user should now have
+     */
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
         eventUsers.put(userID, newStatus);

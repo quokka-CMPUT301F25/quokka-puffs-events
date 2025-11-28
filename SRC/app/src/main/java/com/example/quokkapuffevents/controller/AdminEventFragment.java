@@ -24,15 +24,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class AdminEventFragment extends Fragment {
-
     ListView listView;
     private AdminEventFragAdapter adapter;
     private Database db;
     private ArrayList<Event> eventList = new ArrayList<>();
-
-    public AdminEventFragment() {
-
-    }
+    public AdminEventFragment() {}
 
     @Nullable
     @Override
@@ -43,17 +39,17 @@ public class AdminEventFragment extends Fragment {
 
         listView = eventFragmentView.findViewById(R.id.adminEventsListView);
 
+        // Create an adapter for the events
         adapter = new AdminEventFragAdapter(getContext(), eventList);
         listView.setAdapter(adapter);
 
+        // Add all the events to the adapter
         db.ListEvents( events -> {
             // refresh adapter
             eventList.clear();
             eventList.addAll(events);
             adapter.notifyDataSetChanged();
         });
-
-
 
         return eventFragmentView;
     }

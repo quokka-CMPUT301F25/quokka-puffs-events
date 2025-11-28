@@ -6,163 +6,324 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:background="@drawable/content_border"
-        android:backgroundTint="@color/mainblue">
 
-        <LinearLayout
-            android:id="@+id/titleLinearLayout"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:background="@color/mainblue"
+        android:orientation="vertical">
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:padding="4dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="Create Notification"
+            android:textSize="24dp"
+            android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_shape_grey"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="Notification Title: "
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:orientation="vertical"
+            android:background="@color/white">
 
-            </TextView>
-
-            <EditText
-                android:id="@+id/notifName"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_shape_grey"
-                android:gravity="left"
-                android:maxLines="1"
-                android:text="Notif name"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
-            </EditText>
+                android:background="@color/greyaccent"
+                android:padding="8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Event Name:"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold">
+
+                    </TextView>
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent">
+
+                    </View>
+
+                    <TextView
+                        android:id="@+id/event"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        android:text="Sleepover"
+                        android:textColor="@color/black"
+                        android:textSize="20sp">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Notification Title: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:layout_gravity="center"
+                        android:textStyle="bold">
+
+                    </TextView>
+
+                    <EditText
+                        android:id="@+id/notifName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:hint="Notification Title"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center"
+                        android:textSize="18sp">
+                    </EditText>
+
+
+                </LinearLayout>
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Message:"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold">
+
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/messageText"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@color/white"
+                    android:maxLines="3"
+                    android:hint="Write your message here..."
+                    android:textColor="@color/black"
+                    android:padding="8dp"
+                    android:textSize="16sp">
+
+                </EditText>
+
+
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/sendMessageBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:backgroundTint="@color/bluebtn"
+                style="@style/SquareButton"
+                android:text="Send">
+            </Button>
+
+
+            <Button
+                android:id="@+id/goBackBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/redbtn"
+                android:text="Back"
+                android:paddingHorizontal="50dp"
+                style="@style/SquareButton"
+                android:layout_gravity="center">
+
+            </Button>
+
+
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="280dp"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Message:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
 
-            </TextView>
+    </LinearLayout>
 
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="700dp"-->
+<!--        android:background="@color/mainblue"-->
+<!--        android:visibility="gone">-->
 
-            </View>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/titleLinearLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_marginTop="24dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:background="@drawable/border_shape_grey"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent">-->
 
-            <EditText
-                android:id="@+id/messageText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="3"
-                android:text="You have joined the waiting list"
-                android:textColor="@color/white"
-                android:textSize="20sp">
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/border_shape_grey"-->
+<!--                android:gravity="center"-->
+<!--                android:maxLines="1"-->
+<!--                android:text="Notification Title: "-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold">-->
 
-            </EditText>
+<!--            </TextView>-->
 
-        </LinearLayout>
+<!--            <EditText-->
+<!--                android:id="@+id/notifName"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/border_shape_grey"-->
+<!--                android:gravity="left"-->
+<!--                android:maxLines="1"-->
+<!--                android:hint="Notification Title"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold">-->
+<!--            </EditText>-->
 
-        <LinearLayout
-            android:id="@+id/linearLayout6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_shape_grey"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleLinearLayout"
-            app:layout_constraintVertical_bias="0.38">
+<!--        </LinearLayout>-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Event Name:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/linearLayout4"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:layout_marginBottom="280dp"-->
+<!--            android:background="@drawable/border_shape_grey"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.0"-->
+<!--            app:layout_constraintStart_toStartOf="parent">-->
 
-            </TextView>
+<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="Message:"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:textColor="@color/white"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:textSize="20sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:textStyle="bold">&ndash;&gt;-->
 
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent">
+<!--&lt;!&ndash;            </TextView>&ndash;&gt;-->
 
-            </View>
+<!--&lt;!&ndash;            <View&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="match_parent">&ndash;&gt;-->
 
-            <TextView
-                android:id="@+id/event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="Sleepover"
-                android:textColor="@color/white"
-                android:textSize="20sp">
+<!--&lt;!&ndash;            </View>&ndash;&gt;-->
 
-            </TextView>
+<!--&lt;!&ndash;            <EditText&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/messageText"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:maxLines="3"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:hint="Write your message here..."&ndash;&gt;-->
+<!--&lt;!&ndash;                android:textColor="@color/white"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:textSize="20sp">&ndash;&gt;-->
 
-        </LinearLayout>
+<!--&lt;!&ndash;            </EditText>&ndash;&gt;-->
 
-        <Button
-            android:id="@+id/goBackBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="88dp"
-            android:backgroundTint="@color/redbtn"
-            android:focusable="false"
-            android:text="Back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+<!--        </LinearLayout>-->
 
-        </Button>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/linearLayout6"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/border_shape_grey"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.0"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/titleLinearLayout"-->
+<!--            app:layout_constraintVertical_bias="0.38">-->
 
-        <Button
-            android:id="@+id/sendMessageBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:backgroundTint="@color/bluebtn"
-            android:focusable="false"
-            android:text="Send"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.448"
-            app:layout_constraintStart_toEndOf="@+id/goBackBtn">
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Event Name:"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold">-->
 
-        </Button>
+<!--            </TextView>-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <View-->
+<!--                android:layout_width="10dp"-->
+<!--                android:layout_height="match_parent">-->
+
+<!--            </View>-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/event"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:maxLines="1"-->
+<!--                android:text="Sleepover"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="20sp">-->
+
+<!--            </TextView>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <Button-->
+<!--            android:id="@+id/goBackBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="88dp"-->
+<!--            android:backgroundTint="@color/redbtn"-->
+<!--            android:focusable="false"-->
+<!--            android:text="Back"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent">-->
+
+<!--        </Button>-->
+
+<!--        <Button-->
+<!--            android:id="@+id/sendMessageBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="4dp"-->
+<!--            android:backgroundTint="@color/bluebtn"-->
+<!--            android:focusable="false"-->
+<!--            android:text="Send"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.448"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/goBackBtn">-->
+
+<!--        </Button>-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </FrameLayout>

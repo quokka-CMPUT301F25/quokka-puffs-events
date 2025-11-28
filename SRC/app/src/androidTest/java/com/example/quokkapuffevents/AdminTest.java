@@ -24,6 +24,8 @@ import com.example.quokkapuffevents.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.example.quokkapuffevents.model.Database;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
