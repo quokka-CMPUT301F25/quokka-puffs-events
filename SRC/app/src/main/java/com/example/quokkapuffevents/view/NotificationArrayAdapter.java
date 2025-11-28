@@ -105,6 +105,11 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         }
     }
 
+    /**
+     *  Binds the UI to logic for an invite notification. Clicking the accept button will notify
+     *  the database that the user has accepted the invite, clicking the reject button will notify the
+     *  database that the user has rejected the invite, clicking the details button will show the event details
+     */
     public void BindInviteUIAndLogic(View view, Notif notification) {
         Button rejectButton = view.findViewById(R.id.rejectBtn);
         Button acceptButton = view.findViewById(R.id.acceptBtn);

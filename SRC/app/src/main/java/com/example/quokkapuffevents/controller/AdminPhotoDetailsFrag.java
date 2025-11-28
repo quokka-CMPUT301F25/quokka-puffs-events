@@ -22,8 +22,10 @@ import com.example.quokkapuffevents.model.Notif;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class AdminPhotoDetailsFrag extends Fragment {
+
     private Database db;
     private Event event;
+
     TextView eventName;
     ImageView imageView;
     TextView organizer;
@@ -31,6 +33,7 @@ public class AdminPhotoDetailsFrag extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
         // GET INSTANCE OF DATABASE AND CURRENT USER INFO
         db = Database.getInstance();
@@ -39,6 +42,7 @@ public class AdminPhotoDetailsFrag extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.image_details_fragment, container, false);
         initializeViews(view);
         displayInfo();
@@ -47,31 +51,33 @@ public class AdminPhotoDetailsFrag extends Fragment {
 
     }
 
+    // Setter
     public void setEvent(Event event) {
-        /**
-         * Sets event
-         * @param event
-         */
+
         this.event = event;
+
     }
 
+    /**
+     * Finds each view and initializes each one
+     * @param view The view that is accessed to find each view
+     */
     public void initializeViews(View view) {
-        /**
-         * Finds each view and initializes each one
-         * @param view The view that is accessed to find each view
-         */
-        eventName = view.findViewById(R.id.eventName);
-        imageView = view.findViewById(R.id.imageView);
-        organizer = view.findViewById(R.id.organizerName);
+
+        eventName = view.findViewById(R.id.imageNameTextView);
+        imageView = view.findViewById(R.id.posterImageView);
+        organizer = view.findViewById(R.id.organizerNameTextView);
         goBackBtn = view.findViewById(R.id.goBackBtn);
 
     }
 
+    /**
+     * Using the initialized views set each one to display each detail of the image
+     */
     public void displayInfo() {
-        /**
-         * Using the initialized views set each one to display each detail of the image
-         */
+
         eventName.setText(event.getName());
+
         if (event.getImageID() != null) {
             db.GetImage(event.getImageID(), new OnSuccessListener<Bitmap>() {
                 @Override
@@ -89,19 +95,24 @@ public class AdminPhotoDetailsFrag extends Fragment {
         }
 
         db.GetUser(event.getOrg(), user -> {
-            organizer.setText(user.getFirstName());
+            organizer.setText(user.getUserName());
         });
+
     }
 
+    /**
+     * A back button to go back to all the images
+     */
     public void setUpListeners() {
-        /**
-         * A back button to go back to all the images
-         */
         goBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 getParentFragmentManager().popBackStack();
+
             }
         });
+
     }
+
 }

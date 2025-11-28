@@ -1,6 +1,8 @@
 package com.example.quokkapuffevents.controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,6 +38,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -57,7 +60,9 @@ public class EventCreateFragment extends Fragment {
     Switch addGeo; //TODO: idek???
     Button cancelEvent; //button to cancel event
     Button createEvent; //button to initialize creating the event
+    Button addInterests;
     String userID; //current user id
+    ArrayList<String> interests;
 
     String maxParts;
 
@@ -77,9 +82,10 @@ public class EventCreateFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = Database.getInstance();
         userID = db.GetCurrentUserID();
+        interests = new ArrayList<>();
         registerImagePickerLauncher();
         initializeViews(view);
-        setUpListeners();
+        setUpListeners(view);
     }
 
     public void initializeViews(View view) {
@@ -99,17 +105,13 @@ public class EventCreateFragment extends Fragment {
         cancelEvent = view.findViewById(R.id.cancelEventCreationBtn);
         createEvent = view.findViewById(R.id.confirmEventCreationBtn);
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
+        addInterests = view.findViewById(R.id.addInterestsBtn);
     }
 
-    public void setUpListeners() {
-        /**
-         * Adds functionality to buttons in fragment
-         */
+    public void setUpListeners(View view) {
+
+        // opens ui which allows user to select where they want theyre images pulled from
         addImagesBtn.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Opens ui which allows user to select where they want theyre images pulled from
-             * @param v The view that was clicked.
-             */
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -119,13 +121,18 @@ public class EventCreateFragment extends Fragment {
             }
         });
 
+        addInterests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addingInterests();
+            }
+        });
+
         createEvent.setOnClickListener(new View.OnClickListener(){
-            /**
-             * Allows organizer to create event
-             * @param v The view that was clicked.
-             */
             @Override
             public void onClick(View v){
+
+
                // Getting input values
                 String title = eventTitle.getText().toString().trim();
                 String desc = eventDesc.getText().toString().trim();
@@ -155,23 +162,25 @@ public class EventCreateFragment extends Fragment {
                 //Create event in database
                 if (maxParts.isEmpty()){
                     Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate);
+                    event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
+
                     db.UploadImageToDatabase(bitmap, uri -> {
                         event.setQrcodeID(uri);
                         db.SaveEvent(event);
                     });
-                    if (selectedImageBitmap != null){
+                    if (selectedImageBitmap != null) {
                         db.UploadImageToDatabase(selectedImageBitmap,uri -> {
                             event.setImageID(uri);
                             db.SaveEvent(event);
                         });
                     }
-
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
                     Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate);
+                    event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
                     //Saving bitmap and image poster
@@ -179,22 +188,20 @@ public class EventCreateFragment extends Fragment {
                         event.setQrcodeID(uri);
                         db.SaveEvent(event);
                     });
-                    if (selectedImageBitmap != null){
-                        db.UploadImageToDatabase(selectedImageBitmap,uri -> {
+                    if (selectedImageBitmap != null) {
+                        db.UploadImageToDatabase(selectedImageBitmap, uri -> {
                             event.setImageID(uri);
                             db.SaveEvent(event);
                         });
                     }
                 }
+
+
                ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
             }
         });
 
         cancelEvent.setOnClickListener(new View.OnClickListener(){
-            /**
-             * Allows organizer to cancel creating event
-             * @param v The view that was clicked.
-             */
             @Override
             public void onClick(View v){
                 ((DashboardActivity) getActivity()).replaceFragment(new HomeFragment());
@@ -206,7 +213,6 @@ public class EventCreateFragment extends Fragment {
         /**
          * Registers the activity result launcher for image picking
          */
-        //This code format is taken from : https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -235,6 +241,7 @@ public class EventCreateFragment extends Fragment {
                 inputStream.close();
             }
             selectedImageBitmap = bitmap;
+
         } catch (Exception e) {
             Log.e("ImageHandling", "Error converting URI to Bitmap", e);
             Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT).show();
@@ -282,10 +289,8 @@ public class EventCreateFragment extends Fragment {
     }
 
     //This code was adapted from GeeksForGeeks. https://www.geeksforgeeks.org/android/how-to-generate-qr-code-in-android/
-    private Bitmap generateQRCode(String text) {
-        /**
-         * generates QR code for event
-         */
+    private Bitmap generateQRCode(String text)
+    {
         BarcodeEncoder barcodeEncoder
                 = new BarcodeEncoder();
         try {
@@ -298,6 +303,54 @@ public class EventCreateFragment extends Fragment {
             e.printStackTrace();
         }
         return(null);
+    }
+
+    public void addingInterests() {
+
+        String[] templateInterests = {
+                "Birthdays", "Weddings", "Concerts", "Lectures",
+                "Tournaments", "Games", "Ceremonies",
+                "Fundraisers", "Theater", "Party"
+        };
+
+        boolean[] checkedItems = new boolean[templateInterests.length];
+
+        // Pre-check previously selected interests
+        for (int i = 0; i < templateInterests.length; i++) {
+            checkedItems[i] = interests.contains(templateInterests[i]);
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Select interests");
+
+        builder.setMultiChoiceItems(templateInterests, checkedItems,
+                (dialog, which, isChecked) -> {
+                    if (isChecked) {
+                        if (!interests.contains(templateInterests[which])) {
+                            interests.add(templateInterests[which]);
+                        }
+                    } else {
+                        interests.remove(templateInterests[which]);
+                    }
+                });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        builder.setNeutralButton("Clear All", (dialog, which) -> {
+            interests.clear();
+            for (int i = 0; i < checkedItems.length; i++) {
+                checkedItems[i] = false;
+                ((AlertDialog) dialog).getListView().setItemChecked(i, false);
+            }
+        });
+
+        builder.setPositiveButton("Add Interests", (dialog, which) -> {
+            Toast.makeText(getActivity(),
+                    "Selected: " + interests.toString(),
+                    Toast.LENGTH_SHORT).show();
+        });
+
+        builder.show();
     }
 
 }

@@ -8,17 +8,18 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -32,6 +33,7 @@ import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Notif;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -47,21 +49,17 @@ public class DashboardActivity extends AppCompatActivity {
     ImageButton settingsButton;
     TextView usernameText;
     TextView userFirstAndLastNameText;
-    private SharedPreferences.Editor loginPrefsEditor;
-    private boolean hasNotifications = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_dashboard);
-        // GET INSTANCE OF DATABASE AND CURRENT USER ID
-        db = Database.getInstance();
-        userID = String.valueOf(db.GetCurrentUserID());
 
         checkNotificationPermission();
 
-        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-        loginPrefsEditor = loginPreferences.edit();
+        // GET INSTANCE OF DATABASE AND CURRENT USER ID
+        db = Database.getInstance();
+        userID = String.valueOf(db.GetCurrentUserID());
 
         db.GetUser(userID, user ->  {
             if (user.getAccountType() == 0) {
@@ -88,6 +86,14 @@ public class DashboardActivity extends AppCompatActivity {
                 replaceFragment(frag);
             });
         }
+
+        try {
+            Class.forName("com.example.quokkapuffevents.controller.FCMManager");
+            Log.d("FCM_TEST", "FCMManager FOUND in APK!");
+        } catch (Exception e) {
+            Log.e("FCM_TEST", "FCMManager NOT FOUND in APK!", e);
+        }
+
     }
 
     public void entrantDashboard() {
@@ -106,10 +112,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         viewEventsButton.setOnClickListener(View -> {
-            /**
-             * Takes entrant to registerable events
-             */
-            replaceFragment(new RegisterEventsFragment());
+            replaceFragment(new FindEventsFrag());
         });
 
         addEventButton.setOnClickListener(View -> {
@@ -213,9 +216,6 @@ public class DashboardActivity extends AppCompatActivity {
         /**
          * Takes user back to login page
          */
-        loginPrefsEditor.clear();
-        loginPrefsEditor.commit();
-
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
@@ -264,33 +264,19 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void updateNotificationIcon() {
-        /**
-         * Update notification icon based on whether there are any notifications
-         */
-        if (notificationButton != null) {
-            if (hasNotifications) {
-                // User has notifications - show active icon
-                notificationButton.setImageResource(R.drawable.notifs);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT).show();
             } else {
-                // No notifications - show normal icon
-                notificationButton.setImageResource(R.drawable.empty_notifs);
+                // Permission denied
+                Toast.makeText(this, "Notifications are disabled! Enable them in Settings.", Toast.LENGTH_LONG).show();
             }
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Refresh notification status every time the activity comes to foreground
-        db.GetUser(userID, user ->  {
-            db.GetUserNotifications(user, notifs -> {
-                // Check if there are any notifications at all
-                hasNotifications = !notifs.isEmpty();
-                updateNotificationIcon();
-            });
-        });
-    }
-
-
 }
