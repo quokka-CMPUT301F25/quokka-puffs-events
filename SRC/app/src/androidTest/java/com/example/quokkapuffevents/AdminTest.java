@@ -12,15 +12,19 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.*;
 
+import android.Manifest;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.example.quokkapuffevents.model.Database;
@@ -37,19 +41,12 @@ import java.util.Date;
  */
 @RunWith(AndroidJUnit4.class)
 public class AdminTest {
-
     Database db = Database.getInstance();
 
-    public static void assertDoesNotExist(ViewInteraction viewInteraction) {
-        try {
-            viewInteraction.check((view, noViewFoundException) -> {
-                if (view != null) {
-                    throw new AssertionError("View still exists in hierarchy: " + view);
-                }
-            });
-        } catch (NoMatchingViewException e) {
-        }
-    }
+    /* For granting permissions of push notification, allows for tests to run properly
+    without unexpected permission popups. */
+    @Rule
+    public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS);
 
     public User createMockAdmin() {
         MessageDigest md = null;
@@ -107,6 +104,17 @@ public class AdminTest {
 
     public void deleteMockAdmin(User user) {
         db.DeleteUser(user);
+    }
+
+    public static void assertDoesNotExist(ViewInteraction viewInteraction) {
+        try {
+            viewInteraction.check((view, noViewFoundException) -> {
+                if (view != null) {
+                    throw new AssertionError("View still exists in hierarchy: " + view);
+                }
+            });
+        } catch (NoMatchingViewException e) {
+        }
     }
 
     @Test
