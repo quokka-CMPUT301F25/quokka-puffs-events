@@ -31,6 +31,7 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -58,10 +59,13 @@ public class EventCreateFragment extends Fragment {
     EditText numbPar; //not in views yet, number of participants to be chosen
     EditText maxPar; // max number of participants to join waiting list
     Switch addGeo; //TODO: idek???
-    Boolean enabledGeo= true;
+    Double lat;
+    Double lng;
+    int lockRadius;
     Button cancelEvent; //button to cancel event
     Button createEvent; //button to initialize creating the event
     Button addInterests;
+    Button setLocation;
     String userID; //current user id
     ArrayList<String> interests;
 
@@ -107,7 +111,7 @@ public class EventCreateFragment extends Fragment {
         createEvent = view.findViewById(R.id.confirmEventCreationBtn);
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
         addInterests = view.findViewById(R.id.addInterestsBtn);
-        //setLocation = view.findViewById(R.id.setLocationButton);
+        setLocation = view.findViewById(R.id.setLocationButton);
     }
 
     public void setUpListeners(View view) {
@@ -161,7 +165,7 @@ public class EventCreateFragment extends Fragment {
 
                 //Create event in database
                 if (maxParts.isEmpty()){
-                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate, enabledGeo);
+                    Event event = db.CreateEvent(title, userID, desc, parts, drawDate, eventDate, lat, lng, lockRadius);
                     event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
@@ -179,7 +183,7 @@ public class EventCreateFragment extends Fragment {
                     }
                 } else {
                     int maxPar = Integer.parseInt(maxParts);
-                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate, enabledGeo);
+                    Event event = db.CreateEvent(title, userID, desc, parts, maxPar, drawDate, eventDate, lat, lng, lockRadius);
                     event.setInterests(interests);
                     //Creating QR code
                     Bitmap bitmap = generateQRCode("quokka-puff://event/" + event.getId());
@@ -208,9 +212,11 @@ public class EventCreateFragment extends Fragment {
             }
         });
 
-//        setLocation.setOnClickListener(v ->{
-//
-//        });
+        setLocation.setOnClickListener(v ->{
+            ChooseEventLocationFragment frag = new ChooseEventLocationFragment();
+            frag.setFrag(this);
+            ((DashboardActivity) getActivity()).replaceFragment(frag);
+        });
     }
 
     public void registerImagePickerLauncher() {
@@ -282,6 +288,11 @@ public class EventCreateFragment extends Fragment {
         requiredFields.put(eventDesc, "Event Description Is Required");
         requiredFields.put(drawDate, "Draw Date Is Required");
         requiredFields.put(dateOfEvent, "Event Date Is Required");
+
+        if(lat == null || lng == null){
+            Toast.makeText(requireContext(), "Please select a location", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         for (Map.Entry<EditText, String> entry : requiredFields.entrySet()) {
             if (entry.getKey().getText().toString().trim().isEmpty()) {
@@ -357,4 +368,12 @@ public class EventCreateFragment extends Fragment {
         builder.show();
     }
 
+    public void setLockRadius(int lockRadius) {
+        this.lockRadius = lockRadius;
+    }
+
+    public void setEventLocation(Double lat, Double lng) {
+        this.lat = lat;
+        this.lng = lng;
+    }
 }

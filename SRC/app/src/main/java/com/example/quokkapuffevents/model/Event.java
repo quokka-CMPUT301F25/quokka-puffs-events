@@ -29,9 +29,10 @@ public class Event {
     private String qrcodeID;
     private ArrayList<String> interests;
     private Boolean drawn;
-    private Boolean geoEnabled;
-    private LatLng location;
+    Double lat;
+    Double lng;
     private Boolean finished;
+    private int lockRadius = -1;
 
     // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
 
@@ -51,9 +52,8 @@ public class Event {
      * The date when the event is supposed to be drawn
      * @param eventDate
      * The date the event is supposed to happen
-     * @param geoEnabled
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate, Boolean geoEnabled){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate, Double lat, Double lng, int lockRadius){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -68,8 +68,10 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
-        this.interests = interests;
-        this.geoEnabled = geoEnabled;
+        this.lat = lat;
+        this.lng = lng;
+        if(lockRadius != -1)
+            this.lockRadius = lockRadius;
     }
 
     /**
@@ -91,7 +93,7 @@ public class Event {
      * @param eventDate
      * The date the event is supposed to happen
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate, Boolean geoEnabled){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate, Double lat, Double lng, int lockRadius){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -106,8 +108,10 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
-        this.geoEnabled = geoEnabled;
-        this.interests = interests;
+        this.lat = lat;
+        this.lng = lng;
+        if(lockRadius != -1)
+            this.lockRadius = lockRadius;
     }
 
     /**
@@ -211,19 +215,25 @@ public class Event {
     public String getOrg() {
         return org;
     }
-    public Boolean getGeoEnabled() {
-        return geoEnabled;
-    }
-    public void setGeoEnabled(Boolean geoEnabled) {
-        this.geoEnabled = geoEnabled;
-    }
-    public LatLng getLocation() {
-        return location;
-    }
-    public void setLocation(LatLng location) {
-        this.location = location;
-    }
 
+    public Double getLat() {
+        return lat;
+    }
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+    public Double getLng() {
+        return lng;
+    }
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+    public int getLockRadius() {
+        return lockRadius;
+    }
+    public void setLockRadius(int lockRadius) {
+        this.lockRadius = lockRadius;
+    }
     public ArrayList<String> getInterests() {
         return interests;
     }

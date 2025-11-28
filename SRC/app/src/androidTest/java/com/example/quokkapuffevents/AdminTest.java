@@ -24,6 +24,7 @@ import com.example.quokkapuffevents.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.example.quokkapuffevents.model.Database;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -39,6 +40,7 @@ import java.util.Date;
 public class AdminTest {
 
     Database db = Database.getInstance();
+    private final LatLng defaultLocation = new LatLng(-34, 151);
 
     public static void assertDoesNotExist(ViewInteraction viewInteraction) {
         try {
@@ -98,7 +100,7 @@ public class AdminTest {
     }
 
     public Event createMockEvent(Date eventDate) {
-        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, false);
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, defaultLocation, -1);
     }
 
     public void deleteMockEvent(Event event) {

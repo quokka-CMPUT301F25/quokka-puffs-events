@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
@@ -139,9 +140,9 @@ public class Database {
      * @return
      * Returns the event as a new Class. Ensures that the event is saved to the cloud
      */
-    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date endDate, Boolean geoEnabled){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date endDate, Double lat, Double lng, int lockRadius){
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org, description, toBeDrawn, maxNumWaitlist, drawnDate, endDate, geoEnabled); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, maxNumWaitlist, drawnDate, endDate, lat, lng, lockRadius); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
 
         GetUser(userID, user -> {
@@ -166,10 +167,10 @@ public class Database {
      * @return
      * Returns the event as a new Class. Ensures that the event is saved to the cloud
      */
-    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date endDate, Boolean geoEnabled){
+    public Event CreateEvent(String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date endDate, Double lat, Double lng, int lockRadius){
         Log.d("Test", "Testing something");
         String id = eventsRef.document().getId(); //Creates a document and returns the id
-        Event newEvent = new Event(id, name, org, description, toBeDrawn, drawnDate, endDate, geoEnabled); //This version has the max on the size of the waitlsit
+        Event newEvent = new Event(id, name, org, description, toBeDrawn, drawnDate, endDate, lat, lng, lockRadius); //This version has the max on the size of the waitlsit
         eventsRef.document(id).set(newEvent);
 
         GetUser(userID, user -> {
