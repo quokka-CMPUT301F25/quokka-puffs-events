@@ -130,6 +130,17 @@ public class EntrantEventDetailsFragment extends Fragment {
         if (event.getFinished() == true){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
+        if ((event.getMaxNumWaitlist() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+        }
+        if (event.getEventUsers().get(db.GetCurrentUserID()) != null){
+            if (!Objects.equals(event.getEventUsers().get(db.GetCurrentUserID()), "Cancelled")){
+                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+            }
+        }
+        if (event.getFinished() == true){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+        }
 
     }
 

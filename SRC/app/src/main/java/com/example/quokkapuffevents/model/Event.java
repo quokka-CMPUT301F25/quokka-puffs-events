@@ -18,6 +18,7 @@ public class Event {
     private Integer toBeDrawn;
     private Integer maxNumWaitlist;
     private Integer numPeopleWaiting;
+    private int numInvitedAccepted;
     private Map<String, String> eventUsers = new HashMap<>(); //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
     private Date drawnDate;
@@ -214,6 +215,22 @@ public class Event {
     public void setInterests(ArrayList<String> interests) {
         this.interests = interests;
     }
+
+    public void setNumInvitedAccepted(int numInvitedAccepted) {
+        this.numInvitedAccepted = numInvitedAccepted;
+    }
+
+    public Integer getNumInvitedAccepted(){
+        Integer total = 0;
+        for (String entry : eventUsers.keySet()) {
+            if ((eventUsers.get(entry).equals("Invited")) || (eventUsers.get(entry).equals("Accepted"))) {
+                total += 1;
+            }
+        }
+        return(total);
+    }
+
+    //Actual methods
     /**
      * Changes the status of a user within the event. Updating meta variables like number of people in the waiting list
      * @param userID
