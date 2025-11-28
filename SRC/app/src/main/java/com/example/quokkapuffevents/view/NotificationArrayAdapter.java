@@ -13,38 +13,114 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.quokkapuffevents.R;
+import com.example.quokkapuffevents.controller.DashboardActivity;
+import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
+import com.example.quokkapuffevents.controller.NotificationDetailsFragment;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Array adapter to configure and display notifications for all users. Excluding admin fragments.
+ */
 public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
 
-    private final List<Notif> notifications;   // adapter owns the list
+    private final List<Notif> notifications;
     private final Database db = Database.getInstance();
+    private DashboardActivity activity = (DashboardActivity) getContext();
 
     public NotificationArrayAdapter(Context context, ArrayList<Notif> notifications) {
         super(context, 0, notifications);
-        this.notifications = new ArrayList<>(notifications); // make a copy
+        this.notifications = new ArrayList<>(notifications);
     }
 
     @Override
-    public int getCount() {
-        return notifications.size();
+    public int getItemViewType(int position) {
+        Notif notification = getItem(position);
+        if (notification.getType() == 1 && !notification.getChosen()) {
+            return 1;  // invite layout
+        } else {
+            return 0;  // message layout
+        }
     }
 
-    @Nullable
     @Override
-    public Notif getItem(int position) {
-        return notifications.get(position);
+    public int getViewTypeCount() {
+        return 2;
     }
 
-    /** External update helpers **/
-    public void setNotifications(List<Notif> newNotifs) {
-        notifications.clear();
-        notifications.addAll(newNotifs);
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        Notif notification = getItem(position);
+        int viewType = getItemViewType(position);
+
+        View view = convertView;
+        if (view == null) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            if (viewType == 1) {
+                view = inflater.inflate(R.layout.notification_content_invite, parent, false);
+                BindInviteUIAndLogic(view, notification);
+            } else {
+                view = inflater.inflate(R.layout.notification_content_message, parent, false);
+            }
+        }
+        InitializeViews(view, notification);
+        return view;
+    }
+
+    public void InitializeViews(View view, Notif notification) {
+        TextView eventText = view.findViewById(R.id.eventText);
+        Button removeButton = view.findViewById(R.id.removeBtn);
+        TextView notificationTitle = view.findViewById(R.id.notificationTitle);
+
+        notificationTitle.setText(notification.getTitle());
+        eventText.setText("Loading...");
+
+        db.GetEvent(notification.getOriginEvent(), event -> {
+            eventText.setText(event.getName());
+        });
+
+        removeButton.setOnClickListener(v -> {
+            db.DeleteNotification(notification);
+            removeNotification(notification);
+        });
+
+        Button detailsButton = view.findViewById(R.id.detailsBtn);
+        if (detailsButton != null) {
+            detailsButton.setOnClickListener(v -> {
+                NotificationDetailsFragment fragment = new NotificationDetailsFragment();
+                fragment.setNotification(notification);
+                activity.replaceFragment(fragment);
+            });
+        }
+    }
+
+    public void BindInviteUIAndLogic(View view, Notif notification) {
+        Button rejectButton = view.findViewById(R.id.rejectBtn);
+        Button acceptButton = view.findViewById(R.id.acceptBtn);
+
+        rejectButton.setOnClickListener(v -> InvitationButtonClicked(notification, 0));
+        acceptButton.setOnClickListener(v -> InvitationButtonClicked(notification, 1));
+    }
+
+    public void InvitationButtonClicked(Notif notification, int choice) {
+        notification.setChoice(choice);
+        notification.setChosen(true);
+        db.SaveNotif(notification);
         notifyDataSetChanged();
+
+        db.GetEvent(notification.getOriginEvent(), event -> {
+            if (choice == 1) {
+                event.SetStatus(db.GetCurrentUserID(), "Accepted");
+            } else {
+                event.SetStatus(db.GetCurrentUserID(), "Rejected");
+            }
+            db.SaveEvent(event);
+        });
     }
 
     public void removeNotification(Notif notif) {
@@ -52,86 +128,9 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         notifyDataSetChanged();
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = (convertView == null)
-                ? LayoutInflater.from(getContext()).inflate(R.layout.notification_content, parent, false)
-                : convertView;
-
-        Notif notification = getItem(position);
-
-        TextView notificationType = view.findViewById(R.id.notificationTypeText);
-        TextView userText = view.findViewById(R.id.userText);
-        TextView eventText = view.findViewById(R.id.eventText);
-
-        Button removeButton = view.findViewById(R.id.removeBtn);
-        Button rejectButton = view.findViewById(R.id.rejectBtn);
-        Button acceptButton = view.findViewById(R.id.acceptBtn);
-
-        // --- UI Binding ---
-        if (notification.getType() == 1 && !notification.getChosen()) {
-            notificationType.setText(R.string.winner_header);
-            //removeButton.setVisibility(View.GONE);
-        } else if (notification.getType() == 0){
-            notificationType.setText(notification.getMessage());
-            rejectButton.setVisibility(View.GONE);
-            acceptButton.setVisibility(View.GONE);
-        }else if (!notification.getChosen()) {
-            notificationType.setText(R.string.not_picked);
-            rejectButton.setVisibility(View.GONE);
-            acceptButton.setVisibility(View.GONE);
-        }
-
-        // --- Button Logic ---
-        removeButton.setOnClickListener(v -> {
-            db.DeleteNotification(notification);
-            removeNotification(notification);   // remove locally
-        });
-
-        rejectButton.setOnClickListener(v -> {
-            InvitationButtonClicked(notification, 0);
-        });
-
-        acceptButton.setOnClickListener(v -> {
-            InvitationButtonClicked(notification, 1);
-        });
-
-        // --- Async user/event UI Binding ---
-        db.GetUser(notification.getOriginUser(), user ->
-                userText.setText(String.format("%s's: ", user.getUserName())));
-
-        db.GetEvent(notification.getOriginEvent(), event -> {
-            eventText.setText(event.getName());
-        });
-
-        if (notification.getChosen()) {
-            removeButton.setVisibility(View.VISIBLE);
-            rejectButton.setVisibility(View.GONE);
-            acceptButton.setVisibility(View.GONE);
-        }
-
-        return view;
-    }
-
-    public void UpdateEventStatus(Notif notification) {
-        db.GetEvent(notification.getOriginEvent(), event -> {
-            if (notification.getChoice() == 1) {
-                event.SetStatus(db.GetCurrentUserID(), "Accepted");
-                db.SaveEvent(event);
-            }
-            else
-                db.GetUser(db.GetCurrentUserID(), user -> {
-                    db.CancelUserIntoEvent(event, user);
-                });
-        });
-    }
-
-    public void InvitationButtonClicked(Notif notification, int choice) {
-        notification.setChoice(choice);
-        notification.setChosen(true);
-        db.SaveNotif(notification);
-        UpdateEventStatus(notification);
+    public void setNotifications(List<Notif> newNotifs) {
+        notifications.clear();
+        notifications.addAll(newNotifs);
         notifyDataSetChanged();
     }
 }

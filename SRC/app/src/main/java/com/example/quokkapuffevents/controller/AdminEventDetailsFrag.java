@@ -28,7 +28,6 @@ public class AdminEventDetailsFrag extends Fragment {
 
     private Database db;
     private Event event;
-
     TextView eventName;
     TextView organizer;
     TextView maxEntrants;
@@ -48,28 +47,23 @@ public class AdminEventDetailsFrag extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.event_details_fragment, container, false);
         initializeViews(view);
         displayInfo();
         setUpListeners();
         return view;
-
     }
 
     // Setter
     public void setEvent(Event event) {
-
         this.event = event;
-
     }
 
-    /**
-     * Finds each view and initializes each one
-     * @param view The view that is accessed to find each view
-     */
     public void initializeViews(View view) {
-
+        /**
+         * Finds each view and initializes each one
+         * @param view The view that is accessed to find each view
+         */
         eventName = view.findViewById(R.id.eventName);
         organizer = view.findViewById(R.id.organizerName);
         maxEntrants = view.findViewById(R.id.maxEntrants);
@@ -80,11 +74,10 @@ public class AdminEventDetailsFrag extends Fragment {
 
     }
 
-    /**
-     * Using the initialized views set each one to display each detail of the event
-     */
     public void displayInfo() {
-
+        /**
+         * Using the initialized views set each one to display each detail of the event
+         */
         eventName.setText(event.getName());
         db.GetUser(event.getOrg(), user -> {
             organizer.setText(user.getFirstName());
@@ -94,7 +87,6 @@ public class AdminEventDetailsFrag extends Fragment {
         if (event.getMaxNumWaitlist() == -1) {
             maxEntrants.setText("No limit");
         }
-
 
         String pattern = "MMM. dd, YYYY";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
@@ -114,12 +106,9 @@ public class AdminEventDetailsFrag extends Fragment {
         ){
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                View view =super.getView(position, convertView, parent);
-
+                View view = super.getView(position, convertView, parent);
                 TextView textView=(TextView) view.findViewById(android.R.id.text1);
-
                 textView.setTextColor(Color.WHITE);
-
                 return view;
             }
         };
@@ -131,23 +120,17 @@ public class AdminEventDetailsFrag extends Fragment {
                 adapter.notifyDataSetChanged();
             });
         }
-
     }
 
-    /**
-     * A back button to go back to all the events
-     */
     public void setUpListeners() {
+        /**
+         * A back button to go back to all the events
+         */
         goBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getParentFragmentManager().popBackStack();
-
             }
         });
-
     }
-
-
 }

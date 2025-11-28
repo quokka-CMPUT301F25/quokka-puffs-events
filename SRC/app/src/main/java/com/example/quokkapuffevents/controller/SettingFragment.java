@@ -39,18 +39,10 @@ public class SettingFragment extends Fragment {
      *   Name
      *   Phone Number // Optional
      *   Delete Account
-     *
-     * Additional: Provide visual updates to show changes:
-     *
-     *   TODO: Background of changed text or edited switch becomes orange.
-     *
      * */
 
-    DashboardActivity dashboardActivity;
-    AdminActivity adminActivity;
     private Database db; // collection we want to access
     private User currUser;
-
 
     Button editProfile;
     Button signOut;
@@ -62,8 +54,6 @@ public class SettingFragment extends Fragment {
     EventListFragAdapter adapter;
     LinearLayout pastEventsContainer;
 
-
-    //    Stole this from Seth -- HAHA SORRY! -Kyle.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -77,7 +67,7 @@ public class SettingFragment extends Fragment {
         initializeViews(view);
         //DisplayPastEvents();
         displayInfo();
-        setUpListeners(view);
+        setUpListeners();
         return view;
     }
 
@@ -89,6 +79,9 @@ public class SettingFragment extends Fragment {
 
     public void setCurrUser(User currUser) {this.currUser = currUser;}
     public void DisplayPastEvents() {
+        /**
+         * Displays previous events user has registered for
+         */
         ArrayList<Event> finalEvents = new ArrayList<>();
         db.GetUser(db.GetCurrentUserID(), user -> {
             db.GetEventsFromUser(user, events -> {
@@ -104,7 +97,7 @@ public class SettingFragment extends Fragment {
         });
     }
     public void initializeViews(View v) {
-        /*
+        /**
           Initializes all attributes for the fragment
           @param v
          * View of the ChangeProfileSettings Fragment
@@ -142,26 +135,25 @@ public class SettingFragment extends Fragment {
                     adapter.setEvents(finalEvents);
                     adapter.setActivity((DashboardActivity) getActivity());
                 });
-            }
-            else{
+            } else {
                 pastEventsContainer.setVisibility(GONE);
             }
-
         } else {
             Log.e("Firestore", "User not found: " + userId);
         }
-
     }
 
-    public void setUpListeners(View v) {
+    public void setUpListeners() {
+        /**
+         Initializes all buttons for fragment
+         */
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db.SetUserID(null);
                 if (currUser.getAccountType() == -1){
                     ((AdminActivity) getActivity()).goBackToLogin();
-                }
-                else {
+                } else {
                     ((DashboardActivity) getActivity()).goBackToLogin();
                 }
 
@@ -173,16 +165,12 @@ public class SettingFragment extends Fragment {
             public void onClick(View v) {
                 if (currUser.getAccountType() == -1){
                     ((AdminActivity) getActivity()).changeProfile(currUser);
-                }
-                else {
+                } else {
                     ChangeProfileSettings editFragment = new ChangeProfileSettings();
                     editFragment.setUser(currUser);
                     ((DashboardActivity) getActivity()).replaceFragment(editFragment);
                 }
             }
         });
-
     }
-
-
 }

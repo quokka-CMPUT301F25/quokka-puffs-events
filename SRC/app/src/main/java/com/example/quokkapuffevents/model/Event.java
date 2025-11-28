@@ -26,18 +26,26 @@ public class Event {
     private String qrcodeID;
     //Add geo data?
     private Boolean drawn;
+    private Boolean finished;
 
     // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
 
     /**
      * The default constructor for Event. Does not have a limit on the max waitlist capacity.
      * @param id
+     * ID for the event
      * @param name
+     * Name for the event
      * @param org
+     * The event's organaizer's ID
      * @param description
+     * A description of the event
      * @param toBeDrawn
+     * The number of people to be drawn
      * @param drawnDate
+     * The date when the event is supposed to be drawn
      * @param eventDate
+     * The date the event is supposed to happen
      */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate){
         this.name = name;
@@ -50,6 +58,7 @@ public class Event {
         this.drawnDate = drawnDate;
         this.eventDate = eventDate;
         this.drawn = false;
+        this.finished = false;
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
@@ -58,13 +67,21 @@ public class Event {
     /**
      * The altered constructor for Event. Contains a limit on the max waitlist capacity.
      * @param id
+     * ID for the event
      * @param name
+     * Name for the event
      * @param org
+     * The event's organaizer's ID
      * @param description
+     * A description of the event
      * @param toBeDrawn
+     * The number of people to be drawn
      * @param maxNumWaitlist
+     * An upper cap on how many people can join the waitlist
      * @param drawnDate
+     * The date when the event is supposed to be drawn
      * @param eventDate
+     * The date the event is supposed to happen
      */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate){
         this.name = name;
@@ -77,6 +94,7 @@ public class Event {
         this.drawnDate = drawnDate;
         this.eventDate = eventDate;
         this.drawn = false;
+        this.finished = false;
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
@@ -164,6 +182,13 @@ public class Event {
         this.toBeDrawn = toBeDrawn;
     }
 
+    public Boolean getFinished() {
+        return finished;
+    }
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
+
     public Map<String, String> getEventUsers() {
         return eventUsers;
     }
@@ -178,17 +203,13 @@ public class Event {
     public String getOrg() {
         return org;
     }
-
-    public Integer getNumInvitedAccepted(){
-        Integer total = 0;
-        for (String entry : eventUsers.keySet()) {
-            if ((eventUsers.get(entry).equals("Invited")) || (eventUsers.get(entry).equals("Accepted"))) {
-                total += 1;
-            }
-        }
-        return(total);
-    }
-    //Actual methods
+    /**
+     * Changes the status of a user within the event. Updating meta variables like number of people in the waiting list
+     * @param userID
+     * Id of the user to update
+     * @param newStatus
+     * The status that the user should now have
+     */
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
         eventUsers.put(userID, newStatus);
@@ -237,10 +258,10 @@ public class Event {
 
             SetStatus(chosenUser, "Invited"); //Update map to show that they have been invited
 
-            db.CreateNotification(1, chosenUser, id, org, "You have been drawn for this event.");
+            db.CreateNotification(1, chosenUser, id, org, "You have been drawn for this event.", "Notification");
         }
         for (String user : waitingUsers){
-            db.CreateNotification(0, user, id, org, "This event has been drawn. Unfortunately you were not drawn, there is a chance that you may be drawn in the future.");
+            db.CreateNotification(0, user, id, org, "This event has been drawn. Unfortunately you were not drawn, there is a chance that you may be drawn in the future.", "Notification");
         }
 
         return(chosen); //Return list of ids
