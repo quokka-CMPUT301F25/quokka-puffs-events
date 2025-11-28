@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
@@ -24,23 +25,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 public class EntrantEventDetailsFragment extends Fragment {
-
-
 //    Set up variables
     private Database db;
     private Event event;
-
     TextView orgEventNameText;
     ImageView eventImage;
     TextView eventTotalParticiapntsWaitingText;
     TextView eventDrawDateText;
     TextView eventDrawn;
+    TextView eventFinished;
     TextView eventDescriptionText;
     Button entrantRegisterForEventBtn;
     Button goBackToDashboardBtn;
-
+    int waitingParticipants = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
@@ -54,25 +54,30 @@ public class EntrantEventDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.entrant_view_event_fragment, container, false);
         initializeViews(view);
         displayInfo();
-        setUpListeners(view);
+        setUpListeners();
+        checkAdmin();
         return view;
     }
 
     public void setEvent(Event event) {
-
-//        Set the current event
+        /**
+         * Sets current event
+         * @param event
+         */
         this.event = event;
 
     }
 
     public void initializeViews(View view) {
-
-//        Grab all the ids to the corresponding variable
+        /**
+         * initializes all buttons/views/edits in fragment
+         */
         orgEventNameText = view.findViewById(R.id.orgEventNameText);
         eventImage = view.findViewById(R.id.eventImageView);
         eventTotalParticiapntsWaitingText = view.findViewById(R.id.eventTotalParticipantsWaitingText);
         eventDrawDateText = view.findViewById(R.id.eventDrawDateText);
         eventDrawn = view.findViewById(R.id.eventDrawn);
+        eventFinished = view.findViewById(R.id.eventFinished);
         eventDescriptionText = view.findViewById(R.id.eventDescriptionText);
         entrantRegisterForEventBtn = view.findViewById(R.id.entrantRegisterForEventBtn);
         goBackToDashboardBtn = view.findViewById(R.id.goBackToDashboardBtn);
@@ -80,33 +85,27 @@ public class EntrantEventDetailsFragment extends Fragment {
     }
 
     public void displayInfo() {
-
+        /**
+         * displays all information to entrant in fragment
+         */
 //        Get values from event object
         String eventDescription = event.getDescription();
         String eventName = event.getName();
         Date eventDrawDateObj = event.getDrawnDate();
+        Map<String, String> participants = event.getEventUsers();
 
-//        Format the date into DD/MM/YYYY
+        participants.forEach((user, status) -> {
+            if(status.equals("Waitlist")) {
+                waitingParticipants++;
+            }
+        });
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String eventDrawnDate = formatter.format(eventDrawDateObj);
 
-
 //        Display info to fragment
         orgEventNameText.setText(eventName);
-//        db.GetImage(event.getImageID(), new OnSuccessListener<Bitmap>() {
-//            @Override
-//            public void onSuccess(Bitmap bitmap) {
-//                if (getActivity() != null) {
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            eventImage.setImageBitmap(bitmap);
-//                        }
-//                    });
-//                }
-//            }
-//        });
-        //Changed to improve
+
         db.GetImage(event.getImageID(), bitmap -> {
             eventImage.setImageBitmap(bitmap);
         });
@@ -114,28 +113,47 @@ public class EntrantEventDetailsFragment extends Fragment {
         eventDescriptionText.setText(eventDescription);
         eventDrawDateText.setText(eventDrawnDate);
         eventDrawn.setText(event.getDrawn().toString());
+        eventFinished.setText(event.getFinished().toString());
 
         //Removing button if after end or full
         if (event.getEventDate().before(new Date())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
-        if ((event.getNumPeopleWaiting() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
+        if ((event.getMaxNumWaitlist() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
+            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+        }
+        if (event.getEventUsers().get(db.GetCurrentUserID()) != null){
+            if (!Objects.equals(event.getEventUsers().get(db.GetCurrentUserID()), "Cancelled")){
+                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+            }
+        }
+        if (event.getFinished() == true){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
 
     }
 
-    public void setUpListeners(View view) {
+    public void setUpListeners() {
+        /**
+         * Adds functionality to buttons in fragment
+         */
         goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Takes Entrant to register events fragment
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
-
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
             }
         });
 
         entrantRegisterForEventBtn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Allows entrant to register for event and takes them back to register events fragment
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
 
@@ -155,6 +173,23 @@ public class EntrantEventDetailsFragment extends Fragment {
             }
         });
 
+    }
+
+    public void checkAdmin() {
+        /**
+         * Checks whether user is an admin and sets up respectful button
+         */
+        db.GetUser(db.GetCurrentUserID(), user -> {
+            if (user.getAccountType() == -1) {
+                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+                goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getParentFragmentManager().popBackStack();
+                    }
+                });
+            }
+        });
     }
 
 }

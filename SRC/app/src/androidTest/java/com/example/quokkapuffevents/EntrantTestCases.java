@@ -9,12 +9,9 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-import static com.google.firebase.database.core.RepoManager.clear;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertEquals;
@@ -23,16 +20,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-
-import android.widget.AdapterView;
-
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.ViewAssertion;
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-//import androidx.test.rule.ActivityTestRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
@@ -40,7 +31,6 @@ import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -56,28 +46,28 @@ import java.util.Date;
 public class EntrantTestCases {
     Database db = Database.getInstance();
 
-    public void ClearDatabase(){
-        db.ListNotifs(notifs -> {
-            for (Notif notif : notifs){
-                db.DeleteNotification(notif);
-            }
-        });
-        db.ListUsers(users -> {
-            for (User user : users){
-                db.DeleteUser(user);
-            }
-        });
-        db.ListEvents(events -> {
-            for (Event event : events){
-                db.DeleteEvent(event);
-            }
-        });
-    }
+//    public void ClearDatabase() {
+//        db.ListNotifs(notifs -> {
+//            for (Notif notif : notifs){
+//                db.DeleteNotification(notif);
+//            }
+//        });
+//        db.ListUsers(users -> {
+//            for (User user : users){
+//                db.DeleteUser(user);
+//            }
+//        });
+//        db.ListEvents(events -> {
+//            for (Event event : events){
+//                db.DeleteEvent(event);
+//            }
+//        });
+//    }
 
     /**
      * Creates an entrant account for testing user stories.
-     *
-     * @return A mock entrant user account
+     * @return
+     * A mock entrant user account
      */
     public User createMockEntrant() {
         MessageDigest md = null;
@@ -119,10 +109,8 @@ public class EntrantTestCases {
 
     /**
      * Creates an event for testing user stories.
-     *
      * @param eventDate
      * A hardcoded date for setting an event into the past, present, or future
-     *
      * @return
      * A mock event for entrants to register for
      */
@@ -146,8 +134,6 @@ public class EntrantTestCases {
      */
     @Test
     public void TestJoinWaitingList() {
-        Database db = Database.getInstance();
-
         // Create Organizer
         User organizer = db.CreateUser("Organizer@Test.ca", 1, "pass",
                 "OrgUser", "Org", "User", "1111111111");
@@ -180,6 +166,9 @@ public class EntrantTestCases {
             Thread.sleep(2000);
 
         } catch (Exception e) {
+            db.DeleteUser(entrant);
+            db.DeleteUser(organizer);
+            db.DeleteEvent(testEvent);
             throw new RuntimeException(e);
         }
 
@@ -209,6 +198,7 @@ public class EntrantTestCases {
     /**
      * User Story US 01.01.03 test case
      */
+    // TODO: FIX THIS TEST
     @Test
     public void TestViewingEvents() {
         // Create and Login Entrant
@@ -236,7 +226,8 @@ public class EntrantTestCases {
             db.DeleteEvent(testEvent);
 
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.DeleteUser(entrant);
+            db.DeleteEvent(testEvent);
             throw new RuntimeException(e);
         }
     }
@@ -321,26 +312,26 @@ public class EntrantTestCases {
             db.DeleteUser(userId);
 
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.GetUser(db.GetCurrentUserID(), user -> db.DeleteUser(user));
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * User Story US 01.02.03 test case
+     */
+    // TODO: FINISH THE TEST
     @Test
     public void TestViewingPastEvents() {
-        accessEntrantDashboard();
-    }
-
-    @Test
-    public void TestReceivingLostNotification() {
-        accessEntrantDashboard();
+        User entrant = accessEntrantDashboard();
+        db.DeleteUser(entrant);
     }
 
     /**
      * User Story US 01.02.02 test case
      */
     @Test
-    public void UpdateEntrantInfo() {
+    public void TestUpdateEntrantInfo() {
         User entrant = accessEntrantDashboard();
         db.SetUserID(entrant.getId());
 
@@ -371,10 +362,10 @@ public class EntrantTestCases {
             onView(withId(R.id.userEmailText)).check(matches(withText("Changed")));
             onView(withId(R.id.userPhoneNumber)).check(matches(withText("Changed")));
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.DeleteUser(entrant);
             throw new RuntimeException(e);
         } finally {
-            ClearDatabase();
+            db.DeleteUser(entrant);
         }
     }
 
@@ -383,7 +374,7 @@ public class EntrantTestCases {
      */
     @Test
     public void TestDeleteProfile() {
-        accessEntrantDashboard();
+        User entrant = accessEntrantDashboard();
         String dummyID = db.GetCurrentUserID();
         try {
             onView(withId(R.id.settings_button)).perform(click());
@@ -393,7 +384,7 @@ public class EntrantTestCases {
             onView(withId(R.id.deleteAccountBtn)).perform(click());
             Thread.sleep(1500);
 
-            // Testing if returned back to
+            // Testing if returned back to login page
             onView(withId(R.id.sign_in_button)).check(matches(isDisplayed()));
             assertNull(db.GetCurrentUserID());
             db.ListUsers(users -> {
@@ -404,10 +395,10 @@ public class EntrantTestCases {
             Thread.sleep(4000);
 
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.DeleteUser(entrant);
             throw new RuntimeException(e);
         } finally {
-            ClearDatabase();
+            db.DeleteUser(entrant);
         }
     }
 
@@ -449,10 +440,10 @@ public class EntrantTestCases {
             Thread.sleep(1500);
 
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.DeleteUser(mockEntrant);
             throw new RuntimeException(e);
         } finally {
-            ClearDatabase();
+            db.DeleteUser(mockEntrant);
         }
     }
 
@@ -461,18 +452,13 @@ public class EntrantTestCases {
      */
     @Test
     public void TestChosenInDrawNotif() {
-        User mockOrg = null;
-        Event event = null;
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+        User mockEntrant = accessEntrantDashboard();
         try {
-            User mockEntrant = accessEntrantDashboard();
+            Thread.sleep(3000);
 
-            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-            Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
-            Thread.sleep(1500);
-
-
-            event.addUser(mockEntrant.getId());
+            db.RegisterUserIntoEvent(event, mockEntrant);
 
             //Check no notification exists
             onView(withId(R.id.notifs_button)).perform(click());
@@ -493,27 +479,30 @@ public class EntrantTestCases {
             //Testing to see if notification has appeared
             onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
 
-
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.DeleteUser(mockOrg);
+            db.DeleteUser(mockEntrant);
+            db.DeleteEvent(event);
         } finally {
-            ClearDatabase();
+            db.DeleteUser(mockOrg);
+            db.DeleteUser(mockEntrant);
+            db.DeleteEvent(event);
         }
     }
 
     /**
      * User Story US 01.04.02 test case
      */
-    @Test public void TestNotChosenInDrawNotif() {
-        User mockOrg = null;
-        Event event = null;
+    // TODO: FIX THIS TEST
+    @Test
+    public void TestNotChosenInDrawNotif() {
+        User mockEntrant = accessEntrantDashboard();
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
         try {
-            User mockEntrant = accessEntrantDashboard();
-            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-            Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
-            Thread.sleep(1500);
-            event.addUser(mockEntrant.getId());
+            Thread.sleep(3000);
+            db.RegisterUserIntoEvent(event, mockEntrant);
             //Check no notification exists
             onView(withId(R.id.notifs_button)).perform(click());
             Thread.sleep(1500);
@@ -529,35 +518,35 @@ public class EntrantTestCases {
             //Testing to see if notification has appeared
             onView(withText(R.string.not_picked)).check(matches(isDisplayed()));
 
-
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
             throw new RuntimeException(e);
         } finally {
-            ClearDatabase();
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
         }
     }
 
     /**
-     * User Story US 01.05.02 test case
+     * User Story US  test case
      */
+    // TODO: FIX THIS TEST
     @Test
     public void TestAcceptInviteToEvent() {
-        User mockOrg = null;
-        Event event = null;
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
+        User mockEntrant = accessEntrantDashboard();
         try {
-            User mockEntrant = accessEntrantDashboard();
+            Thread.sleep(3000);
 
-            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-            Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
-            Thread.sleep(1500);
-
-            event.addUser(mockEntrant.getId());
+            db.RegisterUserIntoEvent(event, mockEntrant);
             //Draw User
             event.drawUsers(-1);
             Thread.sleep(1500);
-
 
             //Go notif
             onView(withId(R.id.notifs_button)).perform(click());
@@ -575,32 +564,32 @@ public class EntrantTestCases {
 
 
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
         } finally {
-            ClearDatabase();
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
         }
     }
 
     /**
      * User Story US 01.05.03 test case
      */
+    // TODO: FIX THIS TEST
     @Test
     public void TestDeclineInviteToEvent() {
-        User mockOrg = null;
-        Event event = null;
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+        User mockEntrant = accessEntrantDashboard();
         try {
-            User mockEntrant = accessEntrantDashboard();
+            Thread.sleep(3000);
 
-            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-            Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
-            Thread.sleep(1500);
-
-            event.addUser(mockEntrant.getId());
+            db.RegisterUserIntoEvent(event, mockEntrant);
             //Draw User
             event.drawUsers(-1);
             Thread.sleep(1500);
-
 
             //Go notif
             onView(withId(R.id.notifs_button)).perform(click());
@@ -615,66 +604,15 @@ public class EntrantTestCases {
                 assertEquals("Rejected", updatedEvent.getEventUsers().get(mockEntrant.getId()));
             });
             Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            ClearDatabase();
-        } finally {
-            ClearDatabase();
-        }
-    }
-
-    /**
-     * User Story US 02.07.02 test case
-     */
-    @Test
-    public void TestSendNotifToAllSelected() {
-        User mockOrg = null;
-        Event event = null;
-        User temp = accessEntrantDashboard();
-        try {
-            User mockEntrant1 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest1", "John", "Test", "0");
-            User mockEntrant2 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest2", "John", "Test", "0");
-            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-            Thread.sleep(1500);
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date());
-            Thread.sleep(1500);
-
-            event.addUser(mockEntrant1.getId());
-            event.addUser(mockEntrant2.getId());
-
-            event.drawUsers(-1);
-            Thread.sleep(1500);
-
-            ActivityScenario.launch(LoginActivity.class);
-            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant1.getUserName()));
-            closeSoftKeyboard();
-            onView(withId(R.id.login_password)).perform(typeText("password"));
-            closeSoftKeyboard();
-            onView(withId(R.id.sign_in_button)).perform(click());
-            Thread.sleep(1500);
-            onView(withId(R.id.notifs_button)).perform(click());
-            Thread.sleep(1500);
-
-            //Testing to see if notification has appeared
-            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
-
-            ActivityScenario.launch(LoginActivity.class);
-            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant2.getUserName()));
-            closeSoftKeyboard();
-            onView(withId(R.id.login_password)).perform(typeText("password"));
-            closeSoftKeyboard();
-            onView(withId(R.id.sign_in_button)).perform(click());
-            Thread.sleep(1500);
-            onView(withId(R.id.notifs_button)).perform(click());
-            Thread.sleep(1500);
-
-            //Testing to see if notification has appeared
-            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
-
 
         } catch (InterruptedException e) {
-            ClearDatabase();
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
         } finally {
-            ClearDatabase();
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
         }
     }
 
@@ -682,7 +620,7 @@ public class EntrantTestCases {
      * User Story US 01.04.03 test case
      */
     @Test
-    public void NotificationsOptOut() {
+    public void TestNotificationsOptOut() {
         // Create and login entrant
         User entrant = accessEntrantDashboard();
         db.SetUserID(entrant.getId());

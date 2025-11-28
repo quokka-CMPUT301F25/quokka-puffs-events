@@ -1,5 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +18,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.view.NotificationArrayAdapter;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -53,29 +58,33 @@ public class NotificationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initializeUI(view);
         loadNotifications();
+        listenForNotificationsLive(db.GetCurrentUserID());
     }
 
-    /**
-     * Initializes UI elements like ListView and its adapter.
-     */
     private void initializeUI(@NonNull View view) {
+        /**
+         * Initializes UI elements like ListView and its adapter.
+         * @param view The root view of the fragment.
+         */
         listView = view.findViewById(R.id.NotifList);
         adapter = new NotificationArrayAdapter(requireContext(), new ArrayList<>());
         listView.setAdapter(adapter);
     }
 
-    /**
-     * Retrieves and displays the current user’s notifications.
-     */
     private void loadNotifications() {
+        /**
+         * Retrieves and displays the current user’s notifications.
+         */
         String userId = ensureUserId();
-        db.GetUser(userId, user -> db.GetUserNotifications(user, adapter::setNotifications));
+        db.GetUser(userId, user -> {
+            db.GetUserNotifications(user, notifs -> adapter.setNotifications(notifs));
+        });
     }
 
-    /**
-     * Ensures a valid user ID is set (injects a test ID if null during testing).
-     */
     private String ensureUserId() {
+        /**
+         * Ensures a valid user ID is set (injects a test ID if null during testing).
+         */
         String userId = db.GetCurrentUserID();
         if (userId == null) {
             Log.w("NotificationDash", "Test environment: injecting fake userID");
@@ -83,5 +92,37 @@ public class NotificationFragment extends Fragment {
             userId = "TEST_USER_ID";
         }
         return userId;
+    }
+
+    public void listenForNotificationsLive(String userId) {
+        /**
+         * Listens for new notifications created in firebase and updates the UI accordingly.
+         * @param userId Takes in the current user ID to listen for notifications for.
+         */
+        db.getDb().getInstance()
+                .collection("notifications")
+                .whereEqualTo("recipient", userId)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null || value == null) return;
+
+                    for (DocumentChange dc : value.getDocumentChanges()) {
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            Notif notif = dc.getDocument().toObject(Notif.class);
+
+                            updateNotificationUI(notif);
+
+                            NotificationHelper.showNotification(requireContext(), notif.getTitle(), notif.getMessage());
+                        }
+                    }
+                });
+    }
+
+    private void updateNotificationUI(Notif notif) {
+        /**
+         * Updates the UI with a new notification.
+         * @param notif The notification to be updated
+         */
+        adapter.add(notif);
+        adapter.notifyDataSetChanged();
     }
 }

@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment {
 
         ListView waitingEvents = view.findViewById(R.id.waiting_events_listview);
 
-
         db.GetUser(db.GetCurrentUserID(), user -> {
             if (user.getAccountType() == 0) {
                 db.FilteredEventsForUser(user, "Waiting", events -> {
@@ -46,13 +45,11 @@ public class HomeFragment extends Fragment {
                             adapter.setEvents(events);
                             adapter.setActivity((DashboardActivity) getActivity());
                 });
-
             }
             else{
                 db.GetEventsFromUser(user, eventsOrg -> {
                     EventListFragAdapter adapter = new EventListFragAdapter(requireContext(), eventsOrg, "Past");
                     waitingEvents.setAdapter(adapter);
-//                    Log.d("DEBUG", "eventsOrg size: " + eventsOrg.size());
                     adapter.setActivity((DashboardActivity) getActivity());
                 });
             }
