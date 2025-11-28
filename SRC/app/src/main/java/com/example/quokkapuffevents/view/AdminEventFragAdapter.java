@@ -49,14 +49,19 @@ public class AdminEventFragAdapter extends ArrayAdapter<Event> {
 
         TextView eventCreators = (TextView) listItem.findViewById(R.id.eventCreator);
         db.GetUser(currentEvent.getOrg(), user -> {
-            eventCreators.setText(user.getUserName() + "'s");
+            eventCreators.setText(user.getUserName());
         });
 
-        TextView eventDates = (TextView) listItem.findViewById(R.id.eventDate);
         Date startDate = currentEvent.getStartDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM. dd, yyyy");
         String temp = "On " + (String)sdf.format(currentEvent.getStartDate());
-        eventDates.setText(temp);
+
+        TextView descriptionTextView = (TextView) listItem.findViewById(R.id.eventDescription);
+
+        String shortDescription = currentEvent.getDescription();
+        if(currentEvent.getDescription().length() > 28)
+            shortDescription = shortDescription.substring(0, 28) + "...";
+        descriptionTextView.setText(shortDescription);
 
         Event event = getItem(position);
 

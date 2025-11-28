@@ -24,6 +24,7 @@ public class Event {
     private Date eventDate;
     private String imageID;
     private String qrcodeID;
+    private ArrayList<String> interests;
     //Add geo data?
     private Boolean drawn;
 
@@ -39,7 +40,7 @@ public class Event {
      * @param drawnDate
      * @param eventDate
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate, ArrayList<String> interests){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -53,6 +54,7 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.interests = interests;
     }
 
     /**
@@ -66,7 +68,7 @@ public class Event {
      * @param drawnDate
      * @param eventDate
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate, ArrayList<String> interests){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -80,6 +82,7 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.interests = interests;
     }
 
     /**
@@ -177,6 +180,14 @@ public class Event {
 
     public String getOrg() {
         return org;
+    }
+
+    public ArrayList<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
     }
 
     public Integer getNumInvitedAccepted(){

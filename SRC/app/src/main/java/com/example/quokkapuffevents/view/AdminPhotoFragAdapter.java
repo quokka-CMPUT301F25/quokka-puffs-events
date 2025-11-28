@@ -54,6 +54,9 @@ public class AdminPhotoFragAdapter extends ArrayAdapter<Event> {
             });
         }
 
+        TextView eventName =  listItem.findViewById(R.id.eventName);
+        eventName.setText(currentEvent.getName());
+
         Button deleteButton = listItem.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override

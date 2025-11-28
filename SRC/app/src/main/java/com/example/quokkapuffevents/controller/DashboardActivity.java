@@ -75,7 +75,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         viewEventsButton.setOnClickListener(View -> {
-            replaceFragment(new RegisterEventsFragment());
+            replaceFragment(new FindEventsFrag());
         });
 
         addEventButton.setOnClickListener(View -> {
