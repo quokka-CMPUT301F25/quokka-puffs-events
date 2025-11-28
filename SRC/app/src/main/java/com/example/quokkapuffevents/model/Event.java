@@ -24,6 +24,7 @@ public class Event {
     private Date eventDate;
     private String imageID;
     private String qrcodeID;
+    private ArrayList<String> interests;
     //Add geo data?
     private Boolean drawn;
     private Boolean finished;
@@ -33,19 +34,12 @@ public class Event {
     /**
      * The default constructor for Event. Does not have a limit on the max waitlist capacity.
      * @param id
-     * ID for the event
      * @param name
-     * Name for the event
      * @param org
-     * The event's organaizer's ID
      * @param description
-     * A description of the event
      * @param toBeDrawn
-     * The number of people to be drawn
      * @param drawnDate
-     * The date when the event is supposed to be drawn
      * @param eventDate
-     * The date the event is supposed to happen
      */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate){
         this.name = name;
@@ -62,26 +56,19 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.interests = interests;
     }
 
     /**
      * The altered constructor for Event. Contains a limit on the max waitlist capacity.
      * @param id
-     * ID for the event
      * @param name
-     * Name for the event
      * @param org
-     * The event's organaizer's ID
      * @param description
-     * A description of the event
      * @param toBeDrawn
-     * The number of people to be drawn
      * @param maxNumWaitlist
-     * An upper cap on how many people can join the waitlist
      * @param drawnDate
-     * The date when the event is supposed to be drawn
      * @param eventDate
-     * The date the event is supposed to happen
      */
     public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate){
         this.name = name;
@@ -98,6 +85,7 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.interests = interests;
     }
 
     /**
@@ -203,13 +191,25 @@ public class Event {
     public String getOrg() {
         return org;
     }
-    /**
-     * Changes the status of a user within the event. Updating meta variables like number of people in the waiting list
-     * @param userID
-     * Id of the user to update
-     * @param newStatus
-     * The status that the user should now have
-     */
+
+    public ArrayList<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
+    }
+
+    public Integer getNumInvitedAccepted(){
+        Integer total = 0;
+        for (String entry : eventUsers.keySet()) {
+            if ((eventUsers.get(entry).equals("Invited")) || (eventUsers.get(entry).equals("Accepted"))) {
+                total += 1;
+            }
+        }
+        return(total);
+    }
+    //Actual methods
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
         eventUsers.put(userID, newStatus);

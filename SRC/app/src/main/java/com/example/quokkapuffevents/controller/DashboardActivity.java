@@ -2,16 +2,9 @@ package com.example.quokkapuffevents.controller;
 
 import static android.view.View.GONE;
 
-import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.Button;
@@ -21,17 +14,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
-import com.example.quokkapuffevents.model.Notif;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -47,8 +35,6 @@ public class DashboardActivity extends AppCompatActivity {
     ImageButton settingsButton;
     TextView usernameText;
     TextView userFirstAndLastNameText;
-    private SharedPreferences.Editor loginPrefsEditor;
-    private boolean hasNotifications = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -58,11 +44,6 @@ public class DashboardActivity extends AppCompatActivity {
         db = Database.getInstance();
         userID = String.valueOf(db.GetCurrentUserID());
 
-        checkNotificationPermission();
-
-        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-        loginPrefsEditor = loginPreferences.edit();
-
         db.GetUser(userID, user ->  {
             if (user.getAccountType() == 0) {
                 entrantDashboard();
@@ -71,11 +52,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
             // Load initial fragment
             replaceFragment(new HomeFragment());
-            db.GetUserNotifications(user, notifs -> {
-                // Check if there are any notifications at all
-                hasNotifications = !notifs.isEmpty();
-                updateNotificationIcon();
-            });
         });
 
         //Handling QR Code events
@@ -91,31 +67,18 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void entrantDashboard() {
-        /**
-         * Dashboard specific for entrants
-         */
         //Initialize Buttons
         initializeViews();
-        updateNotificationIcon();
 
         homeButton.setOnClickListener(View -> {
-            /**
-             * Takes entrant to home (inbox) fragment
-             */
             replaceFragment(new HomeFragment());
         });
 
         viewEventsButton.setOnClickListener(View -> {
-            /**
-             * Takes entrant to registerable events
-             */
-            replaceFragment(new RegisterEventsFragment());
+            replaceFragment(new FindEventsFrag());
         });
 
         addEventButton.setOnClickListener(View -> {
-            /**
-             * Takes entrant to camera for scanning QR code
-             */
             IntentIntegrator intentIntegrator = new IntentIntegrator(this);
             intentIntegrator.setPrompt("Scan a barcode or QR Code");
             intentIntegrator.setOrientationLocked(true);
@@ -123,9 +86,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         settingsButton.setOnClickListener(View -> {
-            /**
-             * Takes entrant to settings
-             */
+            //TODO Add a loading screen here
             db.GetUser(userID, user -> {
                 SettingFragment settingFragment = new SettingFragment();
                 settingFragment.setCurrUser(user);
@@ -134,48 +95,34 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         notificationButton.setOnClickListener(View -> {
-            /**
-             * Takes entrant to view notifications
-             */
             replaceFragment(new NotificationFragment());
         });
 
     }
 
     public void organizerDashboard() {
-        /**
-         * Dashboard specific for organizer
-         */
         //Initialize Buttons
         initializeViews();
-        updateNotificationIcon();
         viewEventsButton.setVisibility(GONE);
 
         homeButton.setOnClickListener(View -> {
-            /**
-             * Takes organizer to home (inbox) fragment
-             */
             replaceFragment(new HomeFragment());
         });
 
+        viewEventsButton.setOnClickListener(View -> {
+            replaceFragment(new RegisterEventsFragment()); //change this to smthg else
+        });
+
         addEventButton.setOnClickListener(View -> {
-            /**
-             * Takes organizer to create event fragment
-             */
             replaceFragment(new EventCreateFragment());
         });
 
         notificationButton.setOnClickListener(View -> {
-            /**
-             * Takes organizer to notification fragment
-             */
             replaceFragment(new NotificationFragment());
         });
 
         settingsButton.setOnClickListener(View -> {
-            /**
-             * Takes organizer to settings fragment
-             */
+            //TODO Add a loading screen here
             db.GetUser(userID, user -> {
                 SettingFragment settingFragment = new SettingFragment();
                 settingFragment.setCurrUser(user);
@@ -186,9 +133,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        /**
-         * Initializes all buttons in fragment
-         */
         homeButton = findViewById(R.id.home_button);
         viewEventsButton = findViewById(R.id.all_events_button);
         addEventButton = findViewById(R.id.add_events_button);
@@ -199,10 +143,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void replaceFragment(Fragment fragment) {
-        /**
-         * Replaces fragment in the slot depending on button clicked
-         * @param fragment fragment to replace previous one with
-         */
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -210,12 +150,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void goBackToLogin() {
-        /**
-         * Takes user back to login page
-         */
-        loginPrefsEditor.clear();
-        loginPrefsEditor.commit();
-
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
@@ -245,51 +179,11 @@ public class DashboardActivity extends AppCompatActivity {
                     entrantFrag.setEvent(event);
                     replaceFragment(entrantFrag);
                 });
+                //viewEventsButton.setText(intentResult.getFormatName());
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    private void checkNotificationPermission() {
-        /**
-         * Ensures that the user has enabled push notifications for this app before sending one
-         */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-            }
-        }
-    }
-
-    private void updateNotificationIcon() {
-        /**
-         * Update notification icon based on whether there are any notifications
-         */
-        if (notificationButton != null) {
-            if (hasNotifications) {
-                // User has notifications - show active icon
-                notificationButton.setImageResource(R.drawable.notifs);
-            } else {
-                // No notifications - show normal icon
-                notificationButton.setImageResource(R.drawable.empty_notifs);
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Refresh notification status every time the activity comes to foreground
-        db.GetUser(userID, user ->  {
-            db.GetUserNotifications(user, notifs -> {
-                // Check if there are any notifications at all
-                hasNotifications = !notifs.isEmpty();
-                updateNotificationIcon();
-            });
-        });
     }
 
 

@@ -40,9 +40,12 @@ public class AdminNotifFragAdapter extends ArrayAdapter<Notif> {
 
         Notif currentNotif = notifList.get(position);
 
+        TextView notifName = (TextView) listItem.findViewById(R.id.notifName);
+        notifName.setText(currentNotif.getMessage());
+
         TextView notifTitles = (TextView) listItem.findViewById(R.id.originUser);
         db.GetUser(currentNotif.getOriginUser(), user -> {
-            notifTitles.setText(user.getFirstName());
+            notifTitles.setText(user.getUserName());
         });
 
         Button deleteButton = listItem.findViewById(R.id.deleteButton);

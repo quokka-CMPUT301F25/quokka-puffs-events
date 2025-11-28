@@ -1,35 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="600dp"
-        android:background="@drawable/border_shape_general"
-        android:padding="12dp"
-        android:orientation="vertical"
-        >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fragmentBackground">
 
-        <Button
-            android:id="@+id/filterEventsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Filter"
-            android:textSize="32dp"
-            android:backgroundTint="@color/bluebtn"
-            android:layout_marginVertical="12dp"
-            android:paddingHorizontal="50dp"
-            android:layout_gravity="center"/>
-
-        <ListView
-            android:id="@+id/findEventsListView"
+        <TextView
+            android:id="@+id/filterTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/lightblue"
-            android:padding="8dp" />
+            android:layout_marginTop="24dp"
+            android:gravity="center_horizontal"
+            android:text="Find Events"
+            android:textColor="@color/UIBackground"
+            android:textSize="18pt"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/UIBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterTitle"
+            app:layout_constraintVertical_bias="0.312">
+
+            <LinearLayout
+                android:id="@+id/filterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/interestsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@color/UIBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Select interests"
+                        android:paddingHorizontal="24dp">
+
+                    </TextView>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/dropdown_arrow">
+
+                    </ImageView>
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Open"
+                    android:textSize="8pt">
+
+                </Button>
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/findEventsListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="46dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filterLayout"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/findEventsListView">
+
+            </View>
 
 
-    </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>
