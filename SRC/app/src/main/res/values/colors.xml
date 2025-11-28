@@ -15,5 +15,10 @@
     <color name="greybtn">#9A9A9A</color>
 
     <color name="transparent">#00000000</color>
+    <color name="UIBackground">#E9E9EB</color>
+    <color name="fragmentBackground">#43506C</color>
+    <color name="positiveBtn">#3D619B</color>
+    <color name="negativeBtn">#EF4B4C</color>
+    <color name="textColor">#2A2A2A</color>
 
 </resources>

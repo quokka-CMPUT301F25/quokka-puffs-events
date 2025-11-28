@@ -49,6 +49,9 @@ public class AdminActivity extends AppCompatActivity {
         settingIcon = findViewById(R.id.settingsIcon);
 
         imagesIcon.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Takes admin user to view all images
+             */
             @Override
             public void onClick(View v) {
                 title.setText("All Images");
@@ -57,6 +60,9 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         eventsIcon.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Takes admin user to view all events
+             */
             @Override
             public void onClick(View v) {
                 title.setText("All Events");
@@ -65,6 +71,9 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         usersIcon.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Takes admin user to view all users
+             */
             @Override
             public void onClick(View v) {
                 title.setText("All Users");
@@ -73,6 +82,9 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         notificationsIcon.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Takes admin user to view all notifications
+             */
             @Override
             public void onClick(View v) {
                 title.setText("All Notifications");
@@ -81,6 +93,9 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         settingIcon.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Takes admin user to setting fragment
+             */
             @Override
             public void onClick(View v) {
                 title.setText("Settings");
@@ -95,6 +110,10 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     public void replaceFragment(Fragment fragment) {
+        /**
+         * Replaces fragment in the slot depending on button clicked
+         * @param fragment fragment to replace previous one with
+         */
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .setReorderingAllowed(true)
@@ -103,6 +122,9 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     public void goBackToLogin() {
+        /**
+         * Takes user back to login page
+         */
         loginPrefsEditor.clear();
         loginPrefsEditor.commit();
 
@@ -112,12 +134,18 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     public void changeProfile(User user) {
+        /**
+         * Takes user to change profile settings page
+         */
         ChangeProfileSettings editFragment = new ChangeProfileSettings();
         editFragment.setUser(user);
         replaceFragment(editFragment);
     }
 
     public void goSettingFragment (User user) {
+        /**
+         * Takes user to settings page
+         */
         SettingFragment settingFragment = new SettingFragment();
         settingFragment.setCurrUser(user);
         replaceFragment(settingFragment);

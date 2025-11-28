@@ -620,8 +620,8 @@ public class Database {
      */
     public void UserExists(String val, OnSuccessListener<Boolean> listener){
         usersRef.where(Filter.or(
-                Filter.equalTo("username", val),
-                Filter.equalTo("email", val)
+                        Filter.equalTo("username", val),
+                        Filter.equalTo("email", val)
                 ))
                 .get()
                 .addOnCompleteListener(task -> {

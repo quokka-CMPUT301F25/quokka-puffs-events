@@ -40,15 +40,11 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
     @Override
     public int getItemViewType(int position) {
         Notif notification = getItem(position);
-
-        // 🔥 Avoid crash:
-        if (notification == null) return 0;
-        if (notification.getType() == null) return 0;
-
-        if (notification.getType() == 1 && !Boolean.TRUE.equals(notification.getChosen())) {
-            return 1; // invite layout
+        if (notification.getType() == 1 && !notification.getChosen()) {
+            return 1;  // invite layout
+        } else {
+            return 0;  // message layout
         }
-        return 0; // message layout
     }
 
 
@@ -105,6 +101,11 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
         }
     }
 
+    /**
+     *  Binds the UI to logic for an invite notification. Clicking the accept button will notify
+     *  the database that the user has accepted the invite, clicking the reject button will notify the
+     *  database that the user has rejected the invite, clicking the details button will show the event details
+     */
     public void BindInviteUIAndLogic(View view, Notif notification) {
         Button rejectButton = view.findViewById(R.id.rejectBtn);
         Button acceptButton = view.findViewById(R.id.acceptBtn);

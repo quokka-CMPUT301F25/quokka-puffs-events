@@ -77,12 +77,8 @@ public class NotificationFragment extends Fragment {
      * Retrieves and displays the current user’s notifications.
      */
     private void loadNotifications() {
-        db.GetUser(ensureUserId(), user -> {
-            db.GetUserNotifications(user, notifs -> {
-                adapter.setNotifications(notifs);
-                adapter.notifyDataSetChanged();  // Important
-            });
-        });
+        String userId = ensureUserId();
+        db.GetUser(userId, user -> db.GetUserNotifications(user, adapter::setNotifications));
     }
 
 
@@ -115,10 +111,18 @@ public class NotificationFragment extends Fragment {
 
                             Notif notif = dc.getDocument().toObject(Notif.class);
 
-                            adapter.add(notif);
-                            adapter.notifyDataSetChanged();
+                            updateNotificationUI(notif);
                         }
                     }
                 });
+    }
+
+    /**
+     * Updates the UI with a new notification.
+     * @param notif The notification to be updated
+     */
+    private void updateNotificationUI(Notif notif) {
+        adapter.add(notif);
+        adapter.notifyDataSetChanged();
     }
 }
