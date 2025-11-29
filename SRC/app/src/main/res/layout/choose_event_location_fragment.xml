@@ -36,7 +36,10 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <fragment
                     android:id="@+id/map"
@@ -54,18 +57,27 @@
                         android:background="@color/greyaccent"
                         android:orientation="vertical"
                         android:paddingHorizontal="8dp"
-                        android:paddingBottom="8dp">
+                        android:paddingBottom="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:paddingHorizontal="8dp">
+                            android:paddingHorizontal="8dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
 
                                 <EditText
                                     android:id="@+id/editTextLocation"
@@ -78,9 +90,11 @@
 
                                 <Button
                                     android:id="@+id/buttonSearch"
-                                    android:layout_width="0dp"
+                                    style="@style/SquareButton"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
+                                    android:backgroundTint="#3D619B"
+                                    android:paddingHorizontal="50dp"
                                     android:text="Search" />
 
                             </LinearLayout>
@@ -89,7 +103,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                tools:ignore="UseSwitchCompatOrMaterialXml">
+                                tools:ignore="UseSwitchCompatOrMaterialXml"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -101,11 +118,9 @@
 
                                 <Switch
                                     android:id="@+id/switchGeolock"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:checked="false"
-                                    android:textOff="OFF"
-                                    android:textOn="ON" />
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:checked="false" />
 
                             </LinearLayout>
 
@@ -115,7 +130,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:orientation="vertical"
-                                android:visibility="visible">
+                                android:visibility="visible"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -136,7 +154,10 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
 
                                     <TextView
                                         android:layout_width="0dp"
@@ -170,7 +191,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <Button
                 android:id="@+id/goBackToCreateEventBtn"

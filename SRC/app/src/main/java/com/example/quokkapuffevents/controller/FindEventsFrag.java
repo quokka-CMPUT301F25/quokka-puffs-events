@@ -102,7 +102,7 @@ public class FindEventsFrag extends Fragment {
     public void initializeViews(View view) {
 
         Log.d("WURT", "WURT2");
-        selectInterests = view.findViewById(R.id.temp_id);
+        //selectInterests = view.findViewById(R.id.temp_id);
         System.out.println(selectInterests);
         listView = view.findViewById(R.id.findEventsListView);
     }
