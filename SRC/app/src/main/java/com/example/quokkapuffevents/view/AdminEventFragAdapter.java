@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,9 +71,16 @@ public class AdminEventFragAdapter extends ArrayAdapter<Event> {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.DeleteEvent(event);
-                eventList.remove(event);
-                notifyDataSetChanged();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Notification")
+                        .setMessage("Are you sure you want to delete this notification?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            db.DeleteEvent(event);
+                            eventList.remove(event);
+                            notifyDataSetChanged();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
             }
         });
 
