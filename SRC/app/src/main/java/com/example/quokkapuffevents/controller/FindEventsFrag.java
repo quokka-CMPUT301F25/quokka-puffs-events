@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -15,11 +16,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.view.AdminEventFragAdapter;
+import com.example.quokkapuffevents.view.EventListFragAdapter;
 import com.example.quokkapuffevents.view.NotificationArrayAdapter;
 
 import java.util.ArrayList;
@@ -28,16 +32,26 @@ import java.util.Arrays;
 public class FindEventsFrag extends Fragment {
 
     ListView listView;
-    private AdminEventFragAdapter adapter;
+    private EventListFragAdapter adapter;
     private Database db;
     private ArrayList<Event> eventList = new ArrayList<>();
-    LinearLayout selectInterests;
+    Button selectInterests;
     String[] templateInterests = {
             "Birthdays", "Weddings", "Concerts", "Lectures",
             "Tournaments", "Games", "Ceremonies",
             "Fundraisers", "Theater", "Party"
     };
+    String[] templateAvailability = {
+            "Open", "Full", "Any"
+    };
+    String[] templateDistances = {
+            "50km", "100km", "200km", "500km", "1000km", "2000km"
+    };
     ArrayList<String> selectedInterestArray;
+    ArrayList<String> selectedAvailableArray;
+    ArrayList<String> selectedDistanceArray;
+    Bundle bundle;
+
     boolean[] checkedItems;
 
 
@@ -52,22 +66,46 @@ public class FindEventsFrag extends Fragment {
 
         db = Database.getInstance();
 
+        bundle = new Bundle();
+
         initializeViews(view);
-        setUpListeners();
 
-        // Create an adapter for the events
-        adapter = new AdminEventFragAdapter(getContext(), eventList);
-        listView.setAdapter(adapter);
+// Receive filter results from FilterSettingsFrag
+        getParentFragmentManager().setFragmentResultListener("filterRequest", this,
+                (requestKey, result) -> {
 
-        selectedInterestArray = new ArrayList<>(Arrays.asList(templateInterests));
-        checkedItems = new boolean[templateInterests.length];
-        for (int i = 0; i < checkedItems.length; i++) {
-            checkedItems[i] = true;
+                    selectedInterestArray = result.getStringArrayList("interests");
+                    selectedAvailableArray = result.getStringArrayList("available");
+                    selectedDistanceArray = result.getStringArrayList("distance");
+
+                    updateFilterAdapter(); // refresh events
+                });
+
+        if (getArguments() == null) {
+            selectedInterestArray = new ArrayList<>(Arrays.asList(templateInterests));
+            selectedAvailableArray = new ArrayList<>(Arrays.asList(templateAvailability));
+            selectedDistanceArray = new ArrayList<>(Arrays.asList(templateDistances));
         }
 
+        adapter = new EventListFragAdapter(requireContext(), eventList, "all");
+        listView.setAdapter(adapter);
+        adapter.setActivity((DashboardActivity) getActivity());
+
+        setUpListeners();
         updateAdapter();
 
         return view;
+    }
+
+    public void updateFilterAdapter() {
+        // Add all the events to the adapter
+        db.ListEvents( events -> {
+            // refresh adapter
+            eventList.clear();
+            events = filterInterests(events);
+            eventList.addAll(events);
+            adapter.notifyDataSetChanged();
+        });
     }
 
     public void updateAdapter() {
@@ -75,7 +113,6 @@ public class FindEventsFrag extends Fragment {
         db.ListEvents( events -> {
             // refresh adapter
             eventList.clear();
-            events = filterInterests(events, selectedInterestArray);
             eventList.addAll(events);
             adapter.notifyDataSetChanged();
         });
@@ -86,80 +123,80 @@ public class FindEventsFrag extends Fragment {
             @Override
             public void onClick(View v) {
 
-                interestDropdown();
+                bundle.putStringArrayList("interests", selectedInterestArray);
+                bundle.putStringArrayList("available", selectedAvailableArray);
+                bundle.putStringArrayList("distance", selectedDistanceArray);
+
+                FilterSettingsFrag filterFrag = new FilterSettingsFrag();
+                filterFrag.setArguments(bundle);
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, filterFrag);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
             }
         });
-
-
 
     }
 
     public void initializeViews(View view) {
 
-        selectInterests = view.findViewById(R.id.interestsButton);
-        System.out.println(selectInterests);
+        selectInterests = view.findViewById(R.id.filterEventsBtn);
         listView = view.findViewById(R.id.findEventsListView);
 
     }
 
-    public ArrayList<Event> filterInterests(ArrayList<Event> arrayList, ArrayList<String> selected) {
+    public ArrayList<Event> filterInterests(ArrayList<Event> arrayList) {
         ArrayList<Event> filteredEvents = new ArrayList<>();
 
         for (Event event : arrayList) {
-            for (String interest : selected) {
-                if (event.getInterests() != null) {
+
+            boolean matchesInterest = false;
+            boolean matchesAvailability = false;
+            boolean matchesDistance = true;
+
+            // 1. Interests
+            if (event.getInterests() != null) {
+                for (String interest : selectedInterestArray) {
                     if (event.getInterests().contains(interest)) {
-                        filteredEvents.add(event);
+                        matchesInterest = true;
+                        break;
                     }
                 }
+            }
+
+            // 2. Availability
+            if (selectedAvailableArray.get(0).equals("Full")) {
+                matchesAvailability = (event.getEventUsers().size() == event.getMaxNumWaitlist()
+                || -1 == event.getMaxNumWaitlist());
+            } else if (selectedAvailableArray.get(0).equals("Open")) {
+                matchesAvailability = event.getEventUsers().size() < event.getMaxNumWaitlist()
+                || -1 == event.getMaxNumWaitlist();
+            } else {
+                matchesAvailability = true; // "Any"
+            }
+
+            // 3. Distance
+//            if (event.getDistance() != null) {
+//                for (String dist : selectedDistanceArray) {
+//                    if (event.getDistance().equals(dist)) {
+//                        matchesDistance = true;
+//                        break;
+//                    }
+//                }
+//            }
+
+            // Add event only if it matches ANY selected filter
+            if (matchesInterest && matchesAvailability && matchesDistance) {
+                filteredEvents.add(event);
             }
         }
 
         return filteredEvents;
     }
 
-    public void interestDropdown() {
-
-        // Pre-check previously selected interests
-        for (int i = 0; i < templateInterests.length; i++) {
-            checkedItems[i] = selectedInterestArray.contains(templateInterests[i]);
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Select interests");
-
-        builder.setMultiChoiceItems(templateInterests, checkedItems,
-                (dialog, which, isChecked) -> {
-                    if (isChecked) {
-                        if (!selectedInterestArray.contains(templateInterests[which])) {
-                            selectedInterestArray.add(templateInterests[which]);
-                        }
-                    } else {
-                        selectedInterestArray.remove(templateInterests[which]);
-                    }
-                });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        builder.setNeutralButton("Clear All", (dialog, which) -> {
-            selectedInterestArray.clear();
-            for (int i = 0; i < checkedItems.length; i++) {
-                checkedItems[i] = false;
-                ((AlertDialog) dialog).getListView().setItemChecked(i, false);
-            }
-            updateAdapter();
-        });
-
-        builder.setPositiveButton("Add Interests", (dialog, which) -> {
-            Toast.makeText(getActivity(),
-                    "Selected: " + selectedInterestArray.toString(),
-                    Toast.LENGTH_SHORT).show();
-            updateAdapter();
-        });
-
-        builder.show();
-    }
 
 
 }

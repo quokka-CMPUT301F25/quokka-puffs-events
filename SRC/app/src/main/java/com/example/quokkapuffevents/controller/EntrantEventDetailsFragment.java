@@ -158,7 +158,7 @@ public class EntrantEventDetailsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                RegisterEventsFragment newFrag = new RegisterEventsFragment();
+                FindEventsFrag newFrag = new FindEventsFrag();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
             }
         });
@@ -184,6 +184,7 @@ public class EntrantEventDetailsFragment extends Fragment {
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
 
+
             }
         });
 
@@ -204,6 +205,10 @@ public class EntrantEventDetailsFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void saveFilters() {
+
     }
 
 }
