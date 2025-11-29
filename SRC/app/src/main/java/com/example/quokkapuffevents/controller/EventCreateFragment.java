@@ -2,6 +2,7 @@ package com.example.quokkapuffevents.controller;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -40,6 +43,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -51,8 +55,10 @@ public class EventCreateFragment extends Fragment {
 
     // EVENT INFORMATION
     EditText eventTitle; //title of event
-    EditText drawDate; //not in views yet, start of registration period
-    EditText dateOfEvent; // date of event
+    TextView drawDate; //not in views yet, start of registration period
+    TextView dateOfEvent; // date of event
+    LinearLayout drawDateLayout;
+    LinearLayout dateOfEventLayout;
     EditText eventDesc; //description of event
     Switch limitPar;
     //the switch in XML file that determines whether organizer would like to limit the numb of participants
@@ -99,18 +105,20 @@ public class EventCreateFragment extends Fragment {
          * @param view
          * View of the EventCreateFragment
          */
-        eventTitle = view.findViewById(R.id.eventTitleInput);
-        dateOfEvent = view.findViewById(R.id.eventDateInput);
-        drawDate = view.findViewById(R.id.drawDateInput);
-        eventDesc = view.findViewById(R.id.eventDescInput);
-        addImagesBtn = view.findViewById(R.id.eventAddImagesBtn);
-        limitPar = view.findViewById(R.id.eventLimitParticipantsSwitch);
-        maxPar = view.findViewById(R.id.eventMaxParticipantsInput);
+        eventTitle = view.findViewById(R.id.eventNameEditText);
+        dateOfEvent = view.findViewById(R.id.eventDateText);
+        drawDate = view.findViewById(R.id.drawDateText);
+        drawDateLayout = view.findViewById(R.id.drawDateCalendar);
+        dateOfEventLayout = view.findViewById(R.id.eventDateCalendar);
+        eventDesc = view.findViewById(R.id.descriptionTextView);
+        addImagesBtn = view.findViewById(R.id.addImageButton);
+        limitPar = view.findViewById(R.id.limitWaitlistSwitch);
+        maxPar = view.findViewById(R.id.maxWaitlistEditText);
         addGeo = view.findViewById(R.id.eventGeolocationSwitch);
-        cancelEvent = view.findViewById(R.id.cancelEventCreationBtn);
-        createEvent = view.findViewById(R.id.confirmEventCreationBtn);
-        numbPar = view.findViewById(R.id.eventParticipantAmountInput);
-        addInterests = view.findViewById(R.id.addInterestsBtn);
+        cancelEvent = view.findViewById(R.id.cancelBtn);
+        createEvent = view.findViewById(R.id.confirmChangesBtn);
+        numbPar = view.findViewById(R.id.participantsNumberTextView);
+        addInterests = view.findViewById(R.id.selectCategoriesButton);
         setLocation = view.findViewById(R.id.setLocationButton);
     }
 
@@ -134,10 +142,23 @@ public class EventCreateFragment extends Fragment {
             }
         });
 
+        drawDateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarDialog(drawDate);
+            }
+        });
+
+        dateOfEventLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarDialog(dateOfEvent);
+            }
+        });
+
         createEvent.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
 
                // Getting input values
                 String title = eventTitle.getText().toString().trim();
@@ -286,8 +307,8 @@ public class EventCreateFragment extends Fragment {
         Map<EditText, String> requiredFields = new HashMap<>();
         requiredFields.put(eventTitle, "Event Title Is Required");
         requiredFields.put(eventDesc, "Event Description Is Required");
-        requiredFields.put(drawDate, "Draw Date Is Required");
-        requiredFields.put(dateOfEvent, "Event Date Is Required");
+//        requiredFields.put(drawDate, "Draw Date Is Required");
+//        requiredFields.put(dateOfEvent, "Event Date Is Required");
 
         if(lat == null || lng == null){
             Toast.makeText(requireContext(), "Please select a location", Toast.LENGTH_SHORT).show();
@@ -375,5 +396,25 @@ public class EventCreateFragment extends Fragment {
     public void setEventLocation(Double lat, Double lng) {
         this.lat = lat;
         this.lng = lng;
+    }
+
+    public void calendarDialog(TextView textView) {
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePicker = new DatePickerDialog(
+                getContext(),
+                (view, yearSelected, monthSelected, daySelected) -> {
+                    String date = yearSelected + "-" + (monthSelected + 1) + "-" + daySelected;
+                    textView.setText(date);
+                },
+                year, month, day
+        );
+
+        datePicker.show();
+
     }
 }
