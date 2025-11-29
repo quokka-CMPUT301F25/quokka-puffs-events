@@ -11,8 +11,6 @@ import android.widget.EditText;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
-import com.example.quokkapuffevents.model.Database;
-import com.example.quokkapuffevents.model.Event;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
@@ -25,9 +23,9 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
     private EditText editTextLocation;
     private Button buttonSearch;
     private Button confirmButton;
-    private Event event;
-    private LatLng latLong;
-    private Database db = Database.getInstance();
+    private EventCreateFragment frag;
+    private Double lat;
+    private Double lng;
 
 
     @Override
@@ -39,6 +37,8 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
     public void onViewCreated(View view, Bundle savedInstanceState) {
         editTextLocation = view.findViewById(R.id.editTextLocation);
         buttonSearch = view.findViewById(R.id.buttonSearch);
+        confirmButton = view.findViewById(R.id.confirm_button);
+
 
         // Initialize Map
         SupportMapFragment mapFragment = (SupportMapFragment)
@@ -54,15 +54,18 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
         });
 
         confirmButton.setOnClickListener(v->{
-            event.setLocation(latLong);
-            db.SaveEvent(event);
+            //TODO: check if the switch is on, if so check the radius
+            // For now radius will default to -1
+            frag.setEventLocation(lat, lng);
+            frag.setLockRadius(-1);
+            ((DashboardActivity) getActivity()).replaceFragment(frag);
         });
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        // TODO: Get event, get lat and lng, set the marker there
         // Default location = Edmonton
         LatLng defaultLocation = new LatLng(53.5461, -113.4938);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
@@ -74,18 +77,20 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
             List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
             if (!addressList.isEmpty()) {
                 Address address = addressList.get(0);
-                latLong = new LatLng(address.getLatitude(), address.getLongitude());
+                lat = address.getLatitude();
+                lng = address.getLongitude();
+                LatLng location = new LatLng(address.getLatitude(), address.getLongitude());
 
                 mMap.clear(); // remove old marker
-                mMap.addMarker(new MarkerOptions().position(latLong).title(locationName));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLong, 15));
+                mMap.addMarker(new MarkerOptions().position(location).title(locationName));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setFrag(EventCreateFragment frag) {
+        this.frag = frag;
     }
 }

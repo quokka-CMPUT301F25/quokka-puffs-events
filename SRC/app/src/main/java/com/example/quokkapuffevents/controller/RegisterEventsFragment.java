@@ -1,5 +1,8 @@
 package com.example.quokkapuffevents.controller;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +11,17 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.view.EventListFragAdapter;
 import com.example.quokkapuffevents.model.*;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,7 +33,6 @@ public class RegisterEventsFragment extends Fragment {
 
     private ListView listView;
     private EventListFragAdapter adapter;
-
 
     @Nullable
     @Override
@@ -45,6 +52,9 @@ public class RegisterEventsFragment extends Fragment {
     }
 
     private void initializeUI(@NonNull View view) {
+        /**
+         * Initializes all events available to register
+         */
         listView = view.findViewById(R.id.findEventsListView);
     }
 
@@ -66,5 +76,4 @@ public class RegisterEventsFragment extends Fragment {
 
         });
     }
-
 }

@@ -1,204 +1,353 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
 
     <LinearLayout
         android:id="@+id/userProfileInformationContainer"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_shape_general"
+        android:background="@color/mainblue"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:layout_editor_absoluteX="121dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:text="Edit Profile"
+            android:layout_marginBottom="8dp"
+            android:text="Profile Settings"
             android:textAlignment="center"
-            android:textSize="32dp"
-            android:layout_marginVertical="12dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="Profile Information"
-            android:textAlignment="textStart"
             android:textSize="24dp"
-            android:layout_marginTop="8dp"/>
+            android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/accountNameAndEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="8dp">
 
-            <EditText
-                android:id="@+id/userFirstNameTextInput"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:autofillHints="Enter a First name"
-                android:background="@drawable/border_shape_grey"
-                android:hint="First name"
-                android:inputType="text"
-                android:padding="6px"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="20dp" />
-
-            <EditText
-                android:id="@+id/userLastNameTextInput"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:autofillHints="Enter a Last name"
-                android:background="@drawable/border_shape_grey"
-                android:hint="Last name"
-                android:inputType="text"
-                android:padding="6px"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="20dp" />
-
-        </LinearLayout>
-
-
-        <EditText
-            android:id="@+id/userEmailTextInput"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:autofillHints="Enter a First and Last name"
-            android:hint="User Email"
-            android:inputType="text"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/border_shape_grey"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:padding="6px"
-            />
-
-        <EditText
-            android:id="@+id/userContactInformationInput"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:autofillHints="Enter a First and Last name"
-            android:hint="(XXX) XXX-XXX"
-            android:inputType="text"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/border_shape_grey"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:padding="6px"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="Other Settings"
-            android:textAlignment="textStart"
-            android:textSize="24dp"
-            android:layout_marginTop="16dp"/>
-
-        <Switch
-            android:id="@+id/enableNotificationsSwitchBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Notifactions Enabled"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/border_shape_grey"
-            android:padding="4dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-
-            <Button
-                android:id="@+id/deleteAccountBtn"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delete Account"
-                android:backgroundTint="@color/redbtn"
-                android:textStyle="italic"
-                android:layout_weight="1"
-                />
+                android:layout_marginBottom="8dp"
+                android:background="@color/greyaccent"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Main Settings"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="24dp" />
+
+                <EditText
+                    android:id="@+id/userFirstNameTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:autofillHints="Enter a First name"
+                    android:background="@color/white"
+                    android:hint="First name"
+                    android:inputType="text"
+                    android:padding="6px"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/userLastNameTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:autofillHints="Enter a Last name"
+                    android:background="@color/white"
+                    android:hint="Last name"
+                    android:inputType="text"
+                    android:padding="6px"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/userEmailTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:autofillHints="Enter a First and Last name"
+                    android:background="@color/white"
+                    android:hint="User Email"
+                    android:inputType="text"
+                    android:padding="6px"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/userContactInformationInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:autofillHints="Enter a First and Last name"
+                    android:background="@color/white"
+                    android:hint="(XXX) XXX-XXX"
+                    android:inputType="text"
+                    android:padding="6px"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Additional Settings"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="24dp" />
+
+                <Switch
+                    android:id="@+id/enableNotificationsSwitchBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="4dp"
+                    android:text="Push Notifactions"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:id="@+id/deleteAccountBtn"
+                    style="@style/SquareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/redbtn"
+                    android:paddingHorizontal="50dp"
+                    android:text="Delete Account" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:textColor="@color/black"
+                    android:text="(Caution: Cannot be undone.)"
+                    android:textSize="16dp"
+                    android:layout_marginBottom="24dp"/>
 
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+<!--                <Button-->
+<!--                    android:id="@+id/revertChangesBtn"-->
+<!--                    style="@style/SquareButton"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:backgroundTint="@color/greybtn"-->
+<!--                    android:text="Revert Changes" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(Warning: Cannot be be undone!)"
-                android:textColor="@color/white"
-                android:textStyle="italic"
-                android:textSize="14dp"
-                android:layout_weight="1"
-                android:textAlignment="textEnd"
-                />
-        </LinearLayout>
+<!--                <Button-->
+<!--                    android:id="@+id/confirmChangesBtn"-->
+<!--                    style="@style/SquareButton"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:backgroundTint="@color/bluebtn"-->
+<!--                    android:text="Confirm Changes" />-->
 
-        <LinearLayout
-            android:id="@+id/accountChangeConfirmContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="12dp">
+            </LinearLayout>
 
             <Button
                 android:id="@+id/revertChangesBtn"
-                android:layout_width="wrap_content"
+                style="@style/SquareButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Revert Changes"
                 android:backgroundTint="@color/greybtn"
-                android:textStyle="bold"
-                android:layout_weight="1"
-                />
-
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:text="Revert Changes" />
 
             <Button
                 android:id="@+id/confirmChangesBtn"
-                android:layout_width="wrap_content"
+                style="@style/SquareButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Confirm Changes"
-                android:backgroundTint="@color/greenbtn"
-                android:textStyle="bold"
-                android:layout_weight="1"
-                />
-
+                android:backgroundTint="@color/bluebtn"
+                android:text="Confirm Changes" />
 
         </LinearLayout>
+
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/accountNameAndEmail"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="12dp"-->
+        <!--            android:orientation="vertical">-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/userFirstNameTextInput"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                android:layout_marginTop="8dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:autofillHints="Enter a First name"-->
+        <!--                android:background="@drawable/border_shape_grey"-->
+        <!--                android:hint="First name"-->
+        <!--                android:inputType="text"-->
+        <!--                android:padding="6px"-->
+        <!--                android:textAlignment="center"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="20dp" />-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/userLastNameTextInput"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                android:layout_marginTop="8dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:autofillHints="Enter a Last name"-->
+        <!--                android:background="@drawable/border_shape_grey"-->
+        <!--                android:hint="Last name"-->
+        <!--                android:inputType="text"-->
+        <!--                android:padding="6px"-->
+        <!--                android:textAlignment="center"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="20dp" />-->
+
+        <!--        </LinearLayout>-->
+
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/userEmailTextInput"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:autofillHints="Enter a First and Last name"-->
+        <!--            android:hint="User Email"-->
+        <!--            android:inputType="text"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:background="@drawable/border_shape_grey"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:textSize="20dp"-->
+        <!--            android:padding="6px"-->
+        <!--            />-->
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/userContactInformationInput"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:autofillHints="Enter a First and Last name"-->
+        <!--            android:hint="(XXX) XXX-XXX"-->
+        <!--            android:inputType="text"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:background="@drawable/border_shape_grey"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:textSize="20dp"-->
+        <!--            android:padding="6px"-->
+        <!--            />-->
+
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:text="Other Settings"-->
+        <!--            android:textAlignment="textStart"-->
+        <!--            android:textSize="24dp"-->
+        <!--            android:layout_marginTop="16dp"/>-->
+
+        <!--        <Switch-->
+        <!--            android:id="@+id/enableNotificationsSwitchBtn"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Notifactions Enabled"-->
+        <!--            android:textSize="20dp"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:background="@drawable/border_shape_grey"-->
+        <!--            android:padding="4dp"/>-->
+
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            android:layout_marginTop="8dp">-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/deleteAccountBtn"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="Delete Account"-->
+        <!--                android:backgroundTint="@color/redbtn"-->
+        <!--                android:textStyle="italic"-->
+        <!--                android:layout_weight="1"-->
+        <!--                />-->
+
+
+        <!--            <View-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                android:layout_weight="1"/>-->
+
+        <!--            <TextView-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="(Warning: Cannot be be undone!)"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textStyle="italic"-->
+        <!--                android:textSize="14dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:textAlignment="textEnd"-->
+        <!--                />-->
+        <!--        </LinearLayout>-->
+
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/accountChangeConfirmContainer"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            android:layout_marginTop="32dp"-->
+        <!--            android:layout_marginBottom="12dp">-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/revertChangesBtn"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="Revert Changes"-->
+        <!--                android:backgroundTint="@color/greybtn"-->
+        <!--                android:textStyle="bold"-->
+        <!--                android:layout_weight="1"-->
+        <!--                />-->
+
+
+        <!--            <View-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                android:layout_weight="1"/>-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/confirmChangesBtn"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="Confirm Changes"-->
+        <!--                android:backgroundTint="@color/greenbtn"-->
+        <!--                android:textStyle="bold"-->
+        <!--                android:layout_weight="1"-->
+        <!--                />-->
+
+
+        <!--        </LinearLayout>-->
 
 
     </LinearLayout>

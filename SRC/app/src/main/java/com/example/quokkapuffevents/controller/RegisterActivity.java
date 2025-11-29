@@ -22,7 +22,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class RegisterActivity extends AppCompatActivity {
-
     private Database db;
 
     @Override
@@ -58,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // For formatting the phone number after the input
         phoneNumber.addTextChangedListener(new TextWatcher() {
-            boolean isFormatting;      // prevents infinite loop
+            boolean isFormatting; // prevents infinite looping
 
             // Not needed for formatting
             @Override
@@ -125,26 +124,26 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Changes currently displayed activity depending on what the user has pressed.
-     * @param activity
-     * The new activity class to display.
-     */
     private void SwitchActivity(Class<?> activity) {
+        /**
+         * Changes currently displayed activity depending on what the user has pressed.
+         * @param activity
+         * The new activity class to display.
+         */
         // Note the `Class<?>` means it can be any class
 
         Intent intent = new Intent(this, activity);
         startActivity(intent);
     }
 
-    /**
-     * Formats an inputted phone number to fit the (XXX) XXX-XXXX format.
-     * @param digits
-     * The unformatted phone number digits.
-     * @return
-     * The formatted phone number.
-     */
     private String formatPhoneDigits(String digits) {
+        /**
+         * Formats an inputted phone number to fit the (XXX) XXX-XXXX format.
+         * @param digits
+         * The unformatted phone number digits.
+         * @return
+         * The formatted phone number.
+         */
         StringBuilder formatted = new StringBuilder();
 
         int length = digits.length();
@@ -162,30 +161,30 @@ public class RegisterActivity extends AppCompatActivity {
         return formatted.toString();
     }
 
-    /**
-     * A toast 'error' message to display when the entered Username or Email Address is already in
-     * use.
-     */
     private void DisplayInUseErrorMsg() {
+        /**
+         * A toast 'error' message to display when the entered Username or Email Address is already in
+         * use.
+         */
         Toast.makeText(this, "Email Address or Username is already in use", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * A toast 'error' message to display when one or more of the input fields are left blank and or
-     * a role is not selected.
-     */
     private void DisplayMissInfoErrorMsg() {
+        /**
+         * A toast 'error' message to display when one or more of the input fields are left blank and or
+         * a role is not selected.
+         */
         Toast.makeText(this, "A field is missing information or a role is not selected", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Hashes the given password using the SHA-512 algorithm and returns the result as a String.
-     * @param password
-     * The password to hash.
-     * @return
-     * A String of the SHA-512 hash of the input password.
-     */
     private String PasswordHashing(String password) {
+        /**
+         * Hashes the given password using the SHA-512 algorithm and returns the result as a String.
+         * @param password
+         * The password to hash.
+         * @return
+         * A String of the SHA-512 hash of the input password.
+         */
         MessageDigest md = null;
 
         try {
@@ -198,26 +197,26 @@ public class RegisterActivity extends AppCompatActivity {
         return new String(hashedPasswordByte);
     }
 
-    /**
-     * Validates that the information entered by the user is fully filled out / available.
-     * @param username
-     * The user submitted username.
-     * @param email
-     * The user submitted email address.
-     * @param password
-     * The user submitted password (unhashed).
-     * @param firstName
-     * The user submitted first name.
-     * @param lastName
-     * The user submitted last name.
-     * @param phone
-     * The user submitted phone number (optional).
-     * @param entrant
-     * A checkbox to check if the user wants to be registered as an entrant.
-     * @param organizer
-     * A checkbox to check if the user wants to be registered as an organizer.
-     */
     private void ValidateInformation(String username, String email, String password, String firstName, String lastName, String phone, CheckBox entrant, CheckBox organizer){
+        /**
+         * Validates that the information entered by the user is fully filled out / available.
+         * @param username
+         * The user submitted username.
+         * @param email
+         * The user submitted email address.
+         * @param password
+         * The user submitted password (unhashed).
+         * @param firstName
+         * The user submitted first name.
+         * @param lastName
+         * The user submitted last name.
+         * @param phone
+         * The user submitted phone number (optional).
+         * @param entrant
+         * A checkbox to check if the user wants to be registered as an entrant.
+         * @param organizer
+         * A checkbox to check if the user wants to be registered as an organizer.
+         */
         db.ValidatePasswordByEmail(email, password, users -> {
             if (!users.isEmpty()) {
                 DisplayInUseErrorMsg();

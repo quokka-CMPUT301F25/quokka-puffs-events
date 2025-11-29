@@ -16,7 +16,9 @@ public class User {
     private ArrayList<String> events;
     private Integer accountType; //-1 Admin, 0 for entrant, +1 for organiser
     private Boolean sendNotifications;
-    //etc etc
+    private String fcmToken;
+
+
 
     /**
      * Normal constructor for a User.
@@ -60,88 +62,69 @@ public class User {
     }
 
     // Getters and Setters
-
     public String getEmail() {
         return email;
     }
-
     public Integer getAccountType() {
         return accountType;
     }
-
     public String getId() {
         return id;
     }
-
     public ArrayList<String> getEvents() {
         return events;
     }
-
     public String getHashPassword() {
         return hashPassword;
     }
-
     public String getUserName() {
         return username;
     }
-
     public void setUserName(String username) {
         this.username = username;
     }
-
     public void setAccountType(Integer accountType) {
         this.accountType = accountType;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public void setEvents(ArrayList<String> events) {
         this.events = events;
     }
-
     public void setHashPassword(String hashPassword) {
         this.hashPassword = hashPassword;
     }
-
     public void setId(String id) {
         this.id = id;
     }
-
     public Boolean getSendNotifications() {
         return sendNotifications;
     }
-
     public void setSendNotifications(Boolean sendNotifications) {
         this.sendNotifications = sendNotifications;
     }
-
     public String getFirstName() {
         return firstName;
     }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
     public String getLastName() {
         return lastName;
     }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
-
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
     public void addEvent(String eventID){
         this.events.add(eventID);
     }
+    public String getFcmToken() { return fcmToken; }
+    public void setFcmToken(String fcmToken) { this.fcmToken = fcmToken; }
 }

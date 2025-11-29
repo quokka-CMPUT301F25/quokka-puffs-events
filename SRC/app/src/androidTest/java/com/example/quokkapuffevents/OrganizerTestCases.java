@@ -7,6 +7,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,6 +20,7 @@ import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +41,8 @@ import java.text.SimpleDateFormat;
 @RunWith(AndroidJUnit4.class)
 public class OrganizerTestCases {
     Database db = Database.getInstance();
+    private final LatLng defaultLocation = new LatLng(-34, 151);
+
 
     /**
      * Creates an entrant account for testing user stories.
@@ -89,7 +93,7 @@ public class OrganizerTestCases {
             db.SetUserID(mockOrg.getId());
 
             Event event = db.CreateEvent("TestDrawSpecificAttendees", mockOrg.getId(),
-                    "Testing specified number of attendees sampling", 5, 1, new Date(), new Date(), false);
+                    "Testing specified number of attendees sampling", 5, 1, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1500);
 
             List<User> attendees = new ArrayList<>();
@@ -99,7 +103,7 @@ public class OrganizerTestCases {
                 attendees.add(attendee);
                 Thread.sleep(500);
 
-                event.addUser(attendee.getId());
+                db.RegisterUserIntoEvent(event, attendee);
             }
 
             db.SaveEvent(event);
@@ -196,5 +200,68 @@ public class OrganizerTestCases {
     @Test
     public void ImageEventPoster(){
         // TODO: Create test when storage is all good
+    }
+
+    /**
+     * User Story US 02.07.02 test case
+     */
+    // TODO: FINISH THIS TEST
+    @Test
+    public void TestSendNotifToAllSelected() {
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date(), 0.0, 0.0, -1);
+        User temp = createMockEntrant();
+
+        User mockEntrant1 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest1", "John", "Test", "0");
+        User mockEntrant2 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest2", "John", "Test", "0");
+        try {
+            Thread.sleep(1500);
+
+            db.RegisterUserIntoEvent(event, mockEntrant1);
+            db.RegisterUserIntoEvent(event, mockEntrant2);
+
+            event.drawUsers(-1);
+            Thread.sleep(1500);
+
+            ActivityScenario.launch(LoginActivity.class);
+            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant1.getUserName()));
+            closeSoftKeyboard();
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+
+            ActivityScenario.launch(LoginActivity.class);
+            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant2.getUserName()));
+            closeSoftKeyboard();
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant1);
+            db.DeleteUser(mockEntrant2);
+            db.DeleteUser(temp);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+        } finally {
+            db.DeleteUser(mockEntrant1);
+            db.DeleteUser(mockEntrant2);
+            db.DeleteUser(temp);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+        }
     }
 }

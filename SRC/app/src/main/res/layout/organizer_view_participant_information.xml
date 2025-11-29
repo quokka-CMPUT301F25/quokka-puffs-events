@@ -6,166 +6,325 @@
     android:background="@color/black">
 
     <LinearLayout
-        android:id="@+id/userProfileInformationContainer"
-        android:layout_width="400dp"
+        android:id="@+id/dashboardEventsContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_shape_general"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/mainblue"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingBottom="24dp"
+        android:paddingTop="8dp">
 
-        <TextView
-            android:id="@+id/usernameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:text="User Name"
-            android:textAlignment="center"
-            android:textSize="32dp"
-            android:layout_marginVertical="12dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="Profile Information"
-            android:textAlignment="textStart"
-            android:textSize="24dp"
-            android:layout_marginTop="8dp"/>
+    <TextView
+        android:id="@+id/usernameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="8dp">
 
         <LinearLayout
-            android:id="@+id/accountNameAndEmail"
+            android:id="@+id/userInfoContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/userFirstNameText"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:autofillHints="Enter a First name"
-                android:background="@drawable/border_shape_grey"
-                android:text="First name"
-                android:inputType="text"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:padding="6dp"/>
+            android:background="@color/greyaccent"
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp">
 
             <TextView
-                android:id="@+id/userLastNameText"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
+                android:text="Profile Information"
+                android:textColor="@color/black"
+                android:paddingHorizontal="8dp"
+                android:textSize="20dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:id="@+id/userFullNameContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name: "
+                        android:textColor="@color/black"
+                        android:textAlignment="textEnd"
+                        android:textSize="18dp"/>
+                    <TextView
+                        android:id="@+id/userFirstNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FirstName"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" "
+                        android:textColor="@color/black"
+                        android:textSize="18dp"/>
+                    <TextView
+                        android:id="@+id/userLastNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LastName"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email: "
+                    android:textColor="@color/black"
+                    android:textAlignment="textEnd"
+                    android:textSize="18dp"/>
+                <TextView
+                    android:id="@+id/userEmailText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="example@example.com"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number: "
+                    android:textColor="@color/black"
+                    android:textAlignment="textEnd"
+                    android:textSize="18dp"/>
+                <TextView
+                    android:id="@+id/userContactInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="XXX-XXX-XXXX"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"/>
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Geolocation"
+                android:textColor="@color/black"
+                android:paddingHorizontal="8dp"
+                android:textSize="20dp"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:autofillHints="Enter a Last name"
-                android:background="@drawable/border_shape_grey"
-                android:text="Last name"
-                android:inputType="text"
-                android:textAlignment="center"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:text="GEOLOCATION MAP GOES HERE"
                 android:textColor="@color/white"
-                android:textSize="20sp"
-                android:padding="6dp"/>
-
-        </LinearLayout>
-
-
-        <TextView
-            android:id="@+id/userEmailText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:autofillHints="Enter a First and Last name"
-            android:text="User Email"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/border_shape_grey"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:padding="6dp"
-            />
-
-        <TextView
-            android:id="@+id/userContactInformation"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:autofillHints="Enter a First and Last name"
-            android:text="(XXX) XXX-XXX"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/border_shape_grey"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:padding="6dp"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="Geolocation Disabled For This Event"
-            android:textAlignment="textStart"
-            android:textSize="20dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"/>
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/mapView"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            />
+                android:background="@color/black"
+                android:paddingHorizontal="8dp"
+                android:textSize="20dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textStyle="bold"/>
 
 
 
-        <LinearLayout
-            android:id="@+id/accountChangeConfirmContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="12dp">
+            <Button
+                android:id="@+id/revokeInviteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel Invite"
+                android:backgroundTint="@color/redbtn"
+                android:layout_marginHorizontal="8dp"
+
+                style="@style/SquareButton"
+                />
 
             <Button
                 android:id="@+id/goBackToDashboardBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="50dp"
+                android:layout_gravity="center"
                 android:text="Back"
-                android:backgroundTint="@color/greybtn"
+                style="@style/SquareButton"
+                android:backgroundTint="@color/bluebtn"
                 android:textStyle="bold"
-                android:layout_weight="1"
                 />
 
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
 
-            <Button
-                android:id="@+id/revokeInviteBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel Invite"
-                android:backgroundTint="@color/redbtn"
-                android:textStyle="bold"
-                android:layout_weight="1"
-                />
+
 
 
         </LinearLayout>
 
 
+
     </LinearLayout>
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:text="Profile Information"-->
+<!--            android:textAlignment="textStart"-->
+<!--            android:textSize="24dp"-->
+<!--            android:layout_marginTop="8dp"/>-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/accountNameAndEmail"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="12dp"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/userFirstNameText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:autofillHints="Enter a First name"-->
+<!--                android:background="@drawable/border_shape_grey"-->
+<!--                android:text="First name"-->
+<!--                android:inputType="text"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="20sp"-->
+<!--                android:padding="6dp"/>-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/userLastNameText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:autofillHints="Enter a Last name"-->
+<!--                android:background="@drawable/border_shape_grey"-->
+<!--                android:text="Last name"-->
+<!--                android:inputType="text"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="20sp"-->
+<!--                android:padding="6dp"/>-->
+
+<!--        </LinearLayout>-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/userEmailText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:autofillHints="Enter a First and Last name"-->
+<!--            android:text="User Email"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/border_shape_grey"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp"-->
+<!--            android:padding="6dp"-->
+<!--            />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/userContactInformation"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:autofillHints="Enter a First and Last name"-->
+<!--            android:text="(XXX) XXX-XXX"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/border_shape_grey"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp"-->
+<!--            android:padding="6dp"-->
+<!--            />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:text="Geolocation"-->
+<!--            android:textAlignment="textStart"-->
+<!--            android:textSize="24dp"-->
+<!--            android:layout_marginTop="8dp"/>-->
+
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/accountChangeConfirmContainer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_marginTop="32dp"-->
+<!--            android:layout_marginBottom="12dp">-->
+
+<!--            <Button-->
+<!--                android:id="@+id/goBackToDashboardBtn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Back"-->
+<!--                android:backgroundTint="@color/greybtn"-->
+<!--                android:textStyle="bold"-->
+<!--                android:layout_weight="1"-->
+<!--                />-->
+
+
+<!--            <View-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:layout_weight="1"/>-->
+
+<!--            <Button-->
+<!--                android:id="@+id/revokeInviteBtn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Cancel Invite"-->
+<!--                android:backgroundTint="@color/redbtn"-->
+<!--                android:textStyle="bold"-->
+<!--                android:layout_weight="1"-->
+<!--                />-->
+
+
+        </LinearLayout>
+
+
+
+<!--    </LinearLayout>-->
 
 
 

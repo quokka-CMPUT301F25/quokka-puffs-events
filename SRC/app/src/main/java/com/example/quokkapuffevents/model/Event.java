@@ -20,30 +20,40 @@ public class Event {
     private Integer toBeDrawn;
     private Integer maxNumWaitlist;
     private Integer numPeopleWaiting;
+    private int numInvitedAccepted;
     private Map<String, String> eventUsers = new HashMap<>(); //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
     private Date drawnDate;
     private Date eventDate;
     private String imageID;
     private String qrcodeID;
+    private ArrayList<String> interests;
     private Boolean drawn;
-    private Boolean geoEnabled;
-    private LatLng location;
+    Double lat;
+    Double lng;
+    private Boolean finished;
+    private int lockRadius = -1;
 
     // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
 
     /**
      * The default constructor for Event. Does not have a limit on the max waitlist capacity.
      * @param id
+     * ID for the event
      * @param name
+     * Name for the event
      * @param org
+     * The event's organaizer's ID
      * @param description
+     * A description of the event
      * @param toBeDrawn
+     * The number of people to be drawn
      * @param drawnDate
+     * The date when the event is supposed to be drawn
      * @param eventDate
-     * @param geoEnabled
+     * The date the event is supposed to happen
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate, Boolean geoEnabled){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate, Double lat, Double lng, int lockRadius){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -54,24 +64,36 @@ public class Event {
         this.drawnDate = drawnDate;
         this.eventDate = eventDate;
         this.drawn = false;
+        this.finished = false;
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
-        this.geoEnabled = geoEnabled;
+        this.lat = lat;
+        this.lng = lng;
+        if(lockRadius != -1)
+            this.lockRadius = lockRadius;
     }
 
     /**
      * The altered constructor for Event. Contains a limit on the max waitlist capacity.
      * @param id
+     * ID for the event
      * @param name
+     * Name for the event
      * @param org
+     * The event's organaizer's ID
      * @param description
+     * A description of the event
      * @param toBeDrawn
+     * The number of people to be drawn
      * @param maxNumWaitlist
+     * An upper cap on how many people can join the waitlist
      * @param drawnDate
+     * The date when the event is supposed to be drawn
      * @param eventDate
+     * The date the event is supposed to happen
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate, Boolean geoEnabled){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate, Double lat, Double lng, int lockRadius){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -82,10 +104,14 @@ public class Event {
         this.drawnDate = drawnDate;
         this.eventDate = eventDate;
         this.drawn = false;
+        this.finished = false;
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
-        this.geoEnabled = geoEnabled;
+        this.lat = lat;
+        this.lng = lng;
+        if(lockRadius != -1)
+            this.lockRadius = lockRadius;
     }
 
     /**
@@ -169,6 +195,14 @@ public class Event {
     public void setToBeDrawn(Integer toBeDrawn){
         this.toBeDrawn = toBeDrawn;
     }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
+
     public Map<String, String> getEventUsers() {
         return eventUsers;
     }
@@ -181,17 +215,35 @@ public class Event {
     public String getOrg() {
         return org;
     }
-    public Boolean getGeoEnabled() {
-        return geoEnabled;
+
+    public Double getLat() {
+        return lat;
     }
-    public void setGeoEnabled(Boolean geoEnabled) {
-        this.geoEnabled = geoEnabled;
+    public void setLat(Double lat) {
+        this.lat = lat;
     }
-    public LatLng getLocation() {
-        return location;
+    public Double getLng() {
+        return lng;
     }
-    public void setLocation(LatLng location) {
-        this.location = location;
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+    public int getLockRadius() {
+        return lockRadius;
+    }
+    public void setLockRadius(int lockRadius) {
+        this.lockRadius = lockRadius;
+    }
+    public ArrayList<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
+    }
+
+    public void setNumInvitedAccepted(int numInvitedAccepted) {
+        this.numInvitedAccepted = numInvitedAccepted;
     }
 
     public Integer getNumInvitedAccepted(){
@@ -203,7 +255,15 @@ public class Event {
         }
         return(total);
     }
+
     //Actual methods
+    /**
+     * Changes the status of a user within the event. Updating meta variables like number of people in the waiting list
+     * @param userID
+     * Id of the user to update
+     * @param newStatus
+     * The status that the user should now have
+     */
     public void SetStatus (String userID, String newStatus) {
         //Changing the status of a user
         eventUsers.put(userID, newStatus);

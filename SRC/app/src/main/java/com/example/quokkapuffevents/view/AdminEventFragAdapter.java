@@ -6,36 +6,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.fragment.app.Fragment;
 
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.controller.AdminActivity;
 import com.example.quokkapuffevents.controller.AdminEventDetailsFrag;
-import com.example.quokkapuffevents.controller.AdminUserDetailsFrag;
-import com.example.quokkapuffevents.controller.DashboardActivity;
-import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
-import com.example.quokkapuffevents.model.Notif;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+/**
+ * Adapter for the admin fragment that configures and displays all events
+ */
 public class AdminEventFragAdapter extends ArrayAdapter<Event> {
-
     private ArrayList<Event> eventList;
     private Database db;
-
     public AdminEventFragAdapter(@NonNull Context context, ArrayList<Event> list) {
         super(context, 0, list);
         this.eventList = list;
@@ -58,14 +50,19 @@ public class AdminEventFragAdapter extends ArrayAdapter<Event> {
 
         TextView eventCreators = (TextView) listItem.findViewById(R.id.eventCreator);
         db.GetUser(currentEvent.getOrg(), user -> {
-            eventCreators.setText(user.getUserName() + "'s");
+            eventCreators.setText(user.getUserName());
         });
 
-        TextView eventDates = (TextView) listItem.findViewById(R.id.eventDate);
         Date startDate = currentEvent.getStartDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM. dd, yyyy");
         String temp = "On " + (String)sdf.format(currentEvent.getStartDate());
-        eventDates.setText(temp);
+
+        TextView descriptionTextView = (TextView) listItem.findViewById(R.id.eventDescription);
+
+        String shortDescription = currentEvent.getDescription();
+        if(currentEvent.getDescription().length() > 28)
+            shortDescription = shortDescription.substring(0, 28) + "...";
+        descriptionTextView.setText(shortDescription);
 
         Event event = getItem(position);
 

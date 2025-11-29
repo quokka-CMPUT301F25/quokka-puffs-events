@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.quokkapuffevents"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -27,10 +27,12 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding = true
         buildConfig = true
@@ -41,6 +43,12 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging")      // FCM
+    implementation("com.google.firebase:firebase-firestore")      // Firestore DB
+    implementation("com.google.firebase:firebase-analytics")      // Analytics (OK to keep)
+    implementation("com.google.firebase:firebase-storage")        // Storage (OK to keep)
+    implementation("com.google.firebase:firebase-database")       // Realtime DB (if used)
+    implementation("com.opencsv:opencsv:5.9")
     implementation(libs.ext.junit)
     implementation(libs.espresso.core)
     implementation(libs.firebase.database)
@@ -57,24 +65,28 @@ dependencies {
     androidTestImplementation(libs.runner)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
-    implementation("com.google.firebase:firebase-messaging:23.1.1")
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
 
+    implementation("com.google.android.gms:play-services-base:18.4.0")
+    implementation("com.google.android.gms:play-services-location:15.0.1")
 
+
+
+    // AndroidX Core Dependencies
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.firestore)
 
-    // For local unit tests (in src/test/java)
+    // QR Code Scanner (SAFE TO KEEP)
+    implementation("com.journeyapps:zxing-android-embedded:4.1.0")
+
+    // For unit testing
     testImplementation(libs.junit)
 
-    // For instrumented tests (in src/androidTest/java)
-    // You might have duplicates after the change, you can keep just one set
+    // For instrumented testing
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    //For QR Codes
-    implementation("com.journeyapps:zxing-android-embedded:4.1.0")
+    androidTestImplementation(libs.runner)
 }
