@@ -58,7 +58,7 @@ public class EventCreateFragment extends Fragment {
     Switch addGeo; //TODO: idek??? I'm Doing this now
     Button cancelEvent; //button to cancel event
     Button createEvent; //button to initialize creating the event
-    Button setLocation
+    Button setLocation;
     String userID; //current user id
 
     String maxParts;

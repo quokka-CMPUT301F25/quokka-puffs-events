@@ -30,9 +30,6 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -41,139 +38,133 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <LinearLayout
+                <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/greyaccent"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="8dp"
-                    android:paddingBottom="8dp">
+                    android:layout_height="500dp" />
 
-                    <fragment
-                        android:id="@+id/map"
-                        android:name="com.google.android.gms.maps.SupportMapFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="500dp" />
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/greyaccent"
                         android:orientation="vertical"
-                        android:paddingHorizontal="8dp">
+                        android:paddingHorizontal="8dp"
+                        android:paddingBottom="8dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <EditText
-                                android:id="@+id/editTextLocation"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="3"
-                                android:background="@drawable/border_shape_grey"
-                                android:hint="Enter a location"
-                                android:padding="8dp" />
-
-                            <Button
-                                android:id="@+id/buttonSearch"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Search" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            tools:ignore="UseSwitchCompatOrMaterialXml">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:text="Geolock Location"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <Switch
-                                android:id="@+id/switchGeolock"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="false"
-                                android:textOff="OFF"
-                                android:textOn="ON" />
-
-                        </LinearLayout>
-
-                        <!-- Slider added here -->
-                        <LinearLayout
-                            android:id="@+id/sliderContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
                             android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="4dp"
-                                android:text="Geolock Radius"
-                                android:textColor="@color/black"
-                                android:textSize="14sp" />
-
-                            <SeekBar
-                                android:id="@+id/radiusSeekBar"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:max="100"
-                                android:minHeight="20dp"
-                                android:progress="50" />
+                            android:paddingHorizontal="8dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
-                                <TextView
+                                <EditText
+                                    android:id="@+id/editTextLocation"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:background="@color/white"
+                                    android:hint="Enter a location"
+                                    android:padding="8dp" />
+
+                                <Button
+                                    android:id="@+id/buttonSearch"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="50m"
-                                    android:textColor="@color/black"
-                                    android:textSize="12sp" />
+                                    android:text="Search" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                tools:ignore="UseSwitchCompatOrMaterialXml">
 
                                 <TextView
-                                    android:id="@+id/radiusValueText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:text="Geolock Location"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp" />
+
+                                <Switch
+                                    android:id="@+id/switchGeolock"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="100m"
-                                    android:textColor="@color/black"
-                                    android:textSize="12sp" />
+                                    android:checked="false"
+                                    android:textOff="OFF"
+                                    android:textOn="ON" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/sliderContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:orientation="vertical"
+                                android:visibility="visible">
 
                                 <TextView
-                                    android:layout_width="0dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="end"
-                                    android:text="200m"
+                                    android:layout_marginBottom="4dp"
+                                    android:text="Geolock Radius"
                                     android:textColor="@color/black"
-                                    android:textSize="12sp" />
+                                    android:textSize="14sp" />
+
+                                <SeekBar
+                                    android:id="@+id/radiusSeekBar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:max="100"
+                                    android:minHeight="20dp"
+                                    android:progress="50" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="0km"
+                                        android:textColor="@color/black"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:gravity="end"
+                                        android:text="1000km"
+                                        android:textColor="@color/black"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
                         </LinearLayout>
-
                     </LinearLayout>
 
-                </LinearLayout>
+                </ScrollView>
 
             </LinearLayout>
-
-        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
