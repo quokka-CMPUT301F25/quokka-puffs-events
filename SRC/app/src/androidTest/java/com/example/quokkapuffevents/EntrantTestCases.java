@@ -681,4 +681,30 @@ public class EntrantTestCases {
             db.DeleteUser(entrant);
         }
     }
+
+    /**
+     * User Story US 01.05.05 test case
+     */
+    @Test
+    public void TestViewRegistrationCriterion() {
+        User mockEntrant = accessEntrantDashboard();
+
+        try {
+            Thread.sleep(1500);
+
+            onView(withId(R.id.all_events_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.infoBtn)).perform(click());
+
+            onView(withText("Registration Criterion/Guidelines")).check(matches(isDisplayed()));
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockEntrant);
+        }
+    }
 }
