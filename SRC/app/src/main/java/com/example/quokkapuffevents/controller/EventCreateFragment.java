@@ -64,7 +64,6 @@ public class EventCreateFragment extends Fragment {
     //the switch in XML file that determines whether organizer would like to limit the numb of participants
     EditText numbPar; //not in views yet, number of participants to be chosen
     EditText maxPar; // max number of participants to join waiting list
-    Switch addGeo; //TODO: idek???
     Double lat;
     Double lng;
     int lockRadius;
@@ -114,7 +113,6 @@ public class EventCreateFragment extends Fragment {
         addImagesBtn = view.findViewById(R.id.addImageButton);
         limitPar = view.findViewById(R.id.limitWaitlistSwitch);
         maxPar = view.findViewById(R.id.maxWaitlistEditText);
-        addGeo = view.findViewById(R.id.eventGeolocationSwitch);
         cancelEvent = view.findViewById(R.id.cancelBtn);
         createEvent = view.findViewById(R.id.confirmChangesBtn);
         numbPar = view.findViewById(R.id.participantsNumberTextView);
@@ -307,8 +305,6 @@ public class EventCreateFragment extends Fragment {
         Map<EditText, String> requiredFields = new HashMap<>();
         requiredFields.put(eventTitle, "Event Title Is Required");
         requiredFields.put(eventDesc, "Event Description Is Required");
-//        requiredFields.put(drawDate, "Draw Date Is Required");
-//        requiredFields.put(dateOfEvent, "Event Date Is Required");
 
         if(lat == null || lng == null){
             Toast.makeText(requireContext(), "Please select a location", Toast.LENGTH_SHORT).show();

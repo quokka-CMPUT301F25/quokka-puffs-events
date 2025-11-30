@@ -265,21 +265,22 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     }
 
     public void seeDetails(Event event) {
-        if(user == null) {
-            System.out.println("USER IS NULL");
-        } else {
-            if (user.getAccountType() == 0){
+        if (user == null) return;
+
+        db.GetEvent(event.getId(), freshEvent -> {  // <-- FETCH AGAIN FROM FIREBASE!
+            if (user.getAccountType() == 0) {
                 EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
-                entrantFrag.setEvent(event);
+                entrantFrag.setEvent(freshEvent);   // <-- use the fresh event from Firestore
                 activity.openFragment(entrantFrag);
             }
-            else { //Organizer
+            else { // Organizer
                 OrganizerEventDetails orgFrag = new OrganizerEventDetails();
-                orgFrag.SetEvent(event);
+                orgFrag.SetEvent(freshEvent);
                 activity.replaceFragment(orgFrag);
             }
-        }
+        });
     }
+
 
     public void setActivity(DashboardActivity activity) {this.activity = activity;}
 }

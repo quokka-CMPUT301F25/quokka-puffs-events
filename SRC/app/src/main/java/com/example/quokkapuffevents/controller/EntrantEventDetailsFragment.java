@@ -4,6 +4,7 @@ import static android.view.View.INVISIBLE;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,9 @@ public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyC
         displayInfo();
         setUpListeners();
         checkAdmin();
+
+        Log.d("EVENT_LAT", "Lat: " + event.getLat());
+        Log.d("EVENT_LNG", "Lng: " + event.getLng());
 
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map);
