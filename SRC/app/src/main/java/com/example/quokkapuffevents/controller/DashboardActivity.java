@@ -8,6 +8,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -207,15 +208,32 @@ public class DashboardActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void openFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)  // <-- This enables going back properly
+                .commit();
+    }
+
+
     public void goBackToLogin() {
         /**
          * Takes user back to login page
          */
+        clearLoginPreferences();
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
 
     }
+
+    private void clearLoginPreferences() {
+        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
+        loginPrefsEditor.clear();   // Clears all saved data (username, password, saveLogin, ID)
+        loginPrefsEditor.apply();   // Use apply() for async write
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

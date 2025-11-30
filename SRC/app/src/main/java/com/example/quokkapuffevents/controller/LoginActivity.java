@@ -56,6 +56,11 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
 
+        // Ensure the remember me checkbox is checked if the user has no values in the login preferences
+        if (loginPreferences.getAll().isEmpty()) {
+            rememberMe.setChecked(false);
+        }
+
         //If the user has previously logged in, and has selected 'Remember me" fill Username and password
         Boolean saveLogin = loginPreferences.getBoolean("saveLogin", false);
         if (saveLogin) {

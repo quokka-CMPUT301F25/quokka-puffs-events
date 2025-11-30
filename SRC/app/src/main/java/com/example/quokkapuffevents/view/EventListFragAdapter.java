@@ -37,6 +37,7 @@ import java.util.List;
  */
 public class EventListFragAdapter extends ArrayAdapter<Event> {
 
+    //* FIXED: Use SAME reference of events instead of making a COPY
     private final List<Event> events;   // adapter owns the list
     private Event event;
     private final Database db = Database.getInstance();
@@ -72,18 +73,25 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     Button eventRegisterBtn_all;
     //endregion
 
+
+    // ------------------ CONSTRUCTORS ------------------ //
+
+    // FIX APPLIED: Do NOT create a NEW list. Use same reference!
     public EventListFragAdapter(Context context, ArrayList<Event> events, String type) {
         super(context, 0, events);
-        this.events = new ArrayList<>(events);
+        this.events = events;   // <-- FIXED
         this.type = type;
     }
 
     public EventListFragAdapter(Context context, ArrayList<Event> events, String type, DashboardActivity activity) {
         super(context, 0, events);
-        this.events = new ArrayList<>(events);
+        this.events = events;   // <-- FIXED
         this.type = type;
         this.activity = activity;
     }
+
+
+    // ------------------ MAIN ADAPTER LOGIC ------------------ //
 
     @NonNull
     @Override
@@ -92,7 +100,8 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
                 ? LayoutInflater.from(getContext()).inflate(R.layout.event_list_content, parent, false)
                 : convertView;
 
-        event = getItem(position);
+        // FIX: Use events.get(position) instead of getItem(position)
+        event = events.get(position);
 
         db.GetUser(db.GetCurrentUserID(), currUser -> {
             user = currUser;
@@ -155,7 +164,7 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
                 seeDetails(event);
             });
 
-            originUserText_waiting.setText("Loading...");
+            originUserText_past.setText("Loading...");
             db.GetUser(event.getOrg(), user -> {
                 originUserText_past.setText(user.getUserName().toString() + "'s    ");
             });
@@ -175,15 +184,7 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
                 notifyDataSetChanged();
             });
 
-            originUserText_waiting.setText("Loading...");
-            db.GetUser(event.getOrg(), user -> {
-                originUserText_all.setText(user.getUserName().toString() + "'s     ");
-            });
-
-            db.GetUser(event.getOrg(), user -> {
-                originUserText_all.setText(user.getUserName().toString() + "'s     ");
-            });
-
+            originUserText_all.setText("Loading...");
             db.GetUser(event.getOrg(), user -> {
                 originUserText_all.setText(user.getUserName().toString() + "'s     ");
             });
@@ -194,33 +195,38 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
         return view;
     }
 
+
+    // ------------------ UI BINDING ------------------ //
+
     public void UIBinding(){
         if(type.equals("Waiting")) {
-
             pastEvents.setVisibility(View.GONE);
             findEvents.setVisibility(View.GONE);
             waitingEvents.setVisibility(View.VISIBLE);
-
-        } else if(type.equals("Past")) {
-
+        }
+        else if(type.equals("Past")) {
             pastEvents.setVisibility(View.VISIBLE);
             findEvents.setVisibility(View.GONE);
             waitingEvents.setVisibility(View.GONE);
-
-        } else if(type.equals("all")) {
-
+        }
+        else if(type.equals("all")) {
             pastEvents.setVisibility(View.GONE);
             findEvents.setVisibility(View.VISIBLE);
             waitingEvents.setVisibility(View.GONE);
-
         }
     }
+
+
+    // ------------------ DATA UPDATE ------------------ //
 
     public void setEvents(List<Event> newEvents) {
         events.clear();
         events.addAll(newEvents);
         notifyDataSetChanged();
     }
+
+
+    // ------------------ EVENT ACTIONS ------------------ //
 
     public void registerForEvent(Event event) {
         if(event.getLockRadius() == -1)
@@ -246,13 +252,10 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
         }
 
         Task<Location> task = fusedLocationClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    Ulat = location.getLatitude();
-                    Ulng = location.getLongitude();
-                }
+        task.addOnSuccessListener(location -> {
+            if(location != null){
+                Ulat = location.getLatitude();
+                Ulng = location.getLongitude();
             }
         });
     }
@@ -268,7 +271,7 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
             if (user.getAccountType() == 0){
                 EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
                 entrantFrag.setEvent(event);
-                activity.replaceFragment(entrantFrag);
+                activity.openFragment(entrantFrag);
             }
             else { //Organizer
                 OrganizerEventDetails orgFrag = new OrganizerEventDetails();
@@ -277,5 +280,6 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
             }
         }
     }
+
     public void setActivity(DashboardActivity activity) {this.activity = activity;}
 }

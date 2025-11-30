@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.controller;
 
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -8,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
@@ -23,6 +27,9 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
     private EditText editTextLocation;
     private Button buttonSearch;
     private Button confirmButton;
+    private SeekBar radiusSeekBar;
+    private TextView radiusLabel;
+    private Circle circle;
     private EventCreateFragment frag;
     private Double lat;
     private Double lng;
@@ -38,12 +45,43 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
         editTextLocation = view.findViewById(R.id.editTextLocation);
         buttonSearch = view.findViewById(R.id.buttonSearch);
         confirmButton = view.findViewById(R.id.confirm_button);
+        radiusSeekBar = view.findViewById(R.id.radiusSeekBar);
+        radiusLabel = view.findViewById(R.id.radiusLabel);
 
 
         // Initialize Map
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) mapFragment.getMapAsync(this);
+
+        int STEP = 5; // km
+
+        radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (!fromUser) return; // only respond to real user movement
+
+                // SNAP to nearest step
+                int snappedValue = Math.round(progress / STEP) * STEP;
+                seekBar.setProgress(snappedValue);
+
+                // Update Label TEXT → this was missing!
+                radiusLabel.setText(snappedValue + " km");
+
+                // MOVE label under the slider thumb
+                int thumbPos = seekBar.getThumb().getBounds().centerX();
+                radiusLabel.setX(seekBar.getX() + thumbPos - radiusLabel.getWidth() / 2);
+
+                // Update map circle
+                if (circle != null) {
+                    circle.setRadius(snappedValue * 1000); // meters
+                }
+            }
+
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
 
         // Search Button Click
         buttonSearch.setOnClickListener(v -> {
@@ -84,6 +122,12 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
                 mMap.clear(); // remove old marker
                 mMap.addMarker(new MarkerOptions().position(location).title(locationName));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+
+                circle = mMap.addCircle(new CircleOptions()
+                        .center(location)
+                        .radius(0) // default radius in meters
+                        .strokeColor(Color.BLUE)
+                        .fillColor(0x220000FF)); // transparent blue fill
             }
         } catch (IOException e) {
             e.printStackTrace();

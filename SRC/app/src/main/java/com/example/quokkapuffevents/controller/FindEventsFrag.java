@@ -78,15 +78,13 @@ public class FindEventsFrag extends Fragment {
     }
 
     public void updateAdapter() {
-        // Add all the events to the adapter
-        db.ListEvents( events -> {
-            // refresh adapter
+        db.ListEvents(events -> {
             eventList.clear();
-            //events = filterInterests(events, selectedInterestArray);
             eventList.addAll(events);
-            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();  // OK!
         });
     }
+
 
     public void setUpListeners() {
 //        selectInterests.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +95,18 @@ public class FindEventsFrag extends Fragment {
 //        });
 
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateAdapter();   // Refresh every time fragment becomes visible
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateAdapter();
     }
 
     public void initializeViews(View view) {
