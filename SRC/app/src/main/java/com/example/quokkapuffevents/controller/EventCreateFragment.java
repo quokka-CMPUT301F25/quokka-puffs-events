@@ -105,8 +105,8 @@ public class EventCreateFragment extends Fragment {
          * View of the EventCreateFragment
          */
         eventTitle = view.findViewById(R.id.eventNameEditText);
-//        dateOfEvent = view.findViewById(R.id.eventDateText);
-//        drawDate = view.findViewById(R.id.drawDateText);
+        dateOfEvent = view.findViewById(R.id.eventDateText);
+        drawDate = view.findViewById(R.id.drawDateText);
         drawDateLayout = view.findViewById(R.id.drawDateCalendar);
         dateOfEventLayout = view.findViewById(R.id.eventDateCalendar);
         eventDesc = view.findViewById(R.id.descriptionTextView);
@@ -313,22 +313,22 @@ public class EventCreateFragment extends Fragment {
             return false;
         }
 
-        if(eventTitle.getText().toString().trim().isEmpty() ||
-                drawDate.getText().toString().trim().isEmpty() ||
-                dateOfEvent.toString().trim().isEmpty() ||
-                eventDesc.toString().trim().isEmpty() ||
-                numbPar.getText().toString().trim().isEmpty()
-                ) {
-
-            return false;
-
-        }
-
-        if(limitPar.isChecked()) {
-            if(maxPar.getText().toString().trim().isEmpty()) {
-                return false;
-            }
-        }
+//        if(eventTitle.getText().toString().trim().isEmpty() ||
+//                drawDate.getText().toString().trim().isEmpty() ||
+//                dateOfEvent.toString().trim().isEmpty() ||
+//                eventDesc.toString().trim().isEmpty() ||
+//                numbPar.getText().toString().trim().isEmpty()
+//                ) {
+//
+//            return false;
+//
+//        }
+//
+//        if(limitPar.isChecked()) {
+//            if(maxPar.getText().toString().trim().isEmpty()) {
+//                return false;
+//            }
+//        }
 
         for (Map.Entry<EditText, String> entry : requiredFields.entrySet()) {
             if (entry.getKey().getText().toString().trim().isEmpty()) {

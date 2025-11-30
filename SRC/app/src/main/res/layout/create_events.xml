@@ -132,6 +132,7 @@
                             android:padding="6px"
                             android:gravity="right"
                             android:textColor="@color/black"
+                            android:id="@+id/eventDateText"
                             android:textSize="16dp" />
 
                         <ImageView
@@ -187,6 +188,7 @@
                                 android:padding="6px"
                                 android:gravity="right"
                                 android:textColor="@color/black"
+                                android:id="@+id/drawDateText"
                                 android:textSize="16dp" />
 
                             <ImageView
