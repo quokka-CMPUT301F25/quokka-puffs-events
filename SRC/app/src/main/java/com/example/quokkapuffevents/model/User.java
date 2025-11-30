@@ -12,6 +12,7 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
+    private ArrayList<Double> homeLocation;
     private String phoneNumber;
     private ArrayList<String> events;
     private Integer accountType; //-1 Admin, 0 for entrant, +1 for organiser
@@ -40,7 +41,7 @@ public class User {
      * @param phoneNumber
      * The String Phone Number of the User (Optional)
      */
-    public User(String id, String email, Integer accountType, String hashPassword, String username, String firstName, String lastName, String phoneNumber){
+    public User(String id, String email, Integer accountType, String hashPassword, String username, String firstName, String lastName, String phoneNumber, ArrayList<Double> homeLocation){
         this.id = id;
         this.email = email;
         this.hashPassword = hashPassword;
@@ -51,6 +52,7 @@ public class User {
         this.events = new ArrayList<>();
         this.accountType = accountType;
         this.sendNotifications = true;
+        this.homeLocation = homeLocation;
     }
 
     /**
@@ -127,4 +129,12 @@ public class User {
     }
     public String getFcmToken() { return fcmToken; }
     public void setFcmToken(String fcmToken) { this.fcmToken = fcmToken; }
+
+    public ArrayList<Double> getHomeLocation() {
+        return homeLocation;
+    }
+
+    public void setHomeLocation(ArrayList<Double> homeLocation) {
+        this.homeLocation = homeLocation;
+    }
 }
