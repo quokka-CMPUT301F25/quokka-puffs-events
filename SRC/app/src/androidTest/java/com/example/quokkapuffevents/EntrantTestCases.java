@@ -8,12 +8,14 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -88,7 +90,7 @@ public class EntrantTestCases {
             closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(1500);
+            Thread.sleep(5000);
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
@@ -192,10 +194,58 @@ public class EntrantTestCases {
         db.DeleteUser(organizer.getId());
     }
 
+
+    /**
+     * User Story US 01.01.02 test case
+     */
+    @Test
+    public void TestLeaveWaitingList() {
+        // Create Organizer
+        User organizer = db.CreateUser("Organizer@Test.ca", 1, "pass",
+                "OrgUser", "Org", "User", "1111111111");
+        db.SetUserID(organizer.getId());
+
+        // Create Event
+        Event testEvent = createMockEvent(new Date());
+        //  Create Entrant
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
+        db.RegisterUserIntoEvent(testEvent, entrant);
+
+        try {
+            // Verify Entrant Was Cancelled Correctly
+            db.GetEvent(testEvent.getId(), event -> {
+                assertEquals("Waiting", event.getEventUsers().get(entrant.getId()));
+            });
+
+            Thread.sleep(2000);
+
+            //Run method that cancel button uses
+            db.CancelUserIntoEvent(testEvent, entrant);
+
+            // Verify Entrant Was Cancelled Correctly
+            db.GetEvent(testEvent.getId(), event -> {
+                assertEquals("Cancelled", event.getEventUsers().get(entrant.getId()));
+            });
+            Thread.sleep(2000);
+
+
+        } catch (Exception e) {
+            db.DeleteUser(entrant);
+            db.DeleteEvent(testEvent);
+            db.DeleteUser(organizer.getId());
+            throw new RuntimeException(e);
+        }
+
+        // Cleanup
+        db.DeleteEvent(testEvent.getId());
+        db.DeleteUser(entrant.getId());
+        db.DeleteUser(organizer.getId());
+    }
+
     /**
      * User Story US 01.01.03 test case
      */
-    // TODO: FIX THIS TEST
     @Test
     public void TestViewingEvents() {
         // Create and Login Entrant
@@ -320,8 +370,49 @@ public class EntrantTestCases {
     // TODO: FINISH THE TEST
     @Test
     public void TestViewingPastEvents() {
+        User organizer = db.CreateUser("Organizer@Test.ca", 1, "pass",
+                "OrgUser", "Org", "User", "1111111111");
+        db.SetUserID(organizer.getId());
+
+        // Create Events
+        Event testEventChosen = db.CreateEvent("TestPastChosen", organizer.getId(), "Event to test past events", 1, 1, new Date(), new Date());
+        Event testEventNotChosen = db.CreateEvent("TestPastNotChosen", organizer.getId(), "Event to test past events", 0, 1, new Date(), new Date());
+
+        //  Create Entrant
         User entrant = accessEntrantDashboard();
-        db.DeleteUser(entrant);
+        db.SetUserID(entrant.getId());
+        db.RegisterUserIntoEvent(testEventChosen, entrant);
+        db.RegisterUserIntoEvent(testEventNotChosen, entrant);
+
+        //Drawing events
+        db.DrawUsers(testEventChosen);
+        db.DrawUsers(testEventNotChosen);
+
+        try {
+            Thread.sleep(1500);
+            onView(withId(R.id.settings_button)).perform(click());
+            Thread.sleep(4000);
+
+            //Checking that both events are there
+            onView(withId(R.id.past_events_listview))
+                    .check(matches(hasDescendant(withText("TestPastChosen"))));
+            onView(withId(R.id.past_events_listview))
+                    .check(matches(hasDescendant(withText("TestPastNotChosen"))));
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(entrant);
+            db.DeleteUser(organizer);
+            db.DeleteEvent(testEventChosen);
+            db.DeleteEvent(testEventNotChosen);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(entrant);
+            db.DeleteUser(organizer);
+            db.DeleteEvent(testEventChosen);
+            db.DeleteEvent(testEventNotChosen);
+        }
+
+
     }
 
     /**

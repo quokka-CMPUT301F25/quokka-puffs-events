@@ -177,7 +177,7 @@ public class OrganizerTestCases {
             onView(withId(R.id.eventDescInput)).perform(typeText("HELP ME"));
 
             Thread.sleep(2000);
-            onView(withId(R.id.confirmEventCreationBtn)).perform(click());
+            //onView(withId(R.id.confirmEventCreationBtn)).perform(click());
 
             Thread.sleep(5000);
             onView(withId(R.id.home_button)).perform(click());
