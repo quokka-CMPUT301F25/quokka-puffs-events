@@ -318,22 +318,22 @@ public class EventCreateFragment extends Fragment {
             return false;
         }
 
-//        if(eventTitle.getText().toString().trim().isEmpty() ||
-//                drawDate.getText().toString().trim().isEmpty() ||
-//                dateOfEvent.toString().trim().isEmpty() ||
-//                eventDesc.toString().trim().isEmpty() ||
-//                numbPar.getText().toString().trim().isEmpty()
-//                ) {
-//
-//            return false;
-//
-//        }
-//
-//        if(limitPar.isChecked()) {
-//            if(maxPar.getText().toString().trim().isEmpty()) {
-//                return false;
-//            }
-//        }
+        if(eventTitle.getText().toString().trim().isEmpty() ||
+                drawDate.getText().toString().trim().isEmpty() ||
+                dateOfEvent.toString().trim().isEmpty() ||
+                eventDesc.toString().trim().isEmpty() ||
+                numbPar.getText().toString().trim().isEmpty()
+                ) {
+
+            return false;
+
+        }
+
+        if(limitPar.isChecked()) {
+            if(maxPar.getText().toString().trim().isEmpty()) {
+                return false;
+            }
+        }
 
         for (Map.Entry<EditText, String> entry : requiredFields.entrySet()) {
             if (entry.getKey().getText().toString().trim().isEmpty()) {
