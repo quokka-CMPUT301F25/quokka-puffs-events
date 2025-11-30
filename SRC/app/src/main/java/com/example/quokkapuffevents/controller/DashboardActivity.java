@@ -264,7 +264,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void checkNotificationPermission() {
+    public void checkNotificationPermission() {
         /**
          * Ensures that the user has enabled push notifications for this app before sending one
          */
@@ -283,13 +283,22 @@ public class DashboardActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
+
+            boolean granted = grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED;
+
+            if (granted) {
                 Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT).show();
             } else {
-                // Permission denied
                 Toast.makeText(this, "Notifications are disabled! Enable them in Settings.", Toast.LENGTH_LONG).show();
+            }
+
+            // Send the result back to the User Profile fragment
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag("ChangeProfileSettings");
+            if (fragment instanceof ChangeProfileSettings) {
+                ((ChangeProfileSettings) fragment).onNotificationPermissionResult(granted);
             }
         }
     }
+
 }
