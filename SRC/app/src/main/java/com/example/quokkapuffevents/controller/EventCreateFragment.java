@@ -105,8 +105,8 @@ public class EventCreateFragment extends Fragment {
          * View of the EventCreateFragment
          */
         eventTitle = view.findViewById(R.id.eventNameEditText);
-        dateOfEvent = view.findViewById(R.id.eventDateText);
-        drawDate = view.findViewById(R.id.drawDateText);
+//        dateOfEvent = view.findViewById(R.id.eventDateText);
+//        drawDate = view.findViewById(R.id.drawDateText);
         drawDateLayout = view.findViewById(R.id.drawDateCalendar);
         dateOfEventLayout = view.findViewById(R.id.eventDateCalendar);
         eventDesc = view.findViewById(R.id.descriptionTextView);

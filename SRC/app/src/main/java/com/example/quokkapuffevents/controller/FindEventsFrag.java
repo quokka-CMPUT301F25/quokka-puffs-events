@@ -32,8 +32,6 @@ import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.view.AdminEventFragAdapter;
 import com.example.quokkapuffevents.view.EventListFragAdapter;
 import com.example.quokkapuffevents.view.NotificationArrayAdapter;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
