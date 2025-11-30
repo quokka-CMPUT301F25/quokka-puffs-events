@@ -1,6 +1,11 @@
 package com.example.quokkapuffevents.controller;
 
 
+import static androidx.core.content.PermissionChecker.checkSelfPermission;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,11 +19,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.model.Dash;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -143,6 +150,17 @@ public class ChangeProfileSettings extends Fragment {
                 leaveProfileSettings();
             }
         });
+
+        allowNotifs.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Ask activity to check/request notification permission
+                ((DashboardActivity) requireActivity()).checkNotificationPermission();
+            } else {
+                // User manually turned off switch
+                Toast.makeText(getContext(), "Notifications disabled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
     public void deleteUserAccount() {
         /**
@@ -225,6 +243,19 @@ public class ChangeProfileSettings extends Fragment {
             SettingFragment settingFragment = new SettingFragment();
             settingFragment.setCurrUser(currentUser);
             ((DashboardActivity) getActivity()).replaceFragment(settingFragment);
+        }
+    }
+
+
+    public void onNotificationPermissionResult(boolean granted) {
+        if (!granted) {
+            // User denied permission -> force switch OFF
+            Switch switchPush = getView().findViewById(R.id.enableNotificationsSwitchBtn);
+            switchPush.setChecked(false);
+
+            Toast.makeText(getContext(),
+                    "Permission denied — notifications cannot be enabled",
+                    Toast.LENGTH_LONG).show();
         }
     }
 

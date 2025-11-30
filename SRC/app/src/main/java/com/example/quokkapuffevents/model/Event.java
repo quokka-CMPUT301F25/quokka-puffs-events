@@ -3,6 +3,8 @@ package com.example.quokkapuffevents.model;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,9 +28,11 @@ public class Event {
     private String imageID;
     private String qrcodeID;
     private ArrayList<String> interests;
-    //Add geo data?
     private Boolean drawn;
+    Double lat;
+    Double lng;
     private Boolean finished;
+    private int lockRadius = -1;
 
     // Two versions of Event constructor, one version for no max waitlist capacity, the other including it.
 
@@ -49,7 +53,7 @@ public class Event {
      * @param eventDate
      * The date the event is supposed to happen
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Date drawnDate, Date eventDate, Double lat, Double lng, int lockRadius){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -64,7 +68,10 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
-        this.interests = interests;
+        this.lat = lat;
+        this.lng = lng;
+        if(lockRadius != -1)
+            this.lockRadius = lockRadius;
     }
 
     /**
@@ -86,7 +93,7 @@ public class Event {
      * @param eventDate
      * The date the event is supposed to happen
      */
-    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate){
+    public Event(String id, String name, String org, String description, Integer toBeDrawn, Integer maxNumWaitlist, Date drawnDate, Date eventDate, Double lat, Double lng, int lockRadius){
         this.name = name;
         this.id = id;
         this.org = org;
@@ -101,7 +108,10 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
-        this.interests = interests;
+        this.lat = lat;
+        this.lng = lng;
+        if(lockRadius != -1)
+            this.lockRadius = lockRadius;
     }
 
     /**
@@ -196,18 +206,34 @@ public class Event {
     public Map<String, String> getEventUsers() {
         return eventUsers;
     }
-
     public String getDescription() {
         return description;
     }
     public void setDescription(String desc) {
         this.description = desc;
     }
-
     public String getOrg() {
         return org;
     }
 
+    public Double getLat() {
+        return lat;
+    }
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+    public Double getLng() {
+        return lng;
+    }
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+    public int getLockRadius() {
+        return lockRadius;
+    }
+    public void setLockRadius(int lockRadius) {
+        this.lockRadius = lockRadius;
+    }
     public ArrayList<String> getInterests() {
         return interests;
     }

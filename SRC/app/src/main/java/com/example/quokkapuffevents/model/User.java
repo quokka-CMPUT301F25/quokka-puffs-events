@@ -20,7 +20,6 @@ public class User {
 
 
 
-
     /**
      * Normal constructor for a User.
      * @param id

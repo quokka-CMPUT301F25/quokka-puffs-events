@@ -23,6 +23,7 @@ import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,6 +45,8 @@ import java.text.SimpleDateFormat;
 @RunWith(AndroidJUnit4.class)
 public class OrganizerTestCases {
     Database db = Database.getInstance();
+    private final LatLng defaultLocation = new LatLng(-34, 151);
+
 
     /* For granting permissions of push notification, allows for tests to run properly
     without unexpected permission popups. */
@@ -100,7 +103,7 @@ public class OrganizerTestCases {
             db.SetUserID(mockOrg.getId());
 
             Event event = db.CreateEvent("TestDrawSpecificAttendees", mockOrg.getId(),
-                    "Testing specified number of attendees sampling", 5, 1, new Date(), new Date());
+                    "Testing specified number of attendees sampling", 5, 1, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1500);
 
             List<User> attendees = new ArrayList<>();
@@ -216,7 +219,7 @@ public class OrganizerTestCases {
     @Test
     public void TestSendNotifToAllSelected() {
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date());
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date(), 0.0, 0.0, -1);
         User temp = createMockEntrant();
 
         User mockEntrant1 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest1", "John", "Test", "0");
