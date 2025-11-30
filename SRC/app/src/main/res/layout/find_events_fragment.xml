@@ -41,6 +41,10 @@
                 android:paddingBottom="24dp"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
                 <Button
                     android:id="@+id/filterEventsBtn"
                     android:layout_width="wrap_content"
@@ -51,6 +55,16 @@
                     android:layout_margin="4dp"
                     style="@style/SquareButton"
                     android:layout_gravity="center"/>
+
+                    <Button
+                        android:id="@+id/infoBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/bluebtn"
+                        android:text="Registration Info"
+                        style="@style/SquareButton"/>
+                </LinearLayout>
+
 
                 <ListView
                     android:id="@+id/findEventsListView"
