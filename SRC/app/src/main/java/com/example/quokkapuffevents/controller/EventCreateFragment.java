@@ -158,6 +158,11 @@ public class EventCreateFragment extends Fragment {
             @Override
             public void onClick(View v){
 
+                //Validating inputs
+                if (!validateInputs()) {
+                    return;
+                }
+
                // Getting input values
                 String title = eventTitle.getText().toString().trim();
                 String desc = eventDesc.getText().toString().trim();
@@ -173,10 +178,7 @@ public class EventCreateFragment extends Fragment {
                 if (limitParts){
                     maxParts = maxPar.getText().toString().trim();
                 }
-                  //Validating inputs
-                if (!validateInputs()) {
-                    return;
-                }
+
 
                 //Creating Date Objects
                 Date drawDate = dateConverter(drawDateString);
@@ -309,6 +311,23 @@ public class EventCreateFragment extends Fragment {
         if(lat == null || lng == null){
             Toast.makeText(requireContext(), "Please select a location", Toast.LENGTH_SHORT).show();
             return false;
+        }
+
+        if(eventTitle.getText().toString().trim().isEmpty() ||
+                drawDate.getText().toString().trim().isEmpty() ||
+                dateOfEvent.toString().trim().isEmpty() ||
+                eventDesc.toString().trim().isEmpty() ||
+                numbPar.getText().toString().trim().isEmpty()
+                ) {
+
+            return false;
+
+        }
+
+        if(limitPar.isChecked()) {
+            if(maxPar.getText().toString().trim().isEmpty()) {
+                return false;
+            }
         }
 
         for (Map.Entry<EditText, String> entry : requiredFields.entrySet()) {
