@@ -4,13 +4,16 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -20,6 +23,7 @@ import com.google.android.gms.maps.model.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class ChooseEventLocationFragment extends Fragment implements OnMapReadyCallback {
 
@@ -27,7 +31,10 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
     private EditText editTextLocation;
     private Button buttonSearch;
     private Button confirmButton;
+    private Button goBackToCreateEventBtn;
     private SeekBar radiusSeekBar;
+
+    private Switch switchGeolock;
     private TextView radiusLabel;
     private Circle circle;
     private EventCreateFragment frag;
@@ -47,6 +54,8 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
         confirmButton = view.findViewById(R.id.confirm_button);
         radiusSeekBar = view.findViewById(R.id.radiusSeekBar);
         radiusLabel = view.findViewById(R.id.radiusLabel);
+        switchGeolock = view.findViewById(R.id.switchGeolock);
+        goBackToCreateEventBtn = view.findViewById(R.id.goBackToCreateEventBtn);
 
 
         // Initialize Map
@@ -89,13 +98,29 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
             if (!location.isEmpty()) {
                 searchLocation(location);
             }
+
+
         });
 
         confirmButton.setOnClickListener(v->{
             //TODO: check if the switch is on, if so check the radius
             // For now radius will default to -1
+
+
             frag.setEventLocation(lat, lng);
-            frag.setLockRadius(-1);
+            if(switchGeolock.isChecked()) {
+                frag.setLockRadius(radiusSeekBar.getProgress());
+
+            } else {
+                frag.setLockRadius(-1);
+            }
+            ((DashboardActivity) getActivity()).replaceFragment(frag);
+
+
+        });
+
+        goBackToCreateEventBtn.setOnClickListener(v -> {
+            Toast.makeText(requireContext(), "Loaction has not been set.", Toast.LENGTH_SHORT).show();
             ((DashboardActivity) getActivity()).replaceFragment(frag);
         });
     }
@@ -110,29 +135,44 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
     }
 
     private void searchLocation(String locationName) {
-        Geocoder geocoder = new Geocoder(getContext());
-        try {
-            List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
-            if (!addressList.isEmpty()) {
+
+        new Thread(() -> {
+            try {
+                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
+
+                if (addressList == null || addressList.isEmpty()) {
+                    Log.e("SEARCH", "No results found for: " + locationName);
+                    return;
+                }
+
                 Address address = addressList.get(0);
                 lat = address.getLatitude();
                 lng = address.getLongitude();
-                LatLng location = new LatLng(address.getLatitude(), address.getLongitude());
 
-                mMap.clear(); // remove old marker
-                mMap.addMarker(new MarkerOptions().position(location).title(locationName));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+                Log.d("SEARCH", "lat=" + lat + ", lng=" + lng);
 
-                circle = mMap.addCircle(new CircleOptions()
-                        .center(location)
-                        .radius(0) // default radius in meters
-                        .strokeColor(Color.BLUE)
-                        .fillColor(0x220000FF)); // transparent blue fill
+                LatLng location = new LatLng(lat, lng);
+
+                // Update map on UI thread
+                requireActivity().runOnUiThread(() -> {
+                    mMap.clear();
+                    mMap.addMarker(new MarkerOptions().position(location).title(locationName));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+
+                    circle = mMap.addCircle(new CircleOptions()
+                            .center(location)
+                            .radius(0)
+                            .strokeColor(Color.BLUE)
+                            .fillColor(0x220000FF));
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
+
 
     public void setFrag(EventCreateFragment frag) {
         this.frag = frag;
