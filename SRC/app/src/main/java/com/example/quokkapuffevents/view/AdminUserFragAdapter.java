@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,14 +58,14 @@ public class AdminUserFragAdapter extends ArrayAdapter<User> {
         ImageView accountImg = (ImageView) listItem.findViewById(R.id.imageView);
 
         Integer type = currentUser.getAccountType();
-        if (type == -1) {
-            System.out.println("ADMIN");
+        if (type == -1) { // Admin
+            accountImg.setImageResource(R.drawable.admin_icon);
         }
-        else if (type == 0) {
-            System.out.println("ENTRANT");
+        else if (type == 0) { // Entrant
+            accountImg.setImageResource(R.drawable.entrant_icon);
         }
-        else if (type == 1) {
-            System.out.println("ORG");
+        else if (type == 1) { // Organizer
+            accountImg.setImageResource(R.drawable.organizer_icon);
         }
 
         Button deleteButton = listItem.findViewById(R.id.deleteButton);
@@ -72,9 +73,17 @@ public class AdminUserFragAdapter extends ArrayAdapter<User> {
             @Override
             public void onClick(View v) {
                 User user = getItem(position);
-                db.DeleteUser(user);
-                userList.remove(user);
-                notifyDataSetChanged();
+
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete User")
+                        .setMessage("Are you sure you want to delete this user?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            db.DeleteUser(user);
+                            userList.remove(user);
+                            notifyDataSetChanged();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
             }
         });
 

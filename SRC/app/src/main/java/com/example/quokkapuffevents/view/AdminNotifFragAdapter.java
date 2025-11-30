@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,9 +54,17 @@ public class AdminNotifFragAdapter extends ArrayAdapter<Notif> {
             @Override
             public void onClick(View v) {
                 Notif notif = getItem(position);
-                db.DeleteNotification(notif);
-                notifList.remove(notif);
-                notifyDataSetChanged();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Notification")
+                        .setMessage("Are you sure you want to delete this notification?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            db.DeleteNotification(notif);
+                            notifList.remove(notif);
+                            notifyDataSetChanged();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
+
             }
         });
 

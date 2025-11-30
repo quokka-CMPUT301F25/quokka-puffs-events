@@ -13,8 +13,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import android.Manifest;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
@@ -22,6 +25,7 @@ import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -43,6 +47,11 @@ public class OrganizerTestCases {
     Database db = Database.getInstance();
     private final LatLng defaultLocation = new LatLng(-34, 151);
 
+
+    /* For granting permissions of push notification, allows for tests to run properly
+    without unexpected permission popups. */
+    @Rule
+    public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS);
 
     /**
      * Creates an entrant account for testing user stories.
@@ -83,7 +92,8 @@ public class OrganizerTestCases {
         db.DeleteUser(user);
     }
 
-    @Test public void SampleSpecificAttendees(){
+    @Test
+    public void SampleSpecificAttendees(){
         try {
             Database db = Database.getInstance();
 
@@ -260,6 +270,31 @@ public class OrganizerTestCases {
             db.DeleteUser(mockEntrant1);
             db.DeleteUser(mockEntrant2);
             db.DeleteUser(temp);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+        }
+    }
+
+    /**
+     * User Story US 02.01.01 test case
+     */ // TODO: Finish this test
+    @Test
+    public void TestQRCodeGeneration() {
+        User mockOrg = createTestOrganizer();
+        Event event = null;
+
+        try {
+            Thread.sleep(1500);
+
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
+            Thread.sleep(3000);
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+            throw new RuntimeException(e);
+        } finally {
             db.DeleteUser(mockOrg);
             db.DeleteEvent(event);
         }

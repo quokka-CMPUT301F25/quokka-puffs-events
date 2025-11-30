@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -64,6 +65,16 @@ public class AdminPhotoFragAdapter extends ArrayAdapter<Event> {
                 Event event = getItem(position);
                 db.DeleteImage(event.getImageID());
                 notifyDataSetChanged();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Image")
+                        .setMessage("Are you sure you want to delete this image?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            Event eventImg = getItem(position);
+                            db.DeleteImage(eventImg.getImageID());
+                            notifyDataSetChanged();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
             }
         });
 

@@ -18,6 +18,7 @@ mapsSecret = "2.0.1"
 playServicesMaps = "18.1.0"
 
 [libraries]
+core = { module = "androidx.test:core", version.ref = "runner" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
