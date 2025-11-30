@@ -367,7 +367,6 @@ public class EntrantTestCases {
     /**
      * User Story US 01.02.03 test case
      */
-    // TODO: FINISH THE TEST
     @Test
     public void TestViewingPastEvents() {
         User organizer = db.CreateUser("Organizer@Test.ca", 1, "pass",
