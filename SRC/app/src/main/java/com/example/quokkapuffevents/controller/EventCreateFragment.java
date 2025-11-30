@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -49,15 +51,15 @@ public class EventCreateFragment extends Fragment {
     private Database db;
 
     // EVENT INFORMATION
+    LinearLayout dateOfEvent; // Was EditText
+    LinearLayout drawDate; // Was EditText
+    Button addGeo; // Was Switch
+    TextView maxPar; // Was EditText (it's a TextView in XML)
     EditText eventTitle; //title of event
-    EditText drawDate; //not in views yet, start of registration period
-    EditText dateOfEvent; // date of event
     EditText eventDesc; //description of event
     Switch limitPar;
     //the switch in XML file that determines whether organizer would like to limit the numb of participants
     EditText numbPar; //not in views yet, number of participants to be chosen
-    EditText maxPar; // max number of participants to join waiting list
-    Switch addGeo; //TODO: idek???
     Button cancelEvent; //button to cancel event
     Button createEvent; //button to initialize creating the event
     Button addInterests;
@@ -94,17 +96,22 @@ public class EventCreateFragment extends Fragment {
          * @param view
          * View of the EventCreateFragment
          */
-        eventTitle = view.findViewById(R.id.eventTitleInput);
-        dateOfEvent = view.findViewById(R.id.eventDateInput);
-        drawDate = view.findViewById(R.id.drawDateInput);
-        eventDesc = view.findViewById(R.id.eventDescInput);
-        addImagesBtn = view.findViewById(R.id.eventAddImagesBtn);
-        limitPar = view.findViewById(R.id.eventLimitParticipantsSwitch);
-        maxPar = view.findViewById(R.id.eventMaxParticipantsInput);
-        addGeo = view.findViewById(R.id.eventGeolocationSwitch);
-        cancelEvent = view.findViewById(R.id.cancelEventCreationBtn);
+        /**
+         * Initializes all attributes for the fragment
+         * @param view
+         * View of the EventCreateFragment
+         */
+        eventTitle = view.findViewById(R.id.eventNameEditText);
+        dateOfEvent = view.findViewById(R.id.eventDateCalendar);
+        drawDate = view.findViewById(R.id.drawDateCalendar);
+        eventDesc = view.findViewById(R.id.descriptionTextView);
+        addImagesBtn = view.findViewById(R.id.addImageButton);
+        limitPar = view.findViewById(R.id.limitWaitlistSwitch);
+        maxPar = view.findViewById(R.id.maxWaitlistEditText);
+        addGeo = view.findViewById(R.id.setLocationButton);
+        cancelEvent = view.findViewById(R.id.cancelBtn);
         createEvent = view.findViewById(R.id.confirmChangesBtn);
-        numbPar = view.findViewById(R.id.eventParticipantAmountInput);
+        numbPar = view.findViewById(R.id.participantsNumberTextView);
         addInterests = view.findViewById(R.id.selectCategoriesButton);
     }
 
