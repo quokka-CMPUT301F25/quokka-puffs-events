@@ -83,4 +83,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.runner)
+
+    // For QR Codes
+    implementation("com.journeyapps:zxing-android-embedded:4.1.0")
 }

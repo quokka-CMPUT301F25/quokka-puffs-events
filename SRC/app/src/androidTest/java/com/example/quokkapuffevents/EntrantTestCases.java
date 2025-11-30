@@ -20,10 +20,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import android.Manifest;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
@@ -31,6 +33,7 @@ import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -46,23 +49,10 @@ import java.util.Date;
 public class EntrantTestCases {
     Database db = Database.getInstance();
 
-//    public void ClearDatabase() {
-//        db.ListNotifs(notifs -> {
-//            for (Notif notif : notifs){
-//                db.DeleteNotification(notif);
-//            }
-//        });
-//        db.ListUsers(users -> {
-//            for (User user : users){
-//                db.DeleteUser(user);
-//            }
-//        });
-//        db.ListEvents(events -> {
-//            for (Event event : events){
-//                db.DeleteEvent(event);
-//            }
-//        });
-//    }
+    /* For granting permissions of push notification, allows for tests to run properly
+    without unexpected permission popups. */
+    @Rule
+    public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS);
 
     /**
      * Creates an entrant account for testing user stories.
@@ -101,6 +91,7 @@ public class EntrantTestCases {
             Thread.sleep(1500);
 
         } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant);
             throw new RuntimeException(e);
         }
 
@@ -118,6 +109,12 @@ public class EntrantTestCases {
         return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
     }
 
+    /**
+     * An assertion created for testing if a UI element does not exist within the current display of
+     * the app.
+     * @param viewInteraction
+     * The UI element to search for.
+     */
     public static void assertDoesNotExist(ViewInteraction viewInteraction) {
         try {
             viewInteraction.check((view, noViewFoundException) -> {
@@ -531,17 +528,23 @@ public class EntrantTestCases {
     }
 
     /**
-     * User Story US  test case
+     * User Story US 01.05.02 test case
      */
     // TODO: FIX THIS TEST
     @Test
     public void TestAcceptInviteToEvent() {
-        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+        User mockOrg = null;
+        Event event = null;
 
         User mockEntrant = accessEntrantDashboard();
         try {
-            Thread.sleep(3000);
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+
+            Thread.sleep(1500);
+
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
+            Thread.sleep(1500);
 
             db.RegisterUserIntoEvent(event, mockEntrant);
             //Draw User
@@ -565,12 +568,20 @@ public class EntrantTestCases {
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
-            db.DeleteUser(mockOrg);
-            db.DeleteEvent(event);
+            if (mockOrg != null) {
+                db.DeleteUser(mockOrg);
+            }
+            if (event != null) {
+                db.DeleteEvent(event);
+            }
         } finally {
             db.DeleteUser(mockEntrant);
-            db.DeleteUser(mockOrg);
-            db.DeleteEvent(event);
+            if (mockOrg != null) {
+                db.DeleteUser(mockOrg);
+            }
+            if (event != null) {
+                db.DeleteEvent(event);
+            }
         }
     }
 
@@ -580,10 +591,17 @@ public class EntrantTestCases {
     // TODO: FIX THIS TEST
     @Test
     public void TestDeclineInviteToEvent() {
-        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+        User mockOrg = null;
+        Event event = null;
+
         User mockEntrant = accessEntrantDashboard();
         try {
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+
+            Thread.sleep(1500);
+
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
             Thread.sleep(3000);
 
             db.RegisterUserIntoEvent(event, mockEntrant);
@@ -607,12 +625,20 @@ public class EntrantTestCases {
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
-            db.DeleteUser(mockOrg);
-            db.DeleteEvent(event);
+            if (mockOrg != null) {
+                db.DeleteUser(mockOrg);
+            }
+            if (event != null) {
+                db.DeleteEvent(event);
+            }
         } finally {
             db.DeleteUser(mockEntrant);
-            db.DeleteUser(mockOrg);
-            db.DeleteEvent(event);
+            if (mockOrg != null) {
+                db.DeleteUser(mockOrg);
+            }
+            if (event != null) {
+                db.DeleteEvent(event);
+            }
         }
     }
 
