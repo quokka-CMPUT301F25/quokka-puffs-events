@@ -64,9 +64,9 @@ public class AdminPhotoDetailsFrag extends Fragment {
      */
     public void initializeViews(View view) {
 
-        eventName = view.findViewById(R.id.eventName);
-        imageView = view.findViewById(R.id.imageView);
-        organizer = view.findViewById(R.id.organizerName);
+        eventName = view.findViewById(R.id.imageNameTextView);
+        imageView = view.findViewById(R.id.posterImageView);
+        organizer = view.findViewById(R.id.organizerNameTextView);
         goBackBtn = view.findViewById(R.id.goBackBtn);
 
     }
@@ -95,7 +95,7 @@ public class AdminPhotoDetailsFrag extends Fragment {
         }
 
         db.GetUser(event.getOrg(), user -> {
-            organizer.setText(user.getFirstName());
+            organizer.setText(user.getUserName());
         });
 
     }

@@ -19,15 +19,12 @@ import com.example.quokkapuffevents.view.AdminNotifFragAdapter;
 import java.util.ArrayList;
 
 public class AdminNotificationFragment extends Fragment {
-
     ListView listView;
     private AdminNotifFragAdapter adapter;
     private Database db;
     private ArrayList<Notif> notifList = new ArrayList<>();
 
-    public AdminNotificationFragment() {
-
-    }
+    public AdminNotificationFragment() {}
 
     @Nullable
     @Override
@@ -49,7 +46,6 @@ public class AdminNotificationFragment extends Fragment {
             notifList.addAll(notifs);
             adapter.notifyDataSetChanged();
         });
-
         return notifFragmentView;
     }
 }

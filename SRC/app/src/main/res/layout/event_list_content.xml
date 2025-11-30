@@ -2,72 +2,55 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="8dp">
 
-
-    <LinearLayout
-
-        android:id="@+id/past_events_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="@drawable/border_shape">
 
         <LinearLayout
+
+            android:id="@+id/past_events_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-            <TextView
-                android:id="@+id/user_text_past"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="{User}'s "
-                android:layout_weight="1"
-                android:textAlignment="textEnd"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/white"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:visibility="gone    ">
+
             <TextView
                 android:id="@+id/event_text_past"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="{Event name}"
-                android:textColor="@color/bluebtn"
-                android:layout_weight="1"
+                android:text="Event Name"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="24sp"/>
+            <TextView
+                android:id="@+id/user_text_past"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="User"
                 android:textStyle="bold"
                 android:textSize="20sp"/>
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/event_date_past"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="On {Past Event Date}"
-            android:textSize="20sp"
-            android:layout_marginTop="4dp"/>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="4dp"
-            android:paddingHorizontal="8dp">
+            android:text="Date"
+            android:textSize="20sp"/>
 
             <Button
                 android:id="@+id/event_details_btn_past"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:backgroundTint="@color/greybtn"
-                android:text="Details" />
+                android:backgroundTint="@color/black"
+                android:paddingHorizontal="50dp"
+                android:text="Details"
+                android:layout_gravity="start"
+                style="@style/SquareButton"/>
 
-        </LinearLayout>
     </LinearLayout>
 
         <LinearLayout
@@ -77,43 +60,46 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@drawable/border_shape"
-            android:visibility="gone">
+            android:background="@color/white"
+            android:visibility="gone"
+            android:paddingVertical="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-            <TextView
-                android:id="@+id/user_text_waiting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="{User}'s "
-                android:layout_weight="1"
-                android:textAlignment="textEnd"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
-            <TextView
-                android:id="@+id/event_text_waiting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="{Event name}"
-                android:textColor="@color/bluebtn"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+>
+                <TextView
+                    android:id="@+id/event_text_waiting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Event name"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textSize="24sp"/>
+                <TextView
+                    android:id="@+id/user_text_waiting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="User's "
+                    android:textAlignment="textStart"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"/>
 
+            <TextView
+                android:id="@+id/event_date_waiting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:text="On {Event Date}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginTop="2dp"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/event_date_waiting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="On {Event Date}"
-            android:textSize="20sp"
-            android:layout_marginTop="4dp"/>
 
 
 
@@ -129,7 +115,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/redbtn"
                 android:text="Cancel"
-                android:layout_marginBottom="8dp"
+                style="@style/SquareButton"
+
                 android:layout_marginTop="4dp"/>
             <View
                 android:layout_width="0dp"
@@ -142,9 +129,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:backgroundTint="@color/bluebtn"
-                android:text="Details"
-                android:layout_marginBottom="8dp"
+                android:text="View Details"
                 android:layout_marginTop="4dp"
+                style="@style/SquareButton"
                 />
 
         </LinearLayout>
@@ -157,62 +144,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:background="@drawable/border_shape"
-        android:visibility="gone"
+        android:background="@color/white"
+        android:visibility="visible"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-            <TextView
-                android:id="@+id/user_text_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="{User}'s "
-                android:layout_weight="1"
-                android:textAlignment="textEnd"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
             <TextView
                 android:id="@+id/event_text_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="{Event name}"
-                android:textColor="@color/bluebtn"
-                android:layout_weight="1"
+                android:text="EVENT"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="24dp"/>
+
+            <TextView
+                android:id="@+id/user_text_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User"
+                android:textAlignment="textEnd"
                 android:textStyle="bold"
                 android:textSize="20sp"/>
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/event_date_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="On {Past Event Date}"
-            android:textSize="20sp"
-            android:layout_marginTop="4dp"/>
-
+            android:text="Date"
+            android:textSize="20sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="4dp"
-            android:paddingHorizontal="8dp">
-
+            android:layout_marginBottom="8dp">
             <Button
                 android:id="@+id/event_details_btn_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
+                android:layout_weight="1"
                 android:backgroundTint="@color/greybtn"
-                android:text="Details"
+                style="@style/SquareButton"
+                android:text="View Details"
+                android:paddingVertical="12dp"
                 />
 
             <View
@@ -224,9 +200,12 @@
                 android:id="@+id/event_register_btn_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:backgroundTint="@color/greenbtn"
-                android:text="Register"
+                android:layout_weight="1"
+                android:backgroundTint="@color/bluebtn"
+                style="@style/SquareButton"
+                android:text="Register now"
+                android:paddingVertical="12dp"
+
                 />
 
         </LinearLayout>

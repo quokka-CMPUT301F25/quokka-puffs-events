@@ -16,6 +16,10 @@ public class User {
     private ArrayList<String> events;
     private Integer accountType; //-1 Admin, 0 for entrant, +1 for organiser
     private Boolean sendNotifications;
+    private String fcmToken;
+
+
+
 
     /**
      * Normal constructor for a User.
@@ -122,4 +126,6 @@ public class User {
     public void addEvent(String eventID){
         this.events.add(eventID);
     }
+    public String getFcmToken() { return fcmToken; }
+    public void setFcmToken(String fcmToken) { this.fcmToken = fcmToken; }
 }

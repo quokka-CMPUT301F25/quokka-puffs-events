@@ -76,17 +76,16 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initialize(view);
-        SetUpListeners(view);
+        setUpListeners();
     }
 
-    /**
-     * This sets up the viewables and interactables from the fragment and provides the user's information (given not null)
-     * @param view
-     */
     public void initialize(View view) {
-
+        /**
+         * Initializes all UI components and references.
+         *
+         * @param view The root view of the fragment.
+         */
         username = view.findViewById(R.id.usernameText);
         firstname = view.findViewById(R.id.userFirstNameText);
         lastname = view.findViewById(R.id.userLastNameText);
@@ -105,15 +104,14 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
 
     }
 
-    /**
-     * This method sets up the onclick listeners for the interactables on the fragment.
-     * backBtn: goes back to the viewparticipantsfragment
-     * cancelinviteBtn: Cancel's the users invited status. Changing their status to 'canceled'
-     * #TODO: Find out how to change the information in the firebase and update it to show it in real time.
-     * @param view
-     */
-    public void SetUpListeners(View view) {
-
+    public void setUpListeners() {
+        /**
+         * This method sets up the onclick listeners for the interactables on the fragment.
+         * backBtn: goes back to the viewparticipantsfragment
+         * cancelinviteBtn: Cancel's the users invited status. Changing their status to 'canceled'
+         * #TODO: Find out how to change the information in the firebase and update it to show it in real time.
+         * @param view
+         */
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,13 +135,6 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
             }
         });
 
-
-
     }
-
-
-
-
-
 
 }

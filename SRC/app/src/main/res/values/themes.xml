@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.QuokkaPuffEvents" parent="Base.Theme.QuokkaPuffEvents" />
+    <style name="SquareButton" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">0dp</item>
+    </style>
+
 </resources>

@@ -21,12 +21,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.runner.Request;
-
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.MediaType;
-import okhttp3.Callback;
 import java.io.IOException;
 
 import java.util.Map;
@@ -60,12 +54,12 @@ public class SendMessageFragment extends Fragment {
         SetUpListeners(view);
     }
 
-    /**
-     * Initializes all view references including message inputs and buttons.
-     *
-     * @param view The root view of this fragment.
-     */
     private void InitializeViews(View view) {
+        /**
+         * Initializes all view references including message inputs and buttons.
+         *
+         * @param view The root view of this fragment.
+         */
         notifTitle = view.findViewById(R.id.notifName);
         eventTitle = view.findViewById(R.id.event);
         eventTitle.setText(event.getName());
@@ -74,12 +68,12 @@ public class SendMessageFragment extends Fragment {
         sendMessage = view.findViewById(R.id.sendMessageBtn);
     }
 
-    /**
-     * Sets up interaction listeners for navigating back and sending messages.
-     *
-     * @param view The root view of the fragment.
-     */
     public void SetUpListeners(View view) {
+        /**
+         * Sets up interaction listeners for navigating back and sending messages.
+         *
+         * @param view The root view of the fragment.
+         */
         backBtn.setOnClickListener(v -> {
             OrganizerEventDetails newFrag = new OrganizerEventDetails();
             newFrag.SetEvent(event);

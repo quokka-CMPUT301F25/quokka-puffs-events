@@ -10,13 +10,3 @@
 | `<Reanna Manuel>`    | `<reannace>` |
 | `<Kyle Nguyen>`      | `<kmn1>`     |
 | `<Kishan Prasad>`    | `<kkprasad>` |
-
-## References and Resources
-
-**Update as we go, please and thank you.**
-
-## Verbal Collaborations
-
-|  Group Names  | CCID     |
-|  -----------  | -------- |
-|               |          |

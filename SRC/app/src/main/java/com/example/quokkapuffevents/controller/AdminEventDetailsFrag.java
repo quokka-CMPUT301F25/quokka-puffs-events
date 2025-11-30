@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.controller;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ public class AdminEventDetailsFrag extends Fragment {
     TextView startEndDate;
     TextView description;
     ListView allUsersEvent;
+    ImageView posterImage;
     Button goBackBtn;
     ArrayAdapter<String> adapter;
 
@@ -70,13 +74,13 @@ public class AdminEventDetailsFrag extends Fragment {
      */
     public void initializeViews(View view) {
 
-        eventName = view.findViewById(R.id.eventName);
-        organizer = view.findViewById(R.id.organizerName);
-        maxEntrants = view.findViewById(R.id.maxEntrants);
-        startEndDate = view.findViewById(R.id.startAndEndDate);
-        description = view.findViewById(R.id.description);
-        allUsersEvent = view.findViewById(R.id.allUsersEvent);
+        eventName = view.findViewById(R.id.eventNameTextView);
+        organizer = view.findViewById(R.id.organizerNameTextView);
+        startEndDate = view.findViewById(R.id.datesTextView);
+        description = view.findViewById(R.id.descTextView);
+        allUsersEvent = view.findViewById(R.id.usersListView);
         goBackBtn = view.findViewById(R.id.goBackBtn);
+        posterImage = view.findViewById(R.id.posterImageView);
 
     }
 
@@ -90,18 +94,12 @@ public class AdminEventDetailsFrag extends Fragment {
             organizer.setText(user.getFirstName());
         });
 
-        maxEntrants.setText(String.valueOf(event.getMaxNumWaitlist()));
-        if (event.getMaxNumWaitlist() == -1) {
-            maxEntrants.setText("No limit");
-        }
-
-
         String pattern = "MMM. dd, YYYY";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         Date startDate = event.getStartDate();
         Date endDate = event.getEventDate();
 
-        startEndDate.setText(sdf.format(startDate) + " - " + sdf.format(startDate));
+        startEndDate.setText(sdf.format(startDate) + "/" + sdf.format(endDate));
 
         description.setText(event.getDescription());
         description.setMovementMethod(new ScrollingMovementMethod());
@@ -118,7 +116,7 @@ public class AdminEventDetailsFrag extends Fragment {
 
                 TextView textView=(TextView) view.findViewById(android.R.id.text1);
 
-                textView.setTextColor(Color.WHITE);
+                textView.setTextColor(Color.BLACK);
 
                 return view;
             }
@@ -127,9 +125,18 @@ public class AdminEventDetailsFrag extends Fragment {
         allUsersEvent.setAdapter(adapter);
         for (String key : userInEvent.keySet()) {
             db.GetUser(key, user -> {
-                tempArray.add(user.getFirstName());
+                tempArray.add(user.getUserName() + " - " + userInEvent.get(key));
                 adapter.notifyDataSetChanged();
             });
+        }
+
+        if (event.getImageID() != null) {
+            db.GetImage(event.getImageID(), image -> {
+                posterImage.setImageBitmap(image);
+            });
+        }
+        else {
+            posterImage.setImageResource(R.drawable.no_img_found);
         }
 
     }

@@ -34,6 +34,7 @@ public class AdminUserDetailsFrag extends Fragment {
     TextView userid;
     TextView phoneNumber;
     TextView accountType;
+    TextView eventCategory;
     ListView allEventsUser;
     Button goBackBtn;
     ArrayAdapter<String> adapter;
@@ -70,13 +71,14 @@ public class AdminUserDetailsFrag extends Fragment {
      */
     public void initializeViews(View view) {
 
-        firstAndLastName = view.findViewById(R.id.firstAndLastName);
-        email = view.findViewById(R.id.email);
-        username = view.findViewById(R.id.username);
-        userid = view.findViewById(R.id.userid);
-        phoneNumber = view.findViewById(R.id.phoneNumber);
-        accountType = view.findViewById(R.id.accountType);
-        allEventsUser = view.findViewById(R.id.allEventsUser);
+        username = view.findViewById(R.id.usernameTextView);
+        firstAndLastName = view.findViewById(R.id.firstLastNameTextView);
+        email = view.findViewById(R.id.emailTextView);
+        userid = view.findViewById(R.id.idTextView);
+        accountType = view.findViewById(R.id.accountTypeTextView);
+        eventCategory = view.findViewById(R.id.eventCategory);
+        phoneNumber = view.findViewById(R.id.phoneNumberTextView);
+        allEventsUser = view.findViewById(R.id.eventsListView);
         goBackBtn = view.findViewById(R.id.goBackBtn);
 
     }
@@ -90,16 +92,19 @@ public class AdminUserDetailsFrag extends Fragment {
         email.setText(user.getEmail());
         username.setText(user.getUserName());
         userid.setText(user.getId());
-        phoneNumber.setText((String)user.getPhoneNumber());
+        phoneNumber.setText(user.getPhoneNumber().toString());
 
         if (user.getAccountType() == -1) {
             accountType.setText("Admin");
+            eventCategory.setText("");
         }
         if (user.getAccountType() == 0) {
             accountType.setText("Entrant");
+            eventCategory.setText("Joined Events:");
         }
         if (user.getAccountType() == 1) {
             accountType.setText("Organizer");
+            eventCategory.setText("Events Created:");
         }
 
         db.GetEventsFromUser(user, events -> {
@@ -118,7 +123,7 @@ public class AdminUserDetailsFrag extends Fragment {
 
                     TextView textView=(TextView) view.findViewById(android.R.id.text1);
 
-                    textView.setTextColor(Color.WHITE);
+                    textView.setTextColor(Color.BLACK);
 
                     return view;
                 }

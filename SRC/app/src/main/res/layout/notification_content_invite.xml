@@ -5,15 +5,35 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="8dp"
-    android:background="@drawable/border_shape">
+    android:background="@color/white">
 
-    <TextView
-        android:id="@+id/notificationTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="Congratulations!"
-        android:textSize="20sp" />
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/notificationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:text="Congratulations!"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:layout_weight="4"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/removeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="Remove"
+            android:textSize="12sp"
+            android:layout_weight="0"
+            android:backgroundTint="@color/greybtn"
+            style="@style/SquareButton"
+            android:layout_marginHorizontal="4dp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/eventText"
@@ -21,8 +41,7 @@
         android:layout_height="wrap_content"
         android:text="Loading..."
         android:layout_marginTop="6dp"
-        android:textColor="@color/bluebtn"
-        android:textStyle="bold"
+        android:textColor="@color/black"
         android:textSize="18sp" />
 
     <LinearLayout
@@ -30,50 +49,58 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="4dp">
 
-        <Button
-            android:id="@+id/rejectBtn"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Reject"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/redbtn"
-            android:padding="8dp"
-            android:minWidth="0dp" />
-
-        <Button
-            android:id="@+id/acceptBtn"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Accept"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/bluebtn"
-            android:padding="8dp"
-            android:minWidth="0dp" />
-
-        <Button
-            android:id="@+id/detailsBtn"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:text="Details"
-            android:textSize="16sp"
-            android:backgroundTint="@color/greybtn"
-            android:layout_marginHorizontal="4dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
 
-        <Button
-            android:id="@+id/removeBtn"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="X"
-            android:textSize="12sp"
-            android:backgroundTint="@color/greybtn"
-            android:layout_marginHorizontal="4dp" />
+            <Button
+                android:id="@+id/rejectBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Decline"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/redbtn"
+                android:padding="8dp"
+                style="@style/SquareButton"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/acceptBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Accept"
+                android:textSize="16sp"
+                style="@style/SquareButton"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/bluebtn"
+                android:padding="8dp"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/detailsBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details"
+                android:textSize="16sp"
+                style="@style/SquareButton"
+                android:layout_weight="3"
+                android:backgroundTint="@color/greybtn"/>
+        </LinearLayout>
+
+
+
 
     </LinearLayout>
 </LinearLayout>

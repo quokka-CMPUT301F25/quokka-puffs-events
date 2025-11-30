@@ -18,12 +18,14 @@ public class Event {
     private Integer toBeDrawn;
     private Integer maxNumWaitlist;
     private Integer numPeopleWaiting;
+    private int numInvitedAccepted;
     private Map<String, String> eventUsers = new HashMap<>(); //Have the string be Waitlist, invited, cancelled, etc
     private Date startDate;
     private Date drawnDate;
     private Date eventDate;
     private String imageID;
     private String qrcodeID;
+    private ArrayList<String> interests;
     //Add geo data?
     private Boolean drawn;
     private Boolean finished;
@@ -62,6 +64,7 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.interests = interests;
     }
 
     /**
@@ -98,6 +101,7 @@ public class Event {
         this.imageID = null;
         this.qrcodeID = null;
         this.numPeopleWaiting = 0;
+        this.interests = interests;
     }
 
     /**
@@ -203,6 +207,30 @@ public class Event {
     public String getOrg() {
         return org;
     }
+
+    public ArrayList<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
+    }
+
+    public void setNumInvitedAccepted(int numInvitedAccepted) {
+        this.numInvitedAccepted = numInvitedAccepted;
+    }
+
+    public Integer getNumInvitedAccepted(){
+        Integer total = 0;
+        for (String entry : eventUsers.keySet()) {
+            if ((eventUsers.get(entry).equals("Invited")) || (eventUsers.get(entry).equals("Accepted"))) {
+                total += 1;
+            }
+        }
+        return(total);
+    }
+
+    //Actual methods
     /**
      * Changes the status of a user within the event. Updating meta variables like number of people in the waiting list
      * @param userID

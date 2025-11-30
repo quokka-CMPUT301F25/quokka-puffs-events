@@ -1,5 +1,6 @@
 package com.example.quokkapuffevents.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,14 +51,19 @@ public class AdminEventFragAdapter extends ArrayAdapter<Event> {
 
         TextView eventCreators = (TextView) listItem.findViewById(R.id.eventCreator);
         db.GetUser(currentEvent.getOrg(), user -> {
-            eventCreators.setText(user.getUserName() + "'s");
+            eventCreators.setText(user.getUserName());
         });
 
-        TextView eventDates = (TextView) listItem.findViewById(R.id.eventDate);
         Date startDate = currentEvent.getStartDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM. dd, yyyy");
         String temp = "On " + (String)sdf.format(currentEvent.getStartDate());
-        eventDates.setText(temp);
+
+        TextView descriptionTextView = (TextView) listItem.findViewById(R.id.eventDescription);
+
+        String shortDescription = currentEvent.getDescription();
+        if(currentEvent.getDescription().length() > 28)
+            shortDescription = shortDescription.substring(0, 28) + "...";
+        descriptionTextView.setText(shortDescription);
 
         Event event = getItem(position);
 
@@ -65,9 +71,16 @@ public class AdminEventFragAdapter extends ArrayAdapter<Event> {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.DeleteEvent(event);
-                eventList.remove(event);
-                notifyDataSetChanged();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Notification")
+                        .setMessage("Are you sure you want to delete this notification?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            db.DeleteEvent(event);
+                            eventList.remove(event);
+                            notifyDataSetChanged();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
             }
         });
 
