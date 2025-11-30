@@ -171,6 +171,11 @@ public class EventCreateFragment extends Fragment {
                 //Format that user type has to be yyyy-mm-dd in order for DateConverter to work
                 String eventDateString = dateOfEvent.getText().toString().trim();
                 String drawDateString = drawDate.getText().toString().trim();
+
+                System.out.println(drawDateString);
+                System.out.println(drawDateString);
+
+
                 int parts = Integer.parseInt(numbPar.getText().toString()); // number of wanted participants in event
                 String maxParts = "";
 
