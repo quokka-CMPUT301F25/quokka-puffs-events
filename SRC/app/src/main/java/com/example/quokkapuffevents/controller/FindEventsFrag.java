@@ -264,8 +264,16 @@ public class FindEventsFrag extends Fragment {
 //            }
 
             // Add event only if it matches ANY selected filter
+            if (matchesInterest) {
+                System.out.println("Ture interest");
+            }
+            if (matchesAvailability) {
+                System.out.println("Ture available");
+            }
             if (matchesInterest && matchesAvailability && matchesDistance) {
+
                 filteredEvents.add(event);
+
             }
         }
 

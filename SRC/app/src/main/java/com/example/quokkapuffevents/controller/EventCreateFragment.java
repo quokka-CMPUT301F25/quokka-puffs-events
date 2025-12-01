@@ -122,7 +122,7 @@ public class EventCreateFragment extends Fragment {
 
     public void setUpListeners(View view) {
 
-        // opens ui which allows user to select where they want theyre images pulled from
+        // opens ui which allows user to select where they want their images pulled from
         addImagesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
