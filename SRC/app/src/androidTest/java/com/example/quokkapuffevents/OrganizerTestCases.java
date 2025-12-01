@@ -57,8 +57,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @RunWith(AndroidJUnit4.class)
 public class OrganizerTestCases {
     Database db = Database.getInstance();
-    private final LatLng defaultLocation = new LatLng(-34, 151);
-
 
     /* For granting permissions of push notification, allows for tests to run properly
     without unexpected permission popups. */
@@ -98,6 +96,10 @@ public class OrganizerTestCases {
                 "TestOrganizer", "FirstOrganizer", "LastOrganizer",
                 "5870011122");
         return user;
+    }
+
+    public Event createMockEvent(Date eventDate, String organizerId) {
+        return db.CreateEvent("Mock Event", organizerId, "Mock Description", 10, new Date(), eventDate, 0.0, 0.0, -1);
     }
 
     public void deleteMockUser(User user) {
@@ -179,7 +181,7 @@ public class OrganizerTestCases {
 
             // Create event with participant limit
             Event event = db.CreateEvent("TestEventWithLimit", mockOrg.getId(),
-                    "Testing participant limit functionality", 30, 150, new Date(), new Date());
+                    "Testing participant limit functionality", 30, 150, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1500);
 
             // DEBUG: Check event state before any operations
@@ -317,11 +319,10 @@ public class OrganizerTestCases {
     @Test
     public void TestQRCodeGeneration() {
         User mockOrg = createTestOrganizer();
+        db.SetUserID(mockOrg.getId());
+        Event mockEvent = createMockEvent(new Date(), mockOrg.getId());
+
         try {
-            Thread.sleep(30000);
-
-            Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
-
             Thread.sleep(30000);
 
             ActivityScenario.launch(LoginActivity.class);
@@ -332,17 +333,21 @@ public class OrganizerTestCases {
             onView(withId(R.id.sign_in_button)).perform(click());
             Thread.sleep(1500);
 
-            onView(withId(R.id.viewEventDetails)).perform(click());
+            onView(withId(R.id.event_details_btn_past)).perform(click());
 
             Thread.sleep(1500);
 
             onView(withId(R.id.viewQRCodeBtn)).perform(click());
 
+            onView(withId(R.id.qrCode)).check(matches(isDisplayed()));
+
         } catch (InterruptedException e) {
-            db.ClearDatabase();
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(mockEvent);
             throw new RuntimeException(e);
         } finally {
-            db.ClearDatabase();
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(mockEvent);
         }
     }
 
@@ -362,7 +367,7 @@ public class OrganizerTestCases {
 
             // Create event
             Event event = db.CreateEvent("TestEventWithPoster", mockOrg.getId(),
-                    "Testing event poster upload functionality", 10, new Date(), new Date());
+                    "Testing event poster upload functionality", 10, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1500);
 
             // Create a mock poster bitmap
@@ -458,7 +463,7 @@ public class OrganizerTestCases {
 
             // Create event with initial poster
             Event event = db.CreateEvent("TestEventUpdatePoster", mockOrg.getId(),
-                    "Testing event poster update functionality", 10, new Date(), new Date());
+                    "Testing event poster update functionality", 10, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1500);
 
             // Create initial poster
@@ -553,7 +558,7 @@ public class OrganizerTestCases {
 
             // Create event
             Event event = db.CreateEvent("TestEventNotifications", mockOrg.getId(),
-                    "Testing notification functionality", 5, new Date(), new Date());
+                    "Testing notification functionality", 5, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1500);
 
             // Create test users with different statuses
@@ -679,7 +684,7 @@ public class OrganizerTestCases {
 
             // Create event
             Event event = db.CreateEvent("TestEventCancelUnsigned", mockOrg.getId(),
-                    "Testing cancellation of unsigned entrants", 3, new Date(), new Date());
+                    "Testing cancellation of unsigned entrants", 3, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1500);
 
             // Create users with different scenarios
@@ -795,7 +800,7 @@ public class OrganizerTestCases {
         db.SetUserID(organizer.getId());
 
         // Create event
-        Event event = db.CreateEvent("Invite List Test", organizer.getId(), "Test", 2, new Date(), new Date());
+        Event event = db.CreateEvent("Invite List Test", organizer.getId(), "Test", 2, new Date(), new Date(), 0.0, 0.0, -1);
         Thread.sleep(1000);
 
         // Create test users with different statuses
@@ -860,7 +865,7 @@ public class OrganizerTestCases {
 
         db.SetUserID(organizer.getId());
 
-        Event event = db.CreateEvent("Cancelled List Test", organizer.getId(), "Test cancelled entrants", 5, new Date(), new Date());
+        Event event = db.CreateEvent("Cancelled List Test", organizer.getId(), "Test cancelled entrants", 5, new Date(), new Date(), 0.0, 0.0, -1);
         Thread.sleep(1000);
 
         User cancelled1 = db.CreateUser("cancelled1@test.com", 0, "pass", "CancelledOne", "John", "Doe", "5552222222");
@@ -951,7 +956,7 @@ public class OrganizerTestCases {
         db.SetUserID(organizer.getId());
 
         Event event = db.CreateEvent("Final Enrolled List Test", organizer.getId(),
-                "Test final enrolled entrants", 3, new Date(), new Date());
+                "Test final enrolled entrants", 3, new Date(), new Date(), 0.0, 0.0, -1);
         Thread.sleep(1000);
 
         User accepted1 = db.CreateUser("accepted1@test.com", 0, "pass", "AcceptedOne", "John", "Doe", "5552222222");
@@ -1089,7 +1094,7 @@ public class OrganizerTestCases {
     public void ViewWaitingListEntrants() throws Exception {
         User organizer = db.CreateUser("waitlistorg@test.com", 1, "pass", "WaitlistOrg", "Test", "Org", "5551111111");
         db.SetUserID(organizer.getId());
-        Event event = db.CreateEvent("Waiting List Test", organizer.getId(), "Test", 10, new Date(), new Date());
+        Event event = db.CreateEvent("Waiting List Test", organizer.getId(), "Test", 10, new Date(), new Date(), 0.0, 0.0, -1);
         Thread.sleep(1000);
 
         User waiting1 = db.CreateUser("waiting1@test.com", 0, "pass", "User1", "Alice", "Johnson", "5552222222");

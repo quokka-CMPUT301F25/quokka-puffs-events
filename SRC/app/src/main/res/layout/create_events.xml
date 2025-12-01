@@ -361,9 +361,7 @@
                             android:id="@+id/limitWaitlistSwitch"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black">
-
-                        </Switch>
+                            android:textColor="@color/black"/>
 
                     </LinearLayout>
 
