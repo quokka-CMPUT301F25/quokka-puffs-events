@@ -12,6 +12,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.Matchers.*;
 
 import android.Manifest;
@@ -314,8 +315,8 @@ public class AdminTest {
             throw new RuntimeException(e);
         }
 
-        deleteMockAdmin(mockAdmin);
-        deleteMockAdmin(testUser);
+        db.DeleteUser();
+        db.GetUser(mockAdmin);
 
     }
 
@@ -410,8 +411,10 @@ public class AdminTest {
             onView(withId(R.id.adminUsersListView)).check(matches(isDisplayed()));
 
 //            Click the delete button
-            onView(allOf(withId(R.id.deleteButton),
-                    hasSibling(withText("testuser@example.com"))))
+            onData(anything())
+                    .inAdapterView(withId(R.id.adminUsersListView))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.deleteButton))
                     .perform(click());
 
             Thread.sleep(1500);
