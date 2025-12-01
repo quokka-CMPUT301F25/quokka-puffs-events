@@ -66,12 +66,11 @@ public class Database {
         return instance;
     }
 
+    // Getters and Setters
+
     public FirebaseFirestore getDb() {
         return db;
     }
-
-    // Getters and Setters
-
     public void SetUserID(String userID) {
         this.userID = userID;
     }

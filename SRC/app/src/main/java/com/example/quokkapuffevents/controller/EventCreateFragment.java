@@ -79,7 +79,7 @@ public class EventCreateFragment extends Fragment {
     // IMAGE UPLOAD VARIABLES
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private Bitmap selectedImageBitmap;
-    Button addImagesBtn; //TODO: How will we implement images for events and add to database
+    Button addImagesBtn;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
