@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents.controller;
 
 import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -142,10 +143,7 @@ public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyC
         eventFinished.setText(String.valueOf(event.getFinished()));
 
         //Removing button if after end or full
-        if (event.getEventDate().before(new Date())){
-            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
-        }
-        if ((event.getNumPeopleWaiting() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
+        if (event.getEventDate().after(new Date())){
             entrantRegisterForEventBtn.setVisibility(INVISIBLE);
         }
         if ((event.getMaxNumWaitlist() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
@@ -153,16 +151,8 @@ public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyC
         }
         if (event.getEventUsers().get(db.GetCurrentUserID()) != null){
             if (!Objects.equals(event.getEventUsers().get(db.GetCurrentUserID()), "Cancelled")){
-                entrantRegisterForEventBtn.setVisibility(INVISIBLE);
+                entrantRegisterForEventBtn.setVisibility(VISIBLE);
             }
-        }
-        if (event.getFinished() == true){
-            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
-        }
-        if ((event.getMaxNumWaitlist() != -1) && (event.getNumPeopleWaiting() >= event.getMaxNumWaitlist())){
-            entrantRegisterForEventBtn.setVisibility(INVISIBLE);
-        }
-        if (event.getEventUsers().get(db.GetCurrentUserID()) != null){
             if (!Objects.equals(event.getEventUsers().get(db.GetCurrentUserID()), "Cancelled")){
                 entrantRegisterForEventBtn.setVisibility(INVISIBLE);
             }

@@ -286,7 +286,7 @@ public class OrganizerTestCases {
         try {
             Thread.sleep(1500);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), -34.0, 151.0, -1);
 
             Thread.sleep(3000);
 
