@@ -198,7 +198,6 @@ public class EntrantTestCases {
     /**
      * User Story US 01.01.03 test case
      */
-    // TODO: FIX THIS TEST
     @Test
     public void TestViewingEvents() {
         // Create and Login Entrant
@@ -209,7 +208,7 @@ public class EntrantTestCases {
         Event testEvent = createMockEvent(new Date());
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
 
             // Open Events List
             onView(withId(R.id.all_events_button)).check(matches(isDisplayed())).perform(click());
@@ -406,7 +405,7 @@ public class EntrantTestCases {
 
     /**
      * User Story US 01.07.01 test case
-     */
+     */ // TODO: Fix this test
     @Test public void TestRememberMe() {
         User mockEntrant = createMockEntrant();
         try (ActivityScenario<LoadingActivity> scenario = ActivityScenario.launch(LoadingActivity.class)) {
@@ -906,6 +905,32 @@ public class EntrantTestCases {
             if (event != null) {
                 db.DeleteEvent(event);
             }
+        }
+    }
+}
+    /**
+     * User Story US 01.05.05 test case
+     */
+    @Test
+    public void TestViewRegistrationCriterion() {
+        User mockEntrant = accessEntrantDashboard();
+
+        try {
+            Thread.sleep(1500);
+
+            onView(withId(R.id.all_events_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.infoBtn)).perform(click());
+
+            onView(withText("Registration Criterion/Guidelines")).check(matches(isDisplayed()));
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockEntrant);
         }
     }
 }
