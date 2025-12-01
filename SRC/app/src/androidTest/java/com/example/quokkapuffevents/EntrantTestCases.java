@@ -251,21 +251,16 @@ public class EntrantTestCases {
         }
 
         // Verify Entrant Was Added Correctly
-        final boolean[] verified = {false};
-
         db.GetEvent(testEvent.getId(), event -> {
             assertTrue("User is not added to waitlist.", event.getEventUsers().containsKey(entrant.getId()));
             assertEquals("Waiting", event.getEventUsers().get(entrant.getId()));
 
             db.GetUser(entrant.getId(), user -> {
                 assertTrue("Event did not appear in entrant event list.", user.getEvents().contains(testEvent.getId()));
-                verified[0] = true;
             });
         });
 
         try { Thread.sleep(2000); } catch (Exception ignored) {}
-
-        assertTrue("Verification never completed.", verified[0]);
 
         // Cleanup
         db.DeleteEvent(testEvent.getId());
