@@ -314,22 +314,32 @@ public class OrganizerTestCases {
     @Test
     public void TestQRCodeGeneration() {
         User mockOrg = createTestOrganizer();
-        Event event = null;
-
         try {
+            Thread.sleep(30000);
+
+            Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
+            Thread.sleep(30000);
+
+            ActivityScenario.launch(LoginActivity.class);
+            onView(withId(R.id.login_email_address)).perform(typeText(mockOrg.getUserName()));
+            closeSoftKeyboard();
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
             Thread.sleep(1500);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            onView(withId(R.id.viewEventDetails)).perform(click());
 
-            Thread.sleep(3000);
+            Thread.sleep(1500);
+
+            onView(withId(R.id.viewQRCodeBtn)).perform(click());
 
         } catch (InterruptedException e) {
-            db.DeleteUser(mockOrg);
-            db.DeleteEvent(event);
+            db.ClearDatabase();
             throw new RuntimeException(e);
         } finally {
-            db.DeleteUser(mockOrg);
-            db.DeleteEvent(event);
+            db.ClearDatabase();
         }
     }
 
