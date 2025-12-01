@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -13,11 +14,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.*;
 
 import android.Manifest;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.example.quokkapuffevents.controller.LoginActivity;
@@ -230,8 +235,7 @@ public class AdminTest {
         deleteMockAdmin(mockAdmin);
     }
 
-
-
+    //    US 03.03.01 As an administrator, I want to be able to browse images. (Done - Kishan)
     @Test
     public void accessAdminImages() {
         User mockAdmin = createMockAdmin();
@@ -298,6 +302,12 @@ public class AdminTest {
 
             Thread.sleep(1500);
 
+            onView(withText("Delete User")).check(matches(isDisplayed()));
+
+            onView(withId(android.R.id.button2)).perform(click());
+
+            Thread.sleep(1500);
+
             assertDoesNotExist(onView(withText("testuser@example.com")));
 
 
@@ -356,6 +366,12 @@ public class AdminTest {
 
             Thread.sleep(1500);
 
+            onView(withText("Delete Event")).check(matches(isDisplayed()));
+
+            onView(withId(android.R.id.button2)).perform(click());
+
+            Thread.sleep(1500);
+
             assertDoesNotExist(onView(withText("Mock Event")));
 
 
@@ -392,21 +408,27 @@ public class AdminTest {
             onView(withId(R.id.usersIcon)).perform((click()));
             Thread.sleep(1500);
 
-
-            onView(withText("testorganizer@example.com")).check(matches(isDisplayed()));
-
+            onView(withId(R.id.adminUsersListView)).check(matches(isDisplayed()));
 
 //            Click the delete button
             onView(allOf(withId(R.id.deleteButton),
-                    hasSibling(withText("testorganizer@example.com"))))
+                    hasSibling(withText("testuser@example.com"))))
                     .perform(click());
 
             Thread.sleep(1500);
 
-            assertDoesNotExist(onView(withText("testorganizer@example.com")));
+            onView(withText("Delete User")).check(matches(isDisplayed()));
+
+            onView(withId(android.R.id.button2)).perform(click());
+
+            Thread.sleep(1500);
+
+            assertDoesNotExist(onView(withText("TestOrganizer")));
 
 
         } catch (InterruptedException e) {
+            deleteMockAdmin(mockAdmin);
+            deleteMockAdmin(testOrganizer);
             throw new RuntimeException(e);
         }
 
@@ -415,6 +437,63 @@ public class AdminTest {
 
     }
 
+    //    US 03.03.01 As an administrator, I want to be able to remove images. (In-Progress - Kishan)
+    @Test
+    public void deleteImage() {
 
+        User mockAdmin = createMockAdmin();
+        Event testEvent = createMockEvent(new Date());
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.image_temp);
+
+        db.UploadImageToDatabase(bitmap,uri -> {
+            testEvent.setImageID(uri);
+            db.SaveEvent(testEvent);
+        });
+
+        try (ActivityScenario<LoginActivity> scenario =
+                     ActivityScenario.launch(LoginActivity.class)) {
+
+            onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
+
+
+//            Go to the users dashboard
+            onView(withId(R.id.eventsIcon)).perform((click()));
+            Thread.sleep(1500);
+
+            onView(withText("Mock Event")).check(matches(isDisplayed()));
+
+
+//            Click the delete button
+            onView(allOf(withId(R.id.deleteButton),
+                    hasSibling(withText("Mock Event"))))
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withText("Delete Image")).check(matches(isDisplayed()));
+
+            onView(withId(android.R.id.button2)).perform(click());
+
+            Thread.sleep(1500);
+
+            assertDoesNotExist(onView(withText("Mock Event")));
+
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        deleteMockAdmin(mockAdmin);
+        deleteMockEvent(testEvent);
+
+    }
 
 }

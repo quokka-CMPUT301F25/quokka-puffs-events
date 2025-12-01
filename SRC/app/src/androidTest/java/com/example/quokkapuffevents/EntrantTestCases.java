@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -34,6 +35,7 @@ import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +43,7 @@ import org.junit.runner.RunWith;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -225,10 +228,12 @@ public class EntrantTestCases {
             db.DeleteEvent(testEvent);
 
         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
             db.DeleteUser(entrant);
             db.DeleteEvent(testEvent);
-            throw new RuntimeException(e);
         }
+
     }
 
     /**
@@ -495,6 +500,8 @@ public class EntrantTestCases {
     // TODO: FIX THIS TEST
     @Test
     public void TestNotChosenInDrawNotif() {
+        String wantedMessage = "This event has been drawn. Unfortunately you were not drawn, there " +
+                "is a chance that you may be drawn in the future.";
         User mockEntrant = accessEntrantDashboard();
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
         Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
@@ -505,7 +512,12 @@ public class EntrantTestCases {
             //Check no notification exists
             onView(withId(R.id.notifs_button)).perform(click());
             Thread.sleep(1500);
-            assertDoesNotExist(onView(withText(R.string.not_picked)));
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.removeBtn))
+                    .perform(click());
+            assertDoesNotExist(onView(withText(wantedMessage)));
             onView(withId(R.id.home_button)).perform(click());
             Thread.sleep(1500);
             //Draw User
@@ -515,7 +527,14 @@ public class EntrantTestCases {
             onView(withId(R.id.notifs_button)).perform(click());
             Thread.sleep(1500);
             //Testing to see if notification has appeared
-            onView(withText(R.string.not_picked)).check(matches(isDisplayed()));
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.detailsBtn))
+                    .perform(click());
+            Thread.sleep(1500);
+
+            onView(withText(wantedMessage)).check(matches(isDisplayed()));
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
@@ -527,6 +546,62 @@ public class EntrantTestCases {
             db.DeleteUser(mockOrg);
             db.DeleteEvent(event);
         }
+    }
+
+    /**
+     * User Story US 01.05.01 test case
+     */
+    @Test
+    public void TestSecondChanceAfterUserDeclines() {
+        String wantedMessage = "This event has been drawn. Unfortunately you were not drawn, there " +
+                "is a chance that you may be drawn in the future.";
+        User mockEntrant = accessEntrantDashboard();
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
+        try {
+            Thread.sleep(3000);
+            db.RegisterUserIntoEvent(event, mockEntrant);
+            //Check no notification exists
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.removeBtn))
+                    .perform(click());
+            assertDoesNotExist(onView(withText(wantedMessage)));
+            onView(withId(R.id.home_button)).perform(click());
+            Thread.sleep(1500);
+            //Draw User
+            event.drawUsers(0);
+            Thread.sleep(1500);
+            //Go back to notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+            //Testing to see if notification has appeared
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.detailsBtn))
+                    .perform(click());
+            Thread.sleep(1500);
+
+            onView(withText(wantedMessage)).check(matches(isDisplayed()));
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+        }
+
+
+
     }
 
     /**
@@ -549,6 +624,7 @@ public class EntrantTestCases {
             Thread.sleep(1500);
 
             db.RegisterUserIntoEvent(event, mockEntrant);
+
             //Draw User
             event.drawUsers(-1);
             Thread.sleep(1500);
@@ -680,6 +756,157 @@ public class EntrantTestCases {
             throw new RuntimeException(e);
         } finally {
             db.DeleteUser(entrant);
+        }
+    }
+
+    // US 01.01.04 As an entrant, I want to filter events based on my interests and availability. -Kishan
+    @Test
+    public void TestFilter() {
+        // Create and login entrant
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
+        Event mockEvent = createMockEvent(new Date());
+        ArrayList<String> tempCategories = new ArrayList<>();
+        tempCategories.add("Birthdays");
+        mockEvent.setMaxNumWaitlist(-1);
+        mockEvent.setInterests(tempCategories);
+        mockEvent.setToBeDrawn(10);
+        db.SaveEvent(mockEvent);
+
+        try {
+            Thread.sleep(1500);
+
+            onView(withId(R.id.all_events_button)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.filterEventsBtn)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.interestsLayoutButton)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Click "Clear All" first
+            onView(withText("Clear All"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+            onView(withId(R.id.interestsLayoutButton)).perform(click());
+
+            // Click "Birthday" item
+            onView(withText("Birthdays"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+
+            // Click "Add Interests" to confirm
+            onView(withText("Add Interests"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.availabilityButton)).perform(click());
+
+            Thread.sleep(1500);
+
+            // Click "Birthday" item
+            onView(withText("Open"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+
+            // Click "Add Interests" to confirm
+            onView(withText("OK"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.goBackBtn)).perform(click());
+
+            Thread.sleep(1500);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.findEventsListView))
+                    .atPosition(0)
+                    .onChildView(withText("Mock Event"))
+                    .check(matches(isDisplayed()));
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(entrant);
+            db.DeleteEvent(mockEvent);
+        }
+    }
+    /**
+     * US 01.05.04 As an entrant, I want to know how many total entrants are on the waiting list for an event.
+     */
+
+    @Test
+    public void ViewEntrantsWaiting() {
+        User mockOrg = null;
+        Event event = null;
+
+        User mockEntrant = accessEntrantDashboard();
+        try {
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+
+            Thread.sleep(1500);
+
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
+            Thread.sleep(3000);
+
+            db.RegisterUserIntoEvent(event, mockEntrant);
+            // Add more entrants to create a waiting list
+            User entrant2 = db.CreateUser("entrant2@test.com", 0, "pass", "Entrant2", "Bob", "Smith", "5552222222");
+            User entrant3 = db.CreateUser("entrant3@test.com", 0, "pass", "Entrant3", "Charlie", "Brown", "5553333333");
+            User entrant4 = db.CreateUser("entrant4@test.com", 0, "pass", "Entrant4", "Diana", "Williams", "5554444444");
+
+            Thread.sleep(500);
+
+            db.RegisterUserIntoEvent(event, entrant2);
+            db.RegisterUserIntoEvent(event, entrant3);
+            db.RegisterUserIntoEvent(event, entrant4);
+
+            Thread.sleep(1000);
+
+            onView(withId(R.id.all_events_button)).check(matches(isDisplayed())).perform(click());
+
+            Thread.sleep(1500);
+
+            // Test if event appears in the list
+            onView(withText(event.getName())).perform(scrollTo()).check(matches(isDisplayed()));
+
+            onView(withId(R.id.home_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.details_event_btn_waiting)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.eventTotalParticipantsWaitingText))
+                    .check(matches(withText("4")));
+            Thread.sleep(1500);
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant);
+            if (mockOrg != null) {
+                db.DeleteUser(mockOrg);
+            }
+            if (event != null) {
+                db.DeleteEvent(event);
+            }
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockEntrant);
+            if (mockOrg != null) {
+                db.DeleteUser(mockOrg);
+            }
+            if (event != null) {
+                db.DeleteEvent(event);
+            }
         }
     }
 }
