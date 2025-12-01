@@ -114,14 +114,14 @@
                         android:id="@+id/sendToCanceledUserCheckBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Send to canceled entrants"
+                        android:text="Send to all canceled entrants"
                         android:textSize="18dp"/>
 
                     <CheckBox
                         android:id="@+id/sendToInivitedUserCheckBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Send to Invited entrants"
+                        android:text="Send to all invited entrants"
                         android:textSize="18dp"/>
 
 
