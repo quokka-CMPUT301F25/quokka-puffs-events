@@ -335,16 +335,13 @@ public class AdminTest {
     @Test
     public void deleteEvent() throws InterruptedException {
 
-        //TODO: Create a mock org
-        //TODO: Set DB.currentUser to mock org
-
-//        db.ListEvents(events -> {
-//            if(!events.isEmpty())
-//            {
-//                for(Event e: events)
-//                    db.DeleteEvent(e);
-//            }
-//        });
+        db.ListEvents(events -> {
+            if(!events.isEmpty())
+            {
+                for(Event e: events)
+                    db.DeleteEvent(e);
+            }
+        });
 
         User mockAdmin = createMockAdmin();
         User mockOrg = createTestOrganizer();
