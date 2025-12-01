@@ -9,6 +9,8 @@
     android:padding="0dp">
 
     <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/mainblue"
