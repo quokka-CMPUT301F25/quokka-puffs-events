@@ -33,6 +33,7 @@ import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.hamcrest.Matchers;
 import org.junit.Rule;
@@ -51,6 +52,7 @@ import java.util.Date;
 @RunWith(AndroidJUnit4.class)
 public class EntrantTestCases {
     Database db = Database.getInstance();
+    private final LatLng defaultLocation = new LatLng(-34, 151);
 
     /* For granting permissions of push notification, allows for tests to run properly
     without unexpected permission popups. */
@@ -109,7 +111,7 @@ public class EntrantTestCases {
      * A mock event for entrants to register for
      */
     public Event createMockEvent(Date eventDate) {
-        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, 0.0, 0.0, -1);
     }
 
     /**
@@ -454,7 +456,7 @@ public class EntrantTestCases {
     @Test
     public void TestChosenInDrawNotif() {
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(),  0.0, 0.0, -1);
         User mockEntrant = accessEntrantDashboard();
         try {
             Thread.sleep(3000);
@@ -501,7 +503,7 @@ public class EntrantTestCases {
                 "is a chance that you may be drawn in the future.";
         User mockEntrant = accessEntrantDashboard();
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
 
         try {
             Thread.sleep(3000);
@@ -607,8 +609,8 @@ public class EntrantTestCases {
     // TODO: FIX THIS TEST
     @Test
     public void TestAcceptInviteToEvent() {
-        User mockOrg = null;
-        Event event = null;
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
 
         User mockEntrant = accessEntrantDashboard();
         try {
@@ -666,9 +668,8 @@ public class EntrantTestCases {
     // TODO: FIX THIS TEST
     @Test
     public void TestDeclineInviteToEvent() {
-        User mockOrg = null;
-        Event event = null;
-
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
         User mockEntrant = accessEntrantDashboard();
         try {
             mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
