@@ -720,4 +720,22 @@ public class Database {
 
     }
 
+    public void ClearDatabase(){
+        ListEvents(events -> {
+            for (Event event : events){
+                DeleteEvent(event);
+            }
+        });
+        ListUsers(users -> {
+            for (User user : users){
+                DeleteUser(user);
+            }
+        });
+        ListNotifs(notifs -> {
+            for (Notif notif : notifs){
+                DeleteNotification(notif);
+            }
+        });
+    }
+
 }

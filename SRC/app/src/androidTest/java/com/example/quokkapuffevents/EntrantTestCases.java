@@ -31,11 +31,9 @@ import androidx.test.rule.GrantPermissionRule;
 import com.example.quokkapuffevents.controller.LoginActivity;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
-import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -149,7 +147,7 @@ public class EntrantTestCases {
         db.SetUserID(entrant.getId());
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(30000);
 
             //  Open Event List
             onView(withId(R.id.all_events_button))
@@ -908,7 +906,7 @@ public class EntrantTestCases {
             }
         }
     }
-}
+
     /**
      * User Story US 01.05.05 test case
      */
