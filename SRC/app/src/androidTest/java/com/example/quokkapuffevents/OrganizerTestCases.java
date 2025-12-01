@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -9,6 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -320,10 +322,12 @@ public class OrganizerTestCases {
     public void TestQRCodeGeneration() {
         User mockOrg = createTestOrganizer();
         db.SetUserID(mockOrg.getId());
-        Event mockEvent = createMockEvent(new Date(), mockOrg.getId());
+        Event mockEvent = null;
 
         try {
             Thread.sleep(30000);
+
+            mockEvent = createMockEvent(new Date(), mockOrg.getId());
 
             ActivityScenario.launch(LoginActivity.class);
             onView(withId(R.id.login_email_address)).perform(typeText(mockOrg.getUserName()));
@@ -331,7 +335,13 @@ public class OrganizerTestCases {
             onView(withId(R.id.login_password)).perform(typeText("password"));
             closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
-            Thread.sleep(1500);
+            Thread.sleep(3000);
+
+//            onData(anything())
+//                    .inAdapterView(withId(R.id.past_events_listview))
+//                    .atPosition(0)
+//                    .onChildView(withId(R.id.event_details_btn_past))
+//                    .perform(click());
 
             onView(withId(R.id.event_details_btn_past)).perform(click());
 

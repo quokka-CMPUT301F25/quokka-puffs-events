@@ -229,33 +229,38 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     public void registerForEvent(Event event) {
         db.GetUser(db.GetCurrentUserID(), user -> {
 
-            if (user.getLat() == null || user.getLng() == null) {
-                Toast.makeText(activity,
-                        "This event is locked by distance. No location set, please add one in settings.",
-                        Toast.LENGTH_SHORT).show();
-                return;
+            if(event.getLockRadius() > 0) {
+                if (user.getLat() == null || user.getLng() == null) {
+                    Toast.makeText(activity,
+                            "This event is locked by distance. No location set, please add one in settings.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                double userLat = user.getLat();
+                double userLng = user.getLng();
+                double eventLat = event.getLat();
+                double eventLng = event.getLng();
+                Log.d("DEBUG_LOC",
+                        "User: (" + userLat + ", " + userLng + ")  Event: (" + eventLat + ", " + eventLng + ")");
+
+                float[] distance = new float[1]; // result in METERS
+                Location.distanceBetween(userLat, userLng, eventLat, eventLng, distance);
+
+                Log.d("Distance", "Distance from home: " + distance[0] + "m");
+
+                if (distance[0] <= event.getLockRadius()) {
+                    db.RegisterUserIntoEvent(event, user);
+                    Toast.makeText(activity, "Registered!", Toast.LENGTH_SHORT).show();
+                    events.remove(event);
+                } else {
+                    Toast.makeText(activity,
+                            "Too far from the event (" + distance[0] + "m away)",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
-
-            double userLat = user.getLat();
-            double userLng = user.getLng();
-            double eventLat = event.getLat();
-            double eventLng = event.getLng();
-            Log.d("DEBUG_LOC",
-                    "User: (" + userLat + ", " + userLng + ")  Event: (" + eventLat + ", " + eventLng + ")");
-
-            float[] distance = new float[1]; // result in METERS
-            Location.distanceBetween(userLat, userLng, eventLat, eventLng, distance);
-
-            Log.d("Distance", "Distance from home: " + distance[0] + "m");
-
-            if (distance[0] <= event.getLockRadius()) {
+            else {
                 db.RegisterUserIntoEvent(event, user);
-                Toast.makeText(activity, "Registered!", Toast.LENGTH_SHORT).show();
-                events.remove(event);
-            } else {
-                Toast.makeText(activity,
-                        "Too far from the event (" + distance[0] + "m away)",
-                        Toast.LENGTH_SHORT).show();
             }
         });
     }
