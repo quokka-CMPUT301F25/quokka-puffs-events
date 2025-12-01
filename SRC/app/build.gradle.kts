@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    alias(libs.plugins.map.secret)
 }
 
 android {
@@ -35,6 +35,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -55,6 +56,10 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
     implementation(libs.play.services.maps)
+
+    // Location
+    implementation(libs.google.maps)
+
     // These were changed from implementation to androidTestImplementation
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.runner)
@@ -63,7 +68,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
 
     implementation("com.google.android.gms:play-services-base:18.4.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")  // only if using Google Sign-In
+    implementation("com.google.android.gms:play-services-location:15.0.1")
+
 
 
     // AndroidX Core Dependencies

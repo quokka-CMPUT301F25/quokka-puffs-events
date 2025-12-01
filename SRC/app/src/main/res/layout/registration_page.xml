@@ -33,7 +33,7 @@
     <LinearLayout
         android:id="@+id/registration_information_container"
         android:layout_width="350dp"
-        android:layout_height="325dp"
+        android:layout_height="350dp"
         android:background="@color/mainblue"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -120,6 +120,18 @@
             android:hint="Phone Number (Optional)"
             android:inputType="phone"
             android:maxLength="14"
+            android:padding="6px"
+            android:textAlignment="center" />
+        <EditText
+            android:id="@+id/home_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:background="@color/white"
+            android:hint="Address (Optional)"
+            android:inputType="textPersonName"
             android:padding="6px"
             android:textAlignment="center" />
 

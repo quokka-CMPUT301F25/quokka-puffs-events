@@ -146,19 +146,11 @@
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"/>
 
-            <TextView
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="GEOLOCATION MAP GOES HERE"
-                android:textColor="@color/white"
-                android:background="@color/black"
-                android:paddingHorizontal="8dp"
-                android:textSize="20dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textStyle="bold"/>
+                android:layout_height="300dp" />
 
 
 
