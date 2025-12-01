@@ -839,6 +839,8 @@ public class EntrantTestCases {
         } finally {
             db.DeleteUser(entrant);
             db.DeleteEvent(mockEvent);
+        }
+    }
     /**
      * US 01.05.04 As an entrant, I want to know how many total entrants are on the waiting list for an event.
      */
