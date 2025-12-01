@@ -1,6 +1,5 @@
 package com.example.quokkapuffevents.model;
 
-import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

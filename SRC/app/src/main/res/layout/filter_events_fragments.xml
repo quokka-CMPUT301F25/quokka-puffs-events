@@ -63,7 +63,7 @@
 
                         <!-- Button -->
                         <LinearLayout
-                            android:id="@+id/interestsButton"
+                            android:id="@+id/interestsLayoutButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
