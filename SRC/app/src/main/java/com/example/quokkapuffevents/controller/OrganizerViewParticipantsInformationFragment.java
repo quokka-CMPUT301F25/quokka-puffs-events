@@ -15,12 +15,18 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class OrganizerViewParticipantsInformationFragment extends Fragment {
+public class OrganizerViewParticipantsInformationFragment extends Fragment implements OnMapReadyCallback {
 
     private User user;
     private Event event;
@@ -78,6 +84,21 @@ public class OrganizerViewParticipantsInformationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initialize(view);
         setUpListeners();
+
+        SupportMapFragment mapFragment = (SupportMapFragment)
+                getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);  // THIS TRIGGERS onMapReady()
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap){
+        LatLng location = new LatLng(user.getLat(),user.getLng());
+
+        googleMap.addMarker(new MarkerOptions().position(location).title(event.getName()));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+
     }
 
     public void initialize(View view) {

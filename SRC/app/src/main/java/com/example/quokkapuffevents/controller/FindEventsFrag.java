@@ -1,8 +1,12 @@
 package com.example.quokkapuffevents.controller;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -27,6 +32,8 @@ import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.view.AdminEventFragAdapter;
 import com.example.quokkapuffevents.view.EventListFragAdapter;
 import com.example.quokkapuffevents.view.NotificationArrayAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,10 +64,7 @@ public class FindEventsFrag extends Fragment {
 
     boolean[] checkedItems;
 
-
-    public FindEventsFrag() {
-
-    }
+    DashboardActivity activity;
 
     @Nullable
     @Override
@@ -95,6 +99,17 @@ public class FindEventsFrag extends Fragment {
         adapter.setActivity((DashboardActivity) getActivity());
 
         setUpListeners();
+
+        // Create an adapter for the events
+        adapter = new EventListFragAdapter(getContext(), eventList, "all", activity);
+        listView.setAdapter(adapter);
+
+        //selectedInterestArray = new ArrayList<>(Arrays.asList(templateInterests));
+        checkedItems = new boolean[templateInterests.length];
+        for (int i = 0; i < checkedItems.length; i++) {
+            checkedItems[i] = true;
+        }
+
         updateAdapter();
 
         return view;
@@ -112,14 +127,13 @@ public class FindEventsFrag extends Fragment {
     }
 
     public void updateAdapter() {
-        // Add all the events to the adapter
-        db.ListEvents( events -> {
-            // refresh adapter
+        db.ListEvents(events -> {
             eventList.clear();
             eventList.addAll(events);
-            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();  // OK!
         });
     }
+
 
     public void setUpListeners() {
         selectInterests.setOnClickListener(new View.OnClickListener() {
@@ -201,10 +215,12 @@ public class FindEventsFrag extends Fragment {
 
     public void initializeViews(View view) {
 
+        Log.d("WURT", "WURT2");
+        //selectInterests = view.findViewById(R.id.temp_id);
+        System.out.println(selectInterests);
         selectInterests = view.findViewById(R.id.filterEventsBtn);
         informationButton = view.findViewById(R.id.infoBtn);
         listView = view.findViewById(R.id.findEventsListView);
-
     }
 
     public ArrayList<Event> filterInterests(ArrayList<Event> arrayList) {
@@ -265,5 +281,5 @@ public class FindEventsFrag extends Fragment {
     }
 
 
-
+    public void setActivity(DashboardActivity activity) {this.activity = activity;}
 }

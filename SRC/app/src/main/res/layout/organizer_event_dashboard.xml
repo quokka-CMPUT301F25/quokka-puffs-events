@@ -96,34 +96,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/eventPosterContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/greyaccent"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:text="Event Poster"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="normal" />
-
-                <Button
-                    android:id="@+id/viewEventPosterBtn"
-                    style="@style/SquareButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/bluebtn"
-                    android:text="View Poster" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/QRCodeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -151,6 +123,80 @@
 
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/qrCode"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/eventPosterContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Event Poster"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="normal" />
+
+                <Button
+                    android:id="@+id/viewEventPosterBtn"
+                    style="@style/SquareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/bluebtn"
+                    android:text="View Poster" />
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/eventImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/updateEventPosterContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyaccent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Update Event Poster"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="normal" />
+
+                <Button
+                    android:id="@+id/updatePosterBtn"
+                    style="@style/SquareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/bluebtn"
+                    android:text="Update Poster" />
+
+
+            </LinearLayout>
+
+
+
             <LinearLayout
                 android:id="@+id/changeDetailsContainer"
                 android:layout_width="match_parent"
@@ -160,15 +206,15 @@
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp">
 
-                <Button
-                    android:id="@+id/orgChangeDetailsBtn"
-                    style="@style/SquareButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:backgroundTint="@color/bluebtn"
-                    android:paddingHorizontal="50dp"
-                    android:text="Change Details" />
+<!--                <Button-->
+<!--                    android:id="@+id/orgChangeDetailsBtn"-->
+<!--                    style="@style/SquareButton"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:backgroundTint="@color/bluebtn"-->
+<!--                    android:paddingHorizontal="50dp"-->
+<!--                    android:text="Change Details" />-->
             </LinearLayout>
 
             <LinearLayout
@@ -318,11 +364,11 @@
 <!--            android:backgroundTint="@color/bluebtn"-->
 <!--            android:layout_marginBottom="8dp"/>-->
 
-        <ImageView
-            android:id="@+id/qrCode"
-            android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:layout_marginBottom="8dp"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/qrCode"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="280dp"-->
+<!--            android:layout_marginBottom="8dp"/>-->
 
 <!--        <Button-->
 <!--            android:id="@+id/orgRunLotteryBtn"-->

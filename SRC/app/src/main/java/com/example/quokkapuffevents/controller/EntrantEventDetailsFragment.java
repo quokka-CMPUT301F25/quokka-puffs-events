@@ -4,6 +4,7 @@ import static android.view.View.INVISIBLE;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +21,25 @@ import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-public class EntrantEventDetailsFragment extends Fragment {
+public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyCallback {
 //    Set up variables
     private Database db;
     private Event event;
+    private GoogleMap mMap;
     TextView orgEventNameText;
     ImageView eventImage;
     TextView eventTotalParticiapntsWaitingText;
@@ -56,7 +65,27 @@ public class EntrantEventDetailsFragment extends Fragment {
         displayInfo();
         setUpListeners();
         checkAdmin();
+
+//        Log.d("EVENT_LNG", "Lng: " + String.valueOf(event.getLng()));/**/
+
+        Log.d("EVENT_LAT", "Lat: " + String.valueOf(event.getLng()));
+        Log.d("EVENT_LAT", "Lat: " + String.valueOf(event.getLat()));
+
+        SupportMapFragment mapFragment = (SupportMapFragment)
+                getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);  // THIS TRIGGERS onMapReady()
+        }
         return view;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap){
+        LatLng location = new LatLng(event.getLat(),event.getLng());
+
+        googleMap.addMarker(new MarkerOptions().position(location).title(event.getName()));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+
     }
 
     public void setEvent(Event event) {
@@ -151,17 +180,10 @@ public class EntrantEventDetailsFragment extends Fragment {
         /**
          * Adds functionality to buttons in fragment
          */
-        goBackToDashboardBtn.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Takes Entrant to register events fragment
-             * @param v The view that was clicked.
-             */
-            @Override
-            public void onClick(View v) {
-                FindEventsFrag newFrag = new FindEventsFrag();
-                ((DashboardActivity) getActivity()).replaceFragment(newFrag);
-            }
+        goBackToDashboardBtn.setOnClickListener(v -> {
+            getParentFragmentManager().popBackStack();   // <- Correct Way
         });
+
 
         entrantRegisterForEventBtn.setOnClickListener(new View.OnClickListener() {
             /**

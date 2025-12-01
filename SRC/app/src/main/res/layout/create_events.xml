@@ -123,8 +123,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/eventDateCalendarText"
+                        <EditText
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -133,6 +132,7 @@
                             android:padding="6px"
                             android:gravity="right"
                             android:textColor="@color/black"
+                            android:id="@+id/eventDateText"
                             android:textSize="16dp" />
 
                         <ImageView
@@ -179,8 +179,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:id="@+id/drawDateCalendarText"
+                            <EditText
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -189,6 +188,7 @@
                                 android:padding="6px"
                                 android:gravity="right"
                                 android:textColor="@color/black"
+                                android:id="@+id/drawDateText"
                                 android:textSize="16dp" />
 
                             <ImageView
@@ -301,6 +301,7 @@
                             android:maxLines="8"
                             android:padding="4dp"
                             android:textColor="@color/black"
+                            android:gravity="top|start"
                             android:textSize="16dp">
 
                         </EditText>
@@ -385,7 +386,7 @@
 
                         </TextView>
 
-                        <TextView
+                        <EditText
                             android:id="@+id/maxWaitlistEditText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -398,7 +399,7 @@
                             android:textColor="@color/black"
                             android:textSize="16dp">
 
-                        </TextView>
+                        </EditText>
 
                     </LinearLayout>
 

@@ -1,6 +1,13 @@
 package com.example.quokkapuffevents.view;
 
+import android.Manifest;
 import android.content.Context;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,15 +15,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import com.example.quokkapuffevents.R;
 import com.example.quokkapuffevents.controller.DashboardActivity;
 import com.example.quokkapuffevents.controller.EntrantEventDetailsFragment;
 import com.example.quokkapuffevents.controller.OrganizerEventDetails;
 import com.example.quokkapuffevents.model.*;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +38,15 @@ import java.util.List;
  */
 public class EventListFragAdapter extends ArrayAdapter<Event> {
 
+    //* FIXED: Use SAME reference of events instead of making a COPY
     private final List<Event> events;   // adapter owns the list
+    private Event event;
     private final Database db = Database.getInstance();
     private String type;
     private DashboardActivity activity;
     private User user;
+    private Double Ulat;
+    private Double Ulng;
 
     //region --Waiting UI Elements--
     private LinearLayout pastEvents;
@@ -58,11 +74,25 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     Button eventRegisterBtn_all;
     //endregion
 
+
+    // ------------------ CONSTRUCTORS ------------------ //
+
+    // FIX APPLIED: Do NOT create a NEW list. Use same reference!
     public EventListFragAdapter(Context context, ArrayList<Event> events, String type) {
         super(context, 0, events);
-        this.events = new ArrayList<>(events);
+        this.events = events;   // <-- FIXED
         this.type = type;
     }
+
+    public EventListFragAdapter(Context context, ArrayList<Event> events, String type, DashboardActivity activity) {
+        super(context, 0, events);
+        this.events = events;   // <-- FIXED
+        this.type = type;
+        this.activity = activity;
+    }
+
+
+    // ------------------ MAIN ADAPTER LOGIC ------------------ //
 
     @NonNull
     @Override
@@ -71,7 +101,8 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
                 ? LayoutInflater.from(getContext()).inflate(R.layout.event_list_content, parent, false)
                 : convertView;
 
-        Event event = getItem(position);
+        // FIX: Use events.get(position) instead of getItem(position)
+        event = events.get(position);
 
         db.GetUser(db.GetCurrentUserID(), currUser -> {
             user = currUser;
@@ -134,7 +165,7 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
                 seeDetails(event);
             });
 
-            originUserText_waiting.setText("Loading...");
+            originUserText_past.setText("Loading...");
             db.GetUser(event.getOrg(), user -> {
                 originUserText_past.setText(user.getUserName().toString() + "'s    ");
             });
@@ -150,19 +181,10 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
             eventRegisterBtn_all.setOnClickListener(v -> {
                 registerForEvent(event);
-                events.remove(event);
                 notifyDataSetChanged();
             });
 
-            originUserText_waiting.setText("Loading...");
-            db.GetUser(event.getOrg(), user -> {
-                originUserText_all.setText(user.getUserName().toString() + "'s     ");
-            });
-
-            db.GetUser(event.getOrg(), user -> {
-                originUserText_all.setText(user.getUserName().toString() + "'s     ");
-            });
-
+            originUserText_all.setText("Loading...");
             db.GetUser(event.getOrg(), user -> {
                 originUserText_all.setText(user.getUserName().toString() + "'s     ");
             });
@@ -171,27 +193,29 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
         return view;
     }
 
+
+    // ------------------ UI BINDING ------------------ //
+
     public void UIBinding(){
         if(type.equals("Waiting")) {
-
             pastEvents.setVisibility(View.GONE);
             findEvents.setVisibility(View.GONE);
             waitingEvents.setVisibility(View.VISIBLE);
-
-        } else if(type.equals("Past")) {
-
+        }
+        else if(type.equals("Past")) {
             pastEvents.setVisibility(View.VISIBLE);
             findEvents.setVisibility(View.GONE);
             waitingEvents.setVisibility(View.GONE);
-
-        } else if(type.equals("all")) {
-
+        }
+        else if(type.equals("all")) {
             pastEvents.setVisibility(View.GONE);
             findEvents.setVisibility(View.VISIBLE);
             waitingEvents.setVisibility(View.GONE);
-
         }
     }
+
+
+    // ------------------ DATA UPDATE ------------------ //
 
     public void setEvents(List<Event> newEvents) {
         events.clear();
@@ -199,29 +223,65 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
         notifyDataSetChanged();
     }
 
+
+    // ------------------ EVENT ACTIONS ------------------ //
+
     public void registerForEvent(Event event) {
-        db.RegisterUserIntoEvent(event, user);
+        db.GetUser(db.GetCurrentUserID(), user -> {
+
+            if (user.getLat() == null || user.getLng() == null) {
+                Toast.makeText(activity,
+                        "This event is locked by distance. No location set, please add one in settings.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            double userLat = user.getLat();
+            double userLng = user.getLng();
+            double eventLat = event.getLat();
+            double eventLng = event.getLng();
+            Log.d("DEBUG_LOC",
+                    "User: (" + userLat + ", " + userLng + ")  Event: (" + eventLat + ", " + eventLng + ")");
+
+            float[] distance = new float[1]; // result in METERS
+            Location.distanceBetween(userLat, userLng, eventLat, eventLng, distance);
+
+            Log.d("Distance", "Distance from home: " + distance[0] + "m");
+
+            if (distance[0] <= event.getLockRadius()) {
+                db.RegisterUserIntoEvent(event, user);
+                Toast.makeText(activity, "Registered!", Toast.LENGTH_SHORT).show();
+                events.remove(event);
+            } else {
+                Toast.makeText(activity,
+                        "Too far from the event (" + distance[0] + "m away)",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     public void leaveWaitingList(Event event) {
         db.CancelUserIntoEvent(event, user);
     }
 
     public void seeDetails(Event event) {
-        if(user == null) {
-            System.out.println("USER IS NULL");
-        } else {
-            if (user.getAccountType() == 0){
+        if (user == null) return;
+
+        db.GetEvent(event.getId(), freshEvent -> {  // <-- FETCH AGAIN FROM FIREBASE!
+            if (user.getAccountType() == 0) {
                 EntrantEventDetailsFragment entrantFrag = new EntrantEventDetailsFragment();
-                entrantFrag.setEvent(event);
-                activity.replaceFragment(entrantFrag);
+                entrantFrag.setEvent(freshEvent);   // <-- use the fresh event from Firestore
+                activity.openFragment(entrantFrag);
             }
-            else { //Organizer
+            else { // Organizer
                 OrganizerEventDetails orgFrag = new OrganizerEventDetails();
-                orgFrag.SetEvent(event);
+                orgFrag.SetEvent(freshEvent);
                 activity.replaceFragment(orgFrag);
             }
-        }
+        });
     }
+
+
     public void setActivity(DashboardActivity activity) {this.activity = activity;}
 }

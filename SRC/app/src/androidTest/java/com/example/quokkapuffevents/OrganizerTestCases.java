@@ -30,6 +30,7 @@ import com.example.quokkapuffevents.model.Database;
 import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,6 +57,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @RunWith(AndroidJUnit4.class)
 public class OrganizerTestCases {
     Database db = Database.getInstance();
+    private final LatLng defaultLocation = new LatLng(-34, 151);
+
 
     /* For granting permissions of push notification, allows for tests to run properly
     without unexpected permission popups. */
@@ -115,8 +118,9 @@ public class OrganizerTestCases {
             throw new RuntimeException(e);
         }
 
-        return mockOrganizer;
-    }
+            Event event = db.CreateEvent("TestDrawSpecificAttendees", mockOrg.getId(),
+                    "Testing specified number of attendees sampling", 5, 1, new Date(), new Date(), 0.0, 0.0, -1);
+            Thread.sleep(1500);
 
         public void deleteMockUser (User user){
             db.DeleteUser(user);
@@ -238,9 +242,23 @@ public class OrganizerTestCases {
                     assertEquals("User should have 'Waiting' status", "Waiting", event.getEventUsers().get(user.getId()));
                 }
 
-                // Verify the participant limit is still enforced
-                assertEquals("Max participant limit should remain 150", Integer.valueOf(150), event.getMaxNumWaitlist());
-                assertEquals("To be drawn should remain 30", Integer.valueOf(30), event.getToBeDrawn());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println("Test failed with exception: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * User Story US 02.07.02 test case
+     */
+    // TODO: FINISH THIS TEST
+    @Test
+    public void TestSendNotifToAllSelected() {
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date(), 0.0, 0.0, -1);
+        User temp = createMockEntrant();
 
                 // Test date values
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -329,29 +347,38 @@ public class OrganizerTestCases {
             }
         }
 
-        /**
-         * User Story US 02.01.01 test case
-         */ // TODO: Finish this test
-        @Test
-        public void TestQRCodeGeneration () {
-            User mockOrg = createTestOrganizer();
-            Event event = null;
+    /**
+     * User Story US 02.01.01 test case
+     */ // TODO: Finish this test
+    @Test
+    public void TestQRCodeGeneration() {
+        User mockOrg = createTestOrganizer();
+        try {
+            Thread.sleep(30000);
 
-            try {
-                Thread.sleep(1500);
+            Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
 
-                event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Thread.sleep(30000);
 
-                Thread.sleep(3000);
+            ActivityScenario.launch(LoginActivity.class);
+            onView(withId(R.id.login_email_address)).perform(typeText(mockOrg.getUserName()));
+            closeSoftKeyboard();
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+            Thread.sleep(1500);
 
-            } catch (InterruptedException e) {
-                db.DeleteUser(mockOrg);
-                db.DeleteEvent(event);
-                throw new RuntimeException(e);
-            } finally {
-                db.DeleteUser(mockOrg);
-                db.DeleteEvent(event);
-            }
+            onView(withId(R.id.viewEventDetails)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.viewQRCodeBtn)).perform(click());
+
+        } catch (InterruptedException e) {
+            db.ClearDatabase();
+            throw new RuntimeException(e);
+        } finally {
+            db.ClearDatabase();
         }
 
         /**
