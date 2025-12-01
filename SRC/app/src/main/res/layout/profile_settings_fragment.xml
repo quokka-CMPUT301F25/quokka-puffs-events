@@ -16,6 +16,8 @@
         android:background="@color/mainblue"
         android:padding="8dp"
         android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         >
 
     <TextView

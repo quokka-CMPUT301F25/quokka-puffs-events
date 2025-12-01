@@ -1,6 +1,7 @@
 package com.example.quokkapuffevents;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -9,6 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -57,8 +59,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @RunWith(AndroidJUnit4.class)
 public class OrganizerTestCases {
     Database db = Database.getInstance();
-    private final LatLng defaultLocation = new LatLng(-34, 151);
-
 
     /* For granting permissions of push notification, allows for tests to run properly
     without unexpected permission popups. */
@@ -123,6 +123,12 @@ public class OrganizerTestCases {
         }
 
         return mockOrganizer;
+    public Event createMockEvent(Date eventDate, String organizerId) {
+        return db.CreateEvent("Mock Event", organizerId, "Mock Description", 10, new Date(), eventDate, 0.0, 0.0, -1);
+    }
+
+    public void deleteMockUser(User user) {
+        db.DeleteUser(user);
     }
 
     @Test
@@ -320,14 +326,13 @@ public class OrganizerTestCases {
     @Test
     public void TestQRCodeGeneration() {
         User mockOrg = createTestOrganizer();
+        db.SetUserID(mockOrg.getId());
+        Event mockEvent = null;
+
         try {
             Thread.sleep(30000);
 
-            Event event = db.CreateEvent("TestDraw", mockOrg.getId(),
-                    "This event is used to test if a entrant is sent a notif", 1, 1, new Date(),
-                    new Date(), 0.0, 0.0, -1);
-
-            Thread.sleep(30000);
+            mockEvent = createMockEvent(new Date(), mockOrg.getId());
 
             ActivityScenario.launch(LoginActivity.class);
             onView(withId(R.id.login_email_address)).perform(typeText(mockOrg.getUserName()));
@@ -335,19 +340,29 @@ public class OrganizerTestCases {
             onView(withId(R.id.login_password)).perform(typeText("password"));
             closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
-            Thread.sleep(1500);
+            Thread.sleep(3000);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), -34.0, 151.0, -1);
+//            onData(anything())
+//                    .inAdapterView(withId(R.id.past_events_listview))
+//                    .atPosition(0)
+//                    .onChildView(withId(R.id.event_details_btn_past))
+//                    .perform(click());
+
+            onView(withId(R.id.event_details_btn_past)).perform(click());
 
             Thread.sleep(1500);
 
             onView(withId(R.id.viewQRCodeBtn)).perform(click());
 
+            onView(withId(R.id.qrCode)).check(matches(isDisplayed()));
+
         } catch (InterruptedException e) {
-            db.ClearDatabase();
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(mockEvent);
             throw new RuntimeException(e);
         } finally {
-            db.ClearDatabase();
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(mockEvent);
         }
     }
     /**

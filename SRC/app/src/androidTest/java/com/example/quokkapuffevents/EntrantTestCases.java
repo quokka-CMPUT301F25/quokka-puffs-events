@@ -52,7 +52,6 @@ import java.util.Date;
 @RunWith(AndroidJUnit4.class)
 public class EntrantTestCases {
     Database db = Database.getInstance();
-    private final LatLng defaultLocation = new LatLng(-34, 151);
 
     /* For granting permissions of push notification, allows for tests to run properly
     without unexpected permission popups. */
