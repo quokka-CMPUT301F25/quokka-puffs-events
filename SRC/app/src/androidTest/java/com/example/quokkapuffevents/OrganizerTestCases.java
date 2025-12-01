@@ -768,4 +768,371 @@ public class OrganizerTestCases {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * US 02.06.01 As an organizer I want to view a list of all chosen entrants who are invited to apply.
+     * @throws Exception
+     */
+
+    @Test
+    public void ViewInvitedEntrantsList() throws Exception {
+        // Setup organizer
+        User organizer = db.CreateUser("invitelist@test.com", 1, "pass", "InviteOrg", "Test", "Org", "5551111111");
+        Thread.sleep(1000);
+
+        db.SetUserID(organizer.getId());
+
+        // Create event
+        Event event = db.CreateEvent("Invite List Test", organizer.getId(), "Test", 2, new Date(), new Date());
+        Thread.sleep(1000);
+
+        // Create test users with different statuses
+        User invited = db.CreateUser("invited@test.com", 0, "pass", "InvitedUser", "John", "Doe", "5552222222");
+        User accepted = db.CreateUser("accepted@test.com", 0, "pass", "AcceptedUser", "Jane", "Smith", "5553333333");
+        User waiting = db.CreateUser("waiting@test.com", 0, "pass", "WaitingUser", "Bob", "Brown", "5554444444");
+        User cancelled = db.CreateUser("cancelled@test.com", 0, "pass", "CancelledUser", "Alice", "White", "5555555555");
+        Thread.sleep(500);
+
+        // Register users and set statuses
+        db.RegisterUserIntoEvent(event, invited);
+        event.SetStatus(invited.getId(), "Invited");
+
+        db.RegisterUserIntoEvent(event, accepted);
+        event.SetStatus(accepted.getId(), "Accepted");
+
+        db.RegisterUserIntoEvent(event, waiting);
+        // Stays "Waiting" by default
+
+        db.RegisterUserIntoEvent(event, cancelled);
+        event.SetStatus(cancelled.getId(), "Cancelled");
+
+        db.SaveEvent(event);
+        Thread.sleep(1000);
+
+        // Test: Count invited/accepted users
+        int invitedAcceptedCount = 0;
+        for (String status : event.getEventUsers().values()) {
+            if (status.equals("Invited") || status.equals("Accepted")) {
+                invitedAcceptedCount++;
+            }
+        }
+
+        // Verify only invited/accepted users are counted
+        assertEquals("Should have 2 invited/accepted users", 2, invitedAcceptedCount);
+        assertEquals("Should have 4 total users", 4, event.getEventUsers().size());
+
+        // Verify specific users have correct status
+        assertEquals("Invited user should have 'Invited' status", "Invited", event.getEventUsers().get(invited.getId()));
+        assertEquals("Accepted user should have 'Accepted' status", "Accepted", event.getEventUsers().get(accepted.getId()));
+        assertEquals("Waiting user should have 'Waiting' status", "Waiting", event.getEventUsers().get(waiting.getId()));
+        assertEquals("Cancelled user should have 'Cancelled' status", "Cancelled", event.getEventUsers().get(cancelled.getId()));
+
+        // Cleanup
+        db.DeleteEvent(event);
+        db.DeleteUser(invited);
+        db.DeleteUser(accepted);
+        db.DeleteUser(waiting);
+        db.DeleteUser(cancelled);
+        db.DeleteUser(organizer);
+    }
+
+    /**
+     * US 02.06.02 As an organizer I want to see a list of all the cancelled entrants.
+     * @throws Exception
+     */
+
+    @Test
+    public void ViewCancelledEntrantsList() throws Exception {
+        User organizer = db.CreateUser("cancellist@test.com", 1, "pass", "CancelOrg", "Test", "Org", "5551111111");
+        Thread.sleep(1000);
+
+        db.SetUserID(organizer.getId());
+
+        Event event = db.CreateEvent("Cancelled List Test", organizer.getId(), "Test cancelled entrants", 5, new Date(), new Date());
+        Thread.sleep(1000);
+
+        User cancelled1 = db.CreateUser("cancelled1@test.com", 0, "pass", "CancelledOne", "John", "Doe", "5552222222");
+        User cancelled2 = db.CreateUser("cancelled2@test.com", 0, "pass", "CancelledTwo", "Jane", "Smith", "5553333333");
+        User waiting = db.CreateUser("waiting@test.com", 0, "pass", "WaitingUser", "Bob", "Brown", "5554444444");
+        User invited = db.CreateUser("invited@test.com", 0, "pass", "InvitedUser", "Alice", "White", "5555555555");
+        User accepted = db.CreateUser("accepted@test.com", 0, "pass", "AcceptedUser", "Charlie", "Black", "5556666666");
+        Thread.sleep(500);
+
+        db.RegisterUserIntoEvent(event, cancelled1);
+        db.RegisterUserIntoEvent(event, cancelled2);
+        db.RegisterUserIntoEvent(event, waiting);
+        db.RegisterUserIntoEvent(event, invited);
+        db.RegisterUserIntoEvent(event, accepted);
+
+        event.SetStatus(cancelled1.getId(), "Cancelled");
+        event.SetStatus(cancelled2.getId(), "Cancelled");
+        event.SetStatus(invited.getId(), "Invited");
+        event.SetStatus(accepted.getId(), "Accepted");
+
+        db.SaveEvent(event);
+        Thread.sleep(1000);
+
+        int cancelledCount = 0;
+        List<String> cancelledUserIds = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : event.getEventUsers().entrySet()) {
+            if (entry.getValue().equals("Cancelled")) {
+                cancelledCount++;
+                cancelledUserIds.add(entry.getKey());
+            }
+        }
+
+        assertEquals("Should have 2 cancelled users", 2, cancelledCount);
+
+        assertTrue("cancelled1 should be in cancelled list", cancelledUserIds.contains(cancelled1.getId()));
+        assertTrue("cancelled2 should be in cancelled list", cancelledUserIds.contains(cancelled2.getId()));
+
+        assertEquals("waiting user should have 'Waiting' status", "Waiting", event.getEventUsers().get(waiting.getId()));
+        assertEquals("invited user should have 'Invited' status", "Invited", event.getEventUsers().get(invited.getId()));
+        assertEquals("accepted user should have 'Accepted' status", "Accepted", event.getEventUsers().get(accepted.getId()));
+
+        db.UsersInEvent(event, users -> {
+            List<User> cancelledUsers = new ArrayList<>();
+            for (User user : users) {
+                String status = event.getEventUsers().get(user.getId());
+                if ("Cancelled".equals(status)) {
+                    cancelledUsers.add(user);
+                }
+            }
+
+            assertEquals("Should have 2 cancelled users in filtered list", 2, cancelledUsers.size());
+
+            boolean hasCancelled1 = cancelledUsers.stream().anyMatch(u -> u.getId().equals(cancelled1.getId()));
+            boolean hasCancelled2 = cancelledUsers.stream().anyMatch(u -> u.getId().equals(cancelled2.getId()));
+            assertTrue("cancelled1 should be in cancelled users list", hasCancelled1);
+            assertTrue("cancelled2 should be in cancelled users list", hasCancelled2);
+
+            boolean hasWaiting = cancelledUsers.stream().anyMatch(u -> u.getId().equals(waiting.getId()));
+            boolean hasInvited = cancelledUsers.stream().anyMatch(u -> u.getId().equals(invited.getId()));
+            boolean hasAccepted = cancelledUsers.stream().anyMatch(u -> u.getId().equals(accepted.getId()));
+            assertFalse("waiting user should not be in cancelled list", hasWaiting);
+            assertFalse("invited user should not be in cancelled list", hasInvited);
+            assertFalse("accepted user should not be in cancelled list", hasAccepted);
+        });
+
+        Thread.sleep(1000);
+
+        db.DeleteEvent(event);
+        db.DeleteUser(cancelled1);
+        db.DeleteUser(cancelled2);
+        db.DeleteUser(waiting);
+        db.DeleteUser(invited);
+        db.DeleteUser(accepted);
+        db.DeleteUser(organizer);
+    }
+
+    /**
+     * US 02.06.03 As an organizer I want to see a final list of entrants who enrolled for the event.
+     * @throws Exception
+     */
+
+    @Test
+    public void ViewFinalEnrolledEntrantsList() throws Exception {
+        User organizer = db.CreateUser("finallist@test.com", 1, "pass", "FinalOrg", "Test", "Org", "5551111111");
+        Thread.sleep(1000);
+
+        db.SetUserID(organizer.getId());
+
+        Event event = db.CreateEvent("Final Enrolled List Test", organizer.getId(),
+                "Test final enrolled entrants", 3, new Date(), new Date());
+        Thread.sleep(1000);
+
+        User accepted1 = db.CreateUser("accepted1@test.com", 0, "pass", "AcceptedOne", "John", "Doe", "5552222222");
+        User accepted2 = db.CreateUser("accepted2@test.com", 0, "pass", "AcceptedTwo", "Jane", "Smith", "5553333333");
+        User accepted3 = db.CreateUser("accepted3@test.com", 0, "pass", "AcceptedThree", "Bob", "Brown", "5554444444");
+        User waiting = db.CreateUser("waiting@test.com", 0, "pass", "WaitingUser", "Alice", "White", "5555555555");
+        User invited = db.CreateUser("invited@test.com", 0, "pass", "InvitedUser", "Charlie", "Black", "5556666666");
+        User cancelled = db.CreateUser("cancelled@test.com", 0, "pass", "CancelledUser", "David", "Green", "5557777777");
+        Thread.sleep(500);
+
+        db.RegisterUserIntoEvent(event, accepted1);
+        db.RegisterUserIntoEvent(event, accepted2);
+        db.RegisterUserIntoEvent(event, accepted3);
+        db.RegisterUserIntoEvent(event, waiting);
+        db.RegisterUserIntoEvent(event, invited);
+        db.RegisterUserIntoEvent(event, cancelled);
+
+        event.SetStatus(accepted1.getId(), "Accepted");
+        event.SetStatus(accepted2.getId(), "Accepted");
+        event.SetStatus(accepted3.getId(), "Accepted");
+        event.SetStatus(invited.getId(), "Invited");
+        event.SetStatus(cancelled.getId(), "Cancelled");
+
+        db.SaveEvent(event);
+        Thread.sleep(1000);
+
+        int finalEnrolledCount = 0;
+        List<String> finalEnrolledUserIds = new ArrayList<>();
+        List<String> nonEnrolledUserIds = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : event.getEventUsers().entrySet()) {
+            if (entry.getValue().equals("Accepted")) {
+                finalEnrolledCount++;
+                finalEnrolledUserIds.add(entry.getKey());
+            } else {
+                nonEnrolledUserIds.add(entry.getKey());
+            }
+        }
+
+        assertEquals("Should have 3 accepted/enrolled users in final list", 3, finalEnrolledCount);
+
+        assertTrue("accepted1 should be in final enrolled list", finalEnrolledUserIds.contains(accepted1.getId()));
+        assertTrue("accepted2 should be in final enrolled list", finalEnrolledUserIds.contains(accepted2.getId()));
+        assertTrue("accepted3 should be in final enrolled list", finalEnrolledUserIds.contains(accepted3.getId()));
+
+        assertFalse("waiting user should not be in final enrolled list", finalEnrolledUserIds.contains(waiting.getId()));
+        assertFalse("invited user should not be in final enrolled list", finalEnrolledUserIds.contains(invited.getId()));
+        assertFalse("cancelled user should not be in final enrolled list", finalEnrolledUserIds.contains(cancelled.getId()));
+
+        db.UsersInEvent(event, users -> {
+            List<User> enrolledUsers = new ArrayList<>();
+            for (User user : users) {
+                String status = event.getEventUsers().get(user.getId());
+                if ("Accepted".equals(status)) {
+                    enrolledUsers.add(user);
+                }
+            }
+
+            assertEquals("Should have 3 enrolled users in filtered list", 3, enrolledUsers.size());
+
+            boolean hasAccepted1 = enrolledUsers.stream().anyMatch(u -> u.getId().equals(accepted1.getId()));
+            boolean hasAccepted2 = enrolledUsers.stream().anyMatch(u -> u.getId().equals(accepted2.getId()));
+            boolean hasAccepted3 = enrolledUsers.stream().anyMatch(u -> u.getId().equals(accepted3.getId()));
+            assertTrue("accepted1 should be in enrolled users list", hasAccepted1);
+            assertTrue("accepted2 should be in enrolled users list", hasAccepted2);
+            assertTrue("accepted3 should be in enrolled users list", hasAccepted3);
+
+            boolean hasWaiting = enrolledUsers.stream().anyMatch(u -> u.getId().equals(waiting.getId()));
+            boolean hasInvited = enrolledUsers.stream().anyMatch(u -> u.getId().equals(invited.getId()));
+            boolean hasCancelled = enrolledUsers.stream().anyMatch(u -> u.getId().equals(cancelled.getId()));
+            assertFalse("waiting user should not be in enrolled list", hasWaiting);
+            assertFalse("invited user should not be in enrolled list", hasInvited);
+            assertFalse("cancelled user should not be in enrolled list", hasCancelled);
+
+            for (User enrolledUser : enrolledUsers) {
+                assertNotNull("Enrolled user should have ID", enrolledUser.getId());
+                assertNotNull("Enrolled user should have email", enrolledUser.getEmail());
+                assertNotNull("Enrolled user should have name", enrolledUser.getFirstName());
+                assertNotNull("Enrolled user should have last name", enrolledUser.getLastName());
+            }
+        });
+
+        db.UsersInEvent(event, users -> {
+            List<String> enrolledUserDisplay = new ArrayList<>();
+            for (User user : users) {
+                String status = event.getEventUsers().get(user.getId());
+                if ("Accepted".equals(status)) {
+                    enrolledUserDisplay.add(user.getFirstName() + " " + user.getLastName() + " (" + user.getUserName() + ")");
+                }
+            }
+
+            assertEquals("Display list should have 3 entries", 3, enrolledUserDisplay.size());
+
+            for (String display : enrolledUserDisplay) {
+                assertTrue("Display should contain user info", display.contains("("));
+                assertTrue("Display should contain username", display.contains(")"));
+            }
+        });
+
+        Thread.sleep(1000);
+
+        db.FinishEvent(event);
+        Thread.sleep(500);
+
+        db.GetEvent(event.getId(), finishedEvent -> {
+            int postFinishEnrolledCount = 0;
+            for (String status : finishedEvent.getEventUsers().values()) {
+                if ("Accepted".equals(status)) {
+                    postFinishEnrolledCount++;
+                }
+            }
+
+            assertEquals("Enrolled count should remain 3 after finishing event", 3, postFinishEnrolledCount);
+        });
+
+        Thread.sleep(500);
+
+        // Cleanup
+        db.DeleteEvent(event);
+        db.DeleteUser(accepted1);
+        db.DeleteUser(accepted2);
+        db.DeleteUser(accepted3);
+        db.DeleteUser(waiting);
+        db.DeleteUser(invited);
+        db.DeleteUser(cancelled);
+        db.DeleteUser(organizer);
+    }
+
+    /**
+     * US 02.02.01 As an organizer I want to view the list of entrants who joined my event waiting list
+     * @throws Exception
+     */
+
+    @Test
+    public void ViewWaitingListEntrants() throws Exception {
+        User organizer = db.CreateUser("waitlistorg@test.com", 1, "pass", "WaitlistOrg", "Test", "Org", "5551111111");
+        db.SetUserID(organizer.getId());
+        Event event = db.CreateEvent("Waiting List Test", organizer.getId(), "Test", 10, new Date(), new Date());
+        Thread.sleep(1000);
+
+        User waiting1 = db.CreateUser("waiting1@test.com", 0, "pass", "User1", "Alice", "Johnson", "5552222222");
+        User waiting2 = db.CreateUser("waiting2@test.com", 0, "pass", "User2", "Bob", "Smith", "5553333333");
+        User accepted = db.CreateUser("accepted@test.com", 0, "pass", "AcceptedUser", "Charlie", "Brown", "5554444444");
+        User invited = db.CreateUser("invited@test.com", 0, "pass", "InvitedUser", "Diana", "Williams", "5555555555");
+        Thread.sleep(500);
+
+        db.RegisterUserIntoEvent(event, waiting1);
+        db.RegisterUserIntoEvent(event, waiting2);
+        db.RegisterUserIntoEvent(event, accepted);
+        db.RegisterUserIntoEvent(event, invited);
+
+        event.SetStatus(accepted.getId(), "Accepted");
+        event.SetStatus(invited.getId(), "Invited");
+
+        db.SaveEvent(event);
+        Thread.sleep(1000);
+
+        int waitingCount = 0;
+        for (String status : event.getEventUsers().values()) {
+            if ("Waiting".equals(status)) waitingCount++;
+        }
+
+        assertEquals("Should have 2 users on waiting list", 2, waitingCount);
+        assertEquals("Waiting", event.getEventUsers().get(waiting1.getId()));
+        assertEquals("Waiting", event.getEventUsers().get(waiting2.getId()));
+        assertEquals("Accepted", event.getEventUsers().get(accepted.getId()));
+        assertEquals("Invited", event.getEventUsers().get(invited.getId()));
+
+        db.UsersInEvent(event, users -> {
+            List<User> waitingUsers = new ArrayList<>();
+            for (User user : users) {
+                if ("Waiting".equals(event.getEventUsers().get(user.getId()))) {
+                    waitingUsers.add(user);
+                }
+            }
+
+            assertEquals(2, waitingUsers.size());
+            assertTrue(waitingUsers.stream().anyMatch(u -> u.getId().equals(waiting1.getId())));
+            assertTrue(waitingUsers.stream().anyMatch(u -> u.getId().equals(waiting2.getId())));
+            assertFalse(waitingUsers.stream().anyMatch(u -> u.getId().equals(accepted.getId())));
+            assertFalse(waitingUsers.stream().anyMatch(u -> u.getId().equals(invited.getId())));
+        });
+
+        Thread.sleep(500);
+
+        // Cleanup
+        db.DeleteEvent(event);
+        db.DeleteUser(waiting1);
+        db.DeleteUser(waiting2);
+        db.DeleteUser(accepted);
+        db.DeleteUser(invited);
+        db.DeleteUser(organizer);
+    }
+
+
 }
