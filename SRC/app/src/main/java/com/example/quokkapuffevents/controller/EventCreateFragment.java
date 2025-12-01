@@ -118,6 +118,12 @@ public class EventCreateFragment extends Fragment {
         numbPar = view.findViewById(R.id.participantsNumberTextView);
         addInterests = view.findViewById(R.id.selectCategoriesButton);
         setLocation = view.findViewById(R.id.setLocationButton);
+
+//        DEFAULT / FILLER LOCATION
+//        LatLng defaultLocation = new LatLng(53.5461, -113.4938);
+
+        lat = 53.5461;
+        lng = -113.4938;
     }
 
     public void setUpListeners(View view) {
@@ -171,6 +177,11 @@ public class EventCreateFragment extends Fragment {
                 //Format that user type has to be yyyy-mm-dd in order for DateConverter to work
                 String eventDateString = dateOfEvent.getText().toString().trim();
                 String drawDateString = drawDate.getText().toString().trim();
+
+                System.out.println(drawDateString);
+                System.out.println(drawDateString);
+
+
                 int parts = Integer.parseInt(numbPar.getText().toString()); // number of wanted participants in event
                 String maxParts = "";
 

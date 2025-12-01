@@ -134,7 +134,9 @@ public class AdminEventDetailsFrag extends Fragment {
             db.GetImage(event.getImageID(), image -> {
                 posterImage.setImageBitmap(image);
             });
-
+        }
+        else {
+            posterImage.setImageResource(R.drawable.no_img_found);
         }
 
     }

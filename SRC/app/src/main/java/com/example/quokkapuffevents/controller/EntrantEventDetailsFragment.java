@@ -204,6 +204,7 @@ public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyC
                 RegisterEventsFragment newFrag = new RegisterEventsFragment();
                 ((DashboardActivity) getActivity()).replaceFragment(newFrag);
 
+
             }
         });
 
@@ -225,5 +226,10 @@ public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyC
             }
         });
     }
+
+    public void saveFilters() {
+
+    }
+
 }
 

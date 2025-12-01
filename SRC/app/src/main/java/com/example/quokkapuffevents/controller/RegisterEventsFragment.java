@@ -39,7 +39,7 @@ public class RegisterEventsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.find_events_fragment, container, false);
+        return inflater.inflate(R.layout.home_fragment, container, false);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class RegisterEventsFragment extends Fragment {
         /**
          * Initializes all events available to register
          */
-        listView = view.findViewById(R.id.findEventsListView);
+        listView = view.findViewById(R.id.waiting_events_listview);
     }
 
     private void LoadEvent(){
