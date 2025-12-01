@@ -1133,5 +1133,89 @@ public class OrganizerTestCases {
         db.DeleteUser(organizer);
     }
 
+    @Test
+    public void SendNotificationToChosenEntrants() {
+        User organizer = db.CreateUser("cancellist@test.com", 1, "pass",
+                "CancelOrg", "Test", "Org", "5551111111"
+        );
+
+        db.SetUserID(organizer.getId());
+
+        Event event = db.CreateEvent("Cancelled List Test", organizer.getId(),
+                "Test cancelled entrants", 5, new Date(), new Date()
+        );
+
+        User accepted1 = db.CreateUser("accepted1@test.com", 0, "pass",
+                "accepted1", "John", "Doe", "5552222222"
+        );
+        User accepted2 = db.CreateUser("accepted2@test.com", 0, "pass",
+                "accepted2", "Jane", "Smith", "5553333333"
+        );
+
+        try {
+
+            db.RegisterUserIntoEvent(event, accepted1);
+            db.RegisterUserIntoEvent(event, accepted2);
+
+            db.SaveEvent(event);
+            Thread.sleep(1000);
+
+            int cancelledCount = 0;
+            List<String> cancelledUserIds = new ArrayList<>();
+
+            for (Map.Entry<String, String> entry : event.getEventUsers().entrySet()) {
+                if (entry.getValue().equals("Cancelled")) {
+                    cancelledCount++;
+                    cancelledUserIds.add(entry.getKey());
+                }
+            }
+
+            assertEquals("Should have 2 cancelled users", 2, cancelledCount);
+
+            assertTrue("cancelled1 should be in cancelled list", cancelledUserIds.contains(cancelled1.getId()));
+            assertTrue("cancelled2 should be in cancelled list", cancelledUserIds.contains(cancelled2.getId()));
+
+            assertEquals("waiting user should have 'Waiting' status", "Waiting", event.getEventUsers().get(waiting.getId()));
+            assertEquals("invited user should have 'Invited' status", "Invited", event.getEventUsers().get(invited.getId()));
+            assertEquals("accepted user should have 'Accepted' status", "Accepted", event.getEventUsers().get(accepted.getId()));
+
+            db.UsersInEvent(event, users -> {
+                List<User> cancelledUsers = new ArrayList<>();
+                for (User user : users) {
+                    String status = event.getEventUsers().get(user.getId());
+                    if ("Cancelled".equals(status)) {
+                        cancelledUsers.add(user);
+                    }
+                }
+
+                assertEquals("Should have 2 cancelled users in filtered list", 2, cancelledUsers.size());
+
+                boolean hasCancelled1 = cancelledUsers.stream().anyMatch(u -> u.getId().equals(cancelled1.getId()));
+                boolean hasCancelled2 = cancelledUsers.stream().anyMatch(u -> u.getId().equals(cancelled2.getId()));
+                assertTrue("cancelled1 should be in cancelled users list", hasCancelled1);
+                assertTrue("cancelled2 should be in cancelled users list", hasCancelled2);
+
+                boolean hasWaiting = cancelledUsers.stream().anyMatch(u -> u.getId().equals(waiting.getId()));
+                boolean hasInvited = cancelledUsers.stream().anyMatch(u -> u.getId().equals(invited.getId()));
+                boolean hasAccepted = cancelledUsers.stream().anyMatch(u -> u.getId().equals(accepted.getId()));
+                assertFalse("waiting user should not be in cancelled list", hasWaiting);
+                assertFalse("invited user should not be in cancelled list", hasInvited);
+                assertFalse("accepted user should not be in cancelled list", hasAccepted);
+            });
+
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteEvent(event);
+            db.DeleteUser(cancelled1);
+            db.DeleteUser(cancelled2);
+            db.DeleteUser(waiting);
+            db.DeleteUser(invited);
+            db.DeleteUser(accepted);
+            db.DeleteUser(organizer);
+        }
+    }
+    }
 
 }
