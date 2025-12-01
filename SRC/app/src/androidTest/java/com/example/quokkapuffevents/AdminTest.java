@@ -5,6 +5,7 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
@@ -435,7 +436,9 @@ public class AdminTest {
 
     }
 
-    //    US 03.03.01 As an administrator, I want to be able to remove images. (In-Progress - Kishan)
+    /**
+     * US 03.03.01 As an administrator, I want to be able to remove images. (In-Progress - Kishan)
+     */
     @Test
     public void deleteImage() {
 
@@ -463,7 +466,7 @@ public class AdminTest {
 
 
 //            Go to the users dashboard
-            onView(withId(R.id.eventsIcon)).perform((click()));
+            onView(withId(R.id.imagesIcon)).perform((click()));
             Thread.sleep(1500);
 
             onView(withText("Mock Event")).check(matches(isDisplayed()));
@@ -482,15 +485,15 @@ public class AdminTest {
 
             Thread.sleep(1500);
 
-            assertDoesNotExist(onView(withText("Mock Event")));
+            onView(withText("Mock Event")).check(doesNotExist());
 
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        } finally {
+            deleteMockAdmin(mockAdmin);
+            deleteMockEvent(testEvent);
         }
-
-        deleteMockAdmin(mockAdmin);
-        deleteMockEvent(testEvent);
 
     }
 
