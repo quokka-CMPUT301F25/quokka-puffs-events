@@ -12,6 +12,8 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
+    private Double lat;
+    private Double lng;
     private String phoneNumber;
     private ArrayList<String> events;
     private Integer accountType; //-1 Admin, 0 for entrant, +1 for organiser
@@ -127,4 +129,20 @@ public class User {
     }
     public String getFcmToken() { return fcmToken; }
     public void setFcmToken(String fcmToken) { this.fcmToken = fcmToken; }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
 }

@@ -118,6 +118,12 @@ public class EventCreateFragment extends Fragment {
         numbPar = view.findViewById(R.id.participantsNumberTextView);
         addInterests = view.findViewById(R.id.selectCategoriesButton);
         setLocation = view.findViewById(R.id.setLocationButton);
+
+//        DEFAULT / FILLER LOCATION
+//        LatLng defaultLocation = new LatLng(53.5461, -113.4938);
+
+//        lat = 53.5461;
+//        lng = -113.4938;
     }
 
     public void setUpListeners(View view) {
@@ -199,6 +205,8 @@ public class EventCreateFragment extends Fragment {
 
                     db.UploadImageToDatabase(bitmap, uri -> {
                         event.setQrcodeID(uri);
+                        event.setLat(lat);
+                        event.setLng(lng);
                         db.SaveEvent(event);
                     });
                     if (selectedImageBitmap != null) {

@@ -62,6 +62,7 @@ public class ChangeProfileSettings extends Fragment {
     Button revertBtn;
     Button confirmBtn;
     Button deleteBtn;
+    Button setAddressBtn;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -97,6 +98,7 @@ public class ChangeProfileSettings extends Fragment {
         revertBtn = v.findViewById(R.id.revertChangesBtn);
         confirmBtn = v.findViewById(R.id.confirmChangesBtn);
         deleteBtn = v.findViewById(R.id.deleteAccountBtn);
+        setAddressBtn = v.findViewById(R.id.setUserAddressBtn);
 
         userID = db.GetCurrentUserID();
     }
@@ -158,6 +160,15 @@ public class ChangeProfileSettings extends Fragment {
             } else {
                 // User manually turned off switch
                 Toast.makeText(getContext(), "Notifications disabled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        setAddressBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChooseUserLocationFragment frag = new ChooseUserLocationFragment();
+                frag.SetUser(currentUser);
+                ((DashboardActivity) getActivity()).replaceFragment(frag);
             }
         });
 

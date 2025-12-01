@@ -3,6 +3,7 @@ package com.example.quokkapuffevents.controller;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,33 +19,42 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.quokkapuffevents.R;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
+import com.example.quokkapuffevents.model.Database;
+import com.example.quokkapuffevents.model.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class ChooseEventLocationFragment extends Fragment implements OnMapReadyCallback {
+public class ChooseUserLocationFragment extends Fragment implements OnMapReadyCallback {
 
+    private User user;
+
+    private Database db;
     private GoogleMap mMap;
     private EditText editTextLocation;
     private Button buttonSearch;
     private Button confirmButton;
     private Button goBackToCreateEventBtn;
-    private SeekBar radiusSeekBar;
 
-    private Switch switchGeolock;
-    private TextView radiusLabel;
-    private Circle circle;
-    private EventCreateFragment frag;
     private Double lat;
     private Double lng;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.choose_event_location_fragment, container, false);
+        return inflater.inflate(R.layout.choose_user_location_fragment, container, false);
+
+
     }
 
     @Override
@@ -52,10 +62,8 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
         editTextLocation = view.findViewById(R.id.editTextLocation);
         buttonSearch = view.findViewById(R.id.buttonSearch);
         confirmButton = view.findViewById(R.id.confirm_button);
-        radiusSeekBar = view.findViewById(R.id.radiusSeekBar);
-        radiusLabel = view.findViewById(R.id.radiusLabel);
-        switchGeolock = view.findViewById(R.id.switchGeolock);
         goBackToCreateEventBtn = view.findViewById(R.id.goBackToCreateEventBtn);
+        db = Database.getInstance();
 
 
         // Initialize Map
@@ -63,34 +71,6 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
                 getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) mapFragment.getMapAsync(this);
 
-        int STEP = 1; // km
-
-        radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (!fromUser) return; // only respond to real user movement
-
-                // SNAP to nearest step
-                int snappedValue = Math.round(progress / STEP) * STEP;
-                seekBar.setProgress(snappedValue);
-
-                // Update Label TEXT → this was missing!
-                radiusLabel.setText(snappedValue + " km");
-
-                // MOVE label under the slider thumb
-                int thumbPos = seekBar.getThumb().getBounds().centerX();
-                radiusLabel.setX(seekBar.getX() + thumbPos - radiusLabel.getWidth() / 2);
-
-                // Update map circle
-                if (circle != null) {
-                    circle.setRadius(snappedValue * 1000); // meters
-                }
-            }
-
-            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
 
         // Search Button Click
         buttonSearch.setOnClickListener(v -> {
@@ -99,29 +79,27 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
                 searchLocation(location);
             }
 
-
         });
 
         confirmButton.setOnClickListener(v->{
-            //TODO: check if the switch is on, if so check the radius
-            // For now radius will default to -1
+            //TODO: save user location / address
 
+            Toast.makeText(requireContext(), "Loaction has been changed.", Toast.LENGTH_SHORT).show();
 
-            frag.setEventLocation(lat, lng);
-            if(switchGeolock.isChecked()) {
-                frag.setLockRadius(radiusSeekBar.getProgress());
+            db.SaveUser(user);
 
-            } else {
-                frag.setLockRadius(-1);
-            }
+            ChangeProfileSettings frag = new ChangeProfileSettings();
+            frag.setUser(user);
             ((DashboardActivity) getActivity()).replaceFragment(frag);
-
 
         });
 
         goBackToCreateEventBtn.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Loaction has not been set.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Location has not been saved.", Toast.LENGTH_SHORT).show();
+            ChangeProfileSettings frag = new ChangeProfileSettings();
+            frag.setUser(user);
             ((DashboardActivity) getActivity()).replaceFragment(frag);
+
         });
     }
 
@@ -150,6 +128,9 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
                 lat = address.getLatitude();
                 lng = address.getLongitude();
 
+                user.setLat(lat);
+                user.setLng(lng);
+
                 Log.d("SEARCH", "lat=" + lat + ", lng=" + lng);
 
                 LatLng location = new LatLng(lat, lng);
@@ -160,11 +141,6 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
                     mMap.addMarker(new MarkerOptions().position(location).title(locationName));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
 
-                    circle = mMap.addCircle(new CircleOptions()
-                            .center(location)
-                            .radius(0)
-                            .strokeColor(Color.BLUE)
-                            .fillColor(0x220000FF));
                 });
 
             } catch (IOException e) {
@@ -174,7 +150,8 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
     }
 
 
-    public void setFrag(EventCreateFragment frag) {
-        this.frag = frag;
+    public void SetUser(User u) {
+        this.user = u;
     }
 }
+

@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -180,7 +181,6 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
 
             eventRegisterBtn_all.setOnClickListener(v -> {
                 registerForEvent(event);
-                events.remove(event);
                 notifyDataSetChanged();
             });
 
@@ -188,8 +188,6 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
             db.GetUser(event.getOrg(), user -> {
                 originUserText_all.setText(user.getUserName().toString() + "'s     ");
             });
-
-            GetLocation(LocationServices.getFusedLocationProviderClient(activity));
         }
 
         return view;
@@ -229,36 +227,39 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     // ------------------ EVENT ACTIONS ------------------ //
 
     public void registerForEvent(Event event) {
-        if(event.getLockRadius() == -1)
-            db.RegisterUserIntoEvent(event, user);
-        else{
-            db.GetUser(db.GetCurrentUserID(), user ->{
-                Double Elat = event.getLat();
-                Double Elng = event.getLng();
+        db.GetUser(db.GetCurrentUserID(), user -> {
 
-                Double distance = Math.sqrt(Math.pow(Ulat - Elat, 2) + Math.pow(Ulng - Elng, 2));
-                if(distance <= event.getLockRadius())
-                    db.RegisterUserIntoEvent(event, user);
-            });
-        }
-    }
+            if (user.getLat() == null || user.getLng() == null) {
+                Toast.makeText(activity,
+                        "This event is locked by distance. No location set, please add one in settings.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-    private void GetLocation(FusedLocationProviderClient fusedLocationClient) {
-        if(ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            double userLat = user.getLat();
+            double userLng = user.getLng();
+            double eventLat = event.getLat();
+            double eventLng = event.getLng();
+            Log.d("DEBUG_LOC",
+                    "User: (" + userLat + ", " + userLng + ")  Event: (" + eventLat + ", " + eventLng + ")");
 
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-            return;
-        }
+            float[] distance = new float[1]; // result in METERS
+            Location.distanceBetween(userLat, userLng, eventLat, eventLng, distance);
 
-        Task<Location> task = fusedLocationClient.getLastLocation();
-        task.addOnSuccessListener(location -> {
-            if(location != null){
-                Ulat = location.getLatitude();
-                Ulng = location.getLongitude();
+            Log.d("Distance", "Distance from home: " + distance[0] + "m");
+
+            if (distance[0] <= event.getLockRadius()) {
+                db.RegisterUserIntoEvent(event, user);
+                Toast.makeText(activity, "Registered!", Toast.LENGTH_SHORT).show();
+                events.remove(event);
+            } else {
+                Toast.makeText(activity,
+                        "Too far from the event (" + distance[0] + "m away)",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     public void leaveWaitingList(Event event) {
         db.CancelUserIntoEvent(event, user);
