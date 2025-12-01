@@ -839,6 +839,71 @@ public class EntrantTestCases {
         } finally {
             db.DeleteUser(entrant);
             db.DeleteEvent(mockEvent);
+    /**
+     * US 01.05.04 As an entrant, I want to know how many total entrants are on the waiting list for an event.
+     */
+
+    @Test
+    public void ViewEntrantsWaiting() {
+        User mockOrg = null;
+        Event event = null;
+
+        User mockEntrant = accessEntrantDashboard();
+        try {
+            mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+
+            Thread.sleep(1500);
+
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
+            Thread.sleep(3000);
+
+            db.RegisterUserIntoEvent(event, mockEntrant);
+            // Add more entrants to create a waiting list
+            User entrant2 = db.CreateUser("entrant2@test.com", 0, "pass", "Entrant2", "Bob", "Smith", "5552222222");
+            User entrant3 = db.CreateUser("entrant3@test.com", 0, "pass", "Entrant3", "Charlie", "Brown", "5553333333");
+            User entrant4 = db.CreateUser("entrant4@test.com", 0, "pass", "Entrant4", "Diana", "Williams", "5554444444");
+
+            Thread.sleep(500);
+
+            db.RegisterUserIntoEvent(event, entrant2);
+            db.RegisterUserIntoEvent(event, entrant3);
+            db.RegisterUserIntoEvent(event, entrant4);
+
+            Thread.sleep(1000);
+
+            onView(withId(R.id.all_events_button)).check(matches(isDisplayed())).perform(click());
+
+            Thread.sleep(1500);
+
+            // Test if event appears in the list
+            onView(withText(event.getName())).perform(scrollTo()).check(matches(isDisplayed()));
+
+            onView(withId(R.id.home_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.details_event_btn_waiting)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.eventTotalParticipantsWaitingText))
+                    .check(matches(withText("4")));
+            Thread.sleep(1500);
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant);
+            if (mockOrg != null) {
+                db.DeleteUser(mockOrg);
+            }
+            if (event != null) {
+                db.DeleteEvent(event);
+            }
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockEntrant);
+            if (mockOrg != null) {
+                db.DeleteUser(mockOrg);
+            }
+            if (event != null) {
+                db.DeleteEvent(event);
+            }
         }
     }
 }

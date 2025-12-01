@@ -106,7 +106,7 @@
             android:contentDescription="Go to notifications fragment"
             android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/notifs">
+            android:src="@drawable/empty_notifs">
 
         </ImageButton>
 
