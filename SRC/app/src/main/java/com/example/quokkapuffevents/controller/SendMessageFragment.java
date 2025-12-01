@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class SendMessageFragment extends Fragment {
@@ -34,6 +36,9 @@ public class SendMessageFragment extends Fragment {
     EditText message;
     Button backBtn;
     Button sendMessage;
+
+    CheckBox canceledUsers;
+    CheckBox invitedUsers;
 
 
     public void SetEvent(Event event) {
@@ -66,6 +71,8 @@ public class SendMessageFragment extends Fragment {
         message = view.findViewById(R.id.messageText);
         backBtn = view.findViewById(R.id.goBackBtn);
         sendMessage = view.findViewById(R.id.sendMessageBtn);
+        canceledUsers = view.findViewById(R.id.sendToCanceledUserCheckBox);
+        invitedUsers = view.findViewById(R.id.sendToInivitedUserCheckBox);
     }
 
     public void SetUpListeners(View view) {
@@ -81,13 +88,24 @@ public class SendMessageFragment extends Fragment {
         });
 
         sendMessage.setOnClickListener(v -> {
+            ArrayList<String> filterType = new ArrayList<>();
             Map<String, String> eventUsers = event.getEventUsers();
 
-            for(Map.Entry<String, String> entry : eventUsers.entrySet()) {
-                if(entry.getValue().equals("Cancelled"))
-                    continue;
+            if(canceledUsers.isChecked()) {
+                filterType.add("Canceled");
+            }
 
-                db.CreateNotification(0, entry.getKey(), event.getId(), event.getOrg(), message.getText().toString(), notifTitle.getText().toString());
+            if(invitedUsers.isChecked()) {
+                filterType.add("Invited");
+                filterType.add("Accepted");
+                filterType.add("Waiting");
+            }
+
+
+            for(Map.Entry<String, String> entry : eventUsers.entrySet()) {
+                if(filterType.contains(entry.getValue())) {
+                    db.CreateNotification(0, entry.getKey(), event.getId(), event.getOrg(), message.getText().toString(), notifTitle.getText().toString());
+                }
             }
 
             OrganizerEventDetails newFrag = new OrganizerEventDetails();

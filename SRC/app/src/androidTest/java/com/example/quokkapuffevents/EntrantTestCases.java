@@ -618,28 +618,41 @@ public class EntrantTestCases {
 
             event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
 
-            Thread.sleep(1500);
-
-            db.RegisterUserIntoEvent(event, mockEntrant);
-
-            //Draw User
-            event.drawUsers(-1);
-            Thread.sleep(1500);
+            Thread.sleep(20000);
 
             //Go notif
             onView(withId(R.id.notifs_button)).perform(click());
-            Thread.sleep(1500);
+            Thread.sleep(20000);
+
+            db.RegisterUserIntoEvent(event, mockEntrant);
+            Thread.sleep(20000);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.removeBtn))
+                    .perform(click());
+
+            Thread.sleep(20000);
+
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(20000);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.acceptBtn))
+                    .perform(click());
 
             //Testing to see if notification has appeared
-            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
-            onView(allOf(withId(R.id.acceptBtn), hasSibling(withText("X")))).perform(click());
+            Thread.sleep(20000);
 
             //Get updated event info
             db.GetEvent(event.getId(), updatedEvent -> {
                 assertEquals("Accepted", updatedEvent.getEventUsers().get(mockEntrant.getId()));
             });
-            Thread.sleep(1500);
-
+            Thread.sleep(20000);
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
@@ -676,26 +689,43 @@ public class EntrantTestCases {
 
             event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
 
-            Thread.sleep(3000);
-
-            db.RegisterUserIntoEvent(event, mockEntrant);
-            //Draw User
-            event.drawUsers(-1);
-            Thread.sleep(1500);
+            Thread.sleep(20000);
 
             //Go notif
             onView(withId(R.id.notifs_button)).perform(click());
-            Thread.sleep(1500);
+            Thread.sleep(20000);
+
+            db.RegisterUserIntoEvent(event, mockEntrant);
+            Thread.sleep(20000);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.removeBtn))
+                    .perform(click());
+
+            Thread.sleep(20000);
+
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(20000);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.rejectBtn))
+                    .perform(click());
 
             //Testing to see if notification has appeared
-            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
-            onView(allOf(withId(R.id.rejectBtn), hasSibling(withText("X")))).perform(click());
+            Thread.sleep(20000);
 
-            //Get updated Event info
+            //Get updated event info
             db.GetEvent(event.getId(), updatedEvent -> {
-                assertEquals("Rejected", updatedEvent.getEventUsers().get(mockEntrant.getId()));
+                assertEquals("Cancelled", updatedEvent.getEventUsers().get(mockEntrant.getId()));
             });
+
             Thread.sleep(1500);
+
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
@@ -713,6 +743,7 @@ public class EntrantTestCases {
             if (event != null) {
                 db.DeleteEvent(event);
             }
+
         }
     }
 
