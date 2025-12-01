@@ -103,9 +103,9 @@ public class EventCreateFragment extends Fragment {
         maxPar = view.findViewById(R.id.eventMaxParticipantsInput);
         addGeo = view.findViewById(R.id.eventGeolocationSwitch);
         cancelEvent = view.findViewById(R.id.cancelEventCreationBtn);
-        createEvent = view.findViewById(R.id.confirmEventCreationBtn);
+        createEvent = view.findViewById(R.id.confirmChangesBtn);
         numbPar = view.findViewById(R.id.eventParticipantAmountInput);
-        addInterests = view.findViewById(R.id.addInterestsBtn);
+        addInterests = view.findViewById(R.id.selectCategoriesButton);
     }
 
     public void setUpListeners(View view) {

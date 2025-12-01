@@ -32,7 +32,7 @@ public class FilterSettingsFrag extends Fragment {
             "Fundraisers", "Theater", "Party"
     };
     String[] templateAvailability = {
-            "Open", "Full", "Any"
+            "Any", "Open", "Full"
     };
     String[] templateDistances = {
             "50km", "100km", "200km", "500km", "1000km", "2000km"
@@ -66,7 +66,7 @@ public class FilterSettingsFrag extends Fragment {
 
     public void initializeViews(View view) {
 
-        selectInterests = view.findViewById(R.id.interestsButton);
+        selectInterests = view.findViewById(R.id.interestsLayoutButton);
         selectAvailability = view.findViewById(R.id.availabilityButton);
         selectDistance = view.findViewById(R.id.locationButton);
         goBackbtn = view.findViewById(R.id.goBackBtn);
