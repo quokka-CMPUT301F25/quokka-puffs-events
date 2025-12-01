@@ -177,7 +177,7 @@ public class OrganizerTestCases {
             onView(withId(R.id.eventDescInput)).perform(typeText("HELP ME"));
 
             Thread.sleep(2000);
-            onView(withId(R.id.confirmEventCreationBtn)).perform(click());
+            onView(withId(R.id.confirmChangesBtn)).perform(click());
 
             Thread.sleep(5000);
             onView(withId(R.id.home_button)).perform(click());
@@ -296,4 +296,51 @@ public class OrganizerTestCases {
             db.DeleteEvent(event);
         }
     }
+
+
+    //Todo: Need to finish
+    @Test
+    public void TestViewParticipants(){
+
+        User mockOrg = createTestOrganizer();
+        Event event = null;
+        User temp = createMockEntrant();
+
+        User mockEntrant1 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest1", "John", "Test", "0");
+        User mockEntrant2 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest2", "John", "Test", "0");
+
+        try {
+            Thread.sleep(1500);
+
+            event = db.CreateEvent("TestEvent", mockOrg.getId(), "This event is for testing", 1, 3, new Date(), new Date());
+
+
+            // register entrants into event
+            db.RegisterUserIntoEvent(event, mockEntrant1);
+            db.RegisterUserIntoEvent(event, mockEntrant2);
+            db.RegisterUserIntoEvent(event, temp);
+
+
+
+
+
+
+
+            Thread.sleep(3000);
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+        }
+
+
+
+    }
+
+
+
 }
