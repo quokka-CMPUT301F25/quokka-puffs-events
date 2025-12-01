@@ -179,7 +179,7 @@ public class OrganizerTestCases {
 
             // Create event with participant limit
             Event event = db.CreateEvent("TestEventWithLimit", mockOrg.getId(),
-                    "Testing participant limit functionality", 30, 150, new Date(), new Date());
+                    "Testing participant limit functionality", 30, 150, new Date(), new Date(), -34.0, 151.0, -1);
             Thread.sleep(1500);
 
             // DEBUG: Check event state before any operations
@@ -352,7 +352,7 @@ public class OrganizerTestCases {
 
             // Create event
             Event event = db.CreateEvent("TestEventWithPoster", mockOrg.getId(),
-                    "Testing event poster upload functionality", 10, new Date(), new Date());
+                    "Testing event poster upload functionality", 10, new Date(), new Date(), -34.0, 151.0, -1);
             Thread.sleep(1500);
 
             // Create a mock poster bitmap
@@ -448,7 +448,7 @@ public class OrganizerTestCases {
 
             // Create event with initial poster
             Event event = db.CreateEvent("TestEventUpdatePoster", mockOrg.getId(),
-                    "Testing event poster update functionality", 10, new Date(), new Date());
+                    "Testing event poster update functionality", 10, new Date(), new Date(), -34.0, 151.0, -1);
             Thread.sleep(1500);
 
             // Create initial poster
@@ -543,7 +543,7 @@ public class OrganizerTestCases {
 
             // Create event
             Event event = db.CreateEvent("TestEventNotifications", mockOrg.getId(),
-                    "Testing notification functionality", 5, new Date(), new Date());
+                    "Testing notification functionality", 5, new Date(), new Date(), -34.0, 151.0, -1);
             Thread.sleep(1500);
 
             // Create test users with different statuses
@@ -669,7 +669,7 @@ public class OrganizerTestCases {
 
             // Create event
             Event event = db.CreateEvent("TestEventCancelUnsigned", mockOrg.getId(),
-                    "Testing cancellation of unsigned entrants", 3, new Date(), new Date());
+                    "Testing cancellation of unsigned entrants", 3, new Date(), new Date(), -34.0, 151.0, -1);
             Thread.sleep(1500);
 
             // Create users with different scenarios
@@ -785,7 +785,7 @@ public class OrganizerTestCases {
         db.SetUserID(organizer.getId());
 
         // Create event
-        Event event = db.CreateEvent("Invite List Test", organizer.getId(), "Test", 2, new Date(), new Date());
+        Event event = db.CreateEvent("Invite List Test", organizer.getId(), "Test", 2, new Date(), new Date(), -34.0, 151.0, -1);
         Thread.sleep(1000);
 
         // Create test users with different statuses
@@ -850,7 +850,7 @@ public class OrganizerTestCases {
 
         db.SetUserID(organizer.getId());
 
-        Event event = db.CreateEvent("Cancelled List Test", organizer.getId(), "Test cancelled entrants", 5, new Date(), new Date());
+        Event event = db.CreateEvent("Cancelled List Test", organizer.getId(), "Test cancelled entrants", 5, new Date(), new Date(), -34.0, 151.0, -1);
         Thread.sleep(1000);
 
         User cancelled1 = db.CreateUser("cancelled1@test.com", 0, "pass", "CancelledOne", "John", "Doe", "5552222222");
@@ -941,7 +941,7 @@ public class OrganizerTestCases {
         db.SetUserID(organizer.getId());
 
         Event event = db.CreateEvent("Final Enrolled List Test", organizer.getId(),
-                "Test final enrolled entrants", 3, new Date(), new Date());
+                "Test final enrolled entrants", 3, new Date(), new Date(), -34.0, 151.0, -1);
         Thread.sleep(1000);
 
         User accepted1 = db.CreateUser("accepted1@test.com", 0, "pass", "AcceptedOne", "John", "Doe", "5552222222");
@@ -1079,7 +1079,7 @@ public class OrganizerTestCases {
     public void ViewWaitingListEntrants() throws Exception {
         User organizer = db.CreateUser("waitlistorg@test.com", 1, "pass", "WaitlistOrg", "Test", "Org", "5551111111");
         db.SetUserID(organizer.getId());
-        Event event = db.CreateEvent("Waiting List Test", organizer.getId(), "Test", 10, new Date(), new Date());
+        Event event = db.CreateEvent("Waiting List Test", organizer.getId(), "Test", 10, new Date(), new Date(), -34.0, 151.0, -1);
         Thread.sleep(1000);
 
         User waiting1 = db.CreateUser("waiting1@test.com", 0, "pass", "User1", "Alice", "Johnson", "5552222222");

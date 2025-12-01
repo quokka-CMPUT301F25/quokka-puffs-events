@@ -2,12 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="8dp">
 
 
         <LinearLayout
-
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/past_events_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -16,7 +18,7 @@
             android:background="@color/white"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:visibility="gone    ">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/event_text_past"
@@ -54,7 +56,8 @@
     </LinearLayout>
 
         <LinearLayout
-
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/waiting_events_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,6 +68,8 @@
             android:paddingVertical="8dp">
 
         <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -104,6 +109,8 @@
 
 
         <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -139,7 +146,8 @@
 
 
     <LinearLayout
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/find_events_content_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

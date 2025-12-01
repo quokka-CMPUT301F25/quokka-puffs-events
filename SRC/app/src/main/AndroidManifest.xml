@@ -20,10 +20,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuokkaPuffEvents">
 
-        <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
         <activity android:name=".controller.LoginActivity" />
         <activity android:name=".controller.RegisterActivity" />
         <activity android:name=".controller.DashboardActivity" />
