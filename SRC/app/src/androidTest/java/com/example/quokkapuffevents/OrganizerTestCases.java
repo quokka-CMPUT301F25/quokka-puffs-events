@@ -123,6 +123,7 @@ public class OrganizerTestCases {
         }
 
         return mockOrganizer;
+    }
     public Event createMockEvent(Date eventDate, String organizerId) {
         return db.CreateEvent("Mock Event", organizerId, "Mock Description", 10, new Date(), eventDate, 0.0, 0.0, -1);
     }

@@ -3,14 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="8dp">
 
 
         <LinearLayout
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/past_events_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,9 +65,7 @@
             android:gravity="center"
             android:background="@color/white"
             android:visibility="gone"
-            android:paddingVertical="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:paddingVertical="8dp">
 
         <LinearLayout
             app:layout_constraintTop_toTopOf="parent"
@@ -161,8 +156,6 @@
         android:visibility="visible"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         >
 
             <TextView
