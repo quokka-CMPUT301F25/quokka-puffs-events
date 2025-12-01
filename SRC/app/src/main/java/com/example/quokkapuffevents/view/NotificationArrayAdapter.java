@@ -128,14 +128,14 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
             if (choice == 1) {
                 event.SetStatus(db.GetCurrentUserID(), "Accepted");
             } else {
-                event.SetStatus(db.GetCurrentUserID(), "Rejected");
+                event.SetStatus(db.GetCurrentUserID(), "Cancelled");
             }
             db.SaveEvent(event);
         });
     }
 
     public void removeNotification(Notif notif) {
-        notifications.remove(notif);
+        remove(notif);
         notifyDataSetChanged();
     }
 
