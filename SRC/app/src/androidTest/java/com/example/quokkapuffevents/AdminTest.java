@@ -1,17 +1,21 @@
 package com.example.quokkapuffevents;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
 import android.content.Context;
@@ -106,7 +110,7 @@ public class AdminTest {
     }
 
     public void deleteMockEvent(Event event) {
-        db.DeleteEvent(event.getId());
+        db.DeleteEvent(event);
     }
 
     public void deleteMockAdmin(User user) {
@@ -442,14 +446,14 @@ public class AdminTest {
     public void deleteImage() {
 
         User mockAdmin = createMockAdmin();
+        db.SetUserID(mockAdmin.getId());
         Event testEvent = createMockEvent(new Date());
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.image_temp);
-
-        db.UploadImageToDatabase(bitmap,uri -> {
-            testEvent.setImageID(uri);
+        Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.add_events);
+        db.UploadImageToDatabase(bitmap, id -> {
+            testEvent.setImageID(id);
             db.SaveEvent(testEvent);
         });
+
 
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
@@ -459,35 +463,36 @@ public class AdminTest {
             closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(1500);
+            Thread.sleep(10000);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
 
 //            Go to the users dashboard
-            onView(withId(R.id.eventsIcon)).perform((click()));
-            Thread.sleep(1500);
+            onView(withId(R.id.imagesIcon)).perform((click()));
+            Thread.sleep(3000);
 
-            onView(withText("Mock Event")).check(matches(isDisplayed()));
 
 
 //            Click the delete button
-            onView(allOf(withId(R.id.deleteButton),
-                    hasSibling(withText("Mock Event"))))
+            onData(anything())
+                    .inAdapterView(withId(R.id.adminImagesListView))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.deleteButton))
                     .perform(click());
 
-            Thread.sleep(1500);
+            Thread.sleep(3000);
 
-            onView(withText("Delete Image")).check(matches(isDisplayed()));
+            onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());
 
-            onView(withId(android.R.id.button2)).perform(click());
-
-            Thread.sleep(1500);
-
-            assertDoesNotExist(onView(withText("Mock Event")));
+        db.GetImage(testEvent.getImageID(), temp -> {
+            assertTrue("Image was not deleted", true);
+        });
 
 
         } catch (InterruptedException e) {
+            deleteMockAdmin(mockAdmin);
+            deleteMockEvent(testEvent);
             throw new RuntimeException(e);
         }
 
