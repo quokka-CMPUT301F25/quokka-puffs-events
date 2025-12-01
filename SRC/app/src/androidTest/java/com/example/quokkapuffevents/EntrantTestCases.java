@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -33,6 +34,7 @@ import com.example.quokkapuffevents.model.Event;
 import com.example.quokkapuffevents.model.Notif;
 import com.example.quokkapuffevents.model.User;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +42,7 @@ import org.junit.runner.RunWith;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -679,6 +682,71 @@ public class EntrantTestCases {
             throw new RuntimeException(e);
         } finally {
             db.DeleteUser(entrant);
+        }
+    }
+
+    // US 01.01.04 As an entrant, I want to filter events based on my interests and availability. -Kishan
+    @Test
+    public void TestFilter() {
+        // Create and login entrant
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
+        Event mockEvent = createMockEvent(new Date());
+        ArrayList<String> tempCategories = new ArrayList<>();
+        tempCategories.add("Birthdays");
+        mockEvent.setInterests(tempCategories);
+
+        try {
+            Thread.sleep(1500);
+
+            onView(withId(R.id.eventsIcon)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.filterEventsBtn)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.interestsButton)).perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.interestsButton)).perform(click());
+
+            // Click "Clear All" first
+            onView(withText("Clear All"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            // Click "Birthday" item
+            onView(withText("Birthday"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            // Click "Add Interests" to confirm
+            onView(withText("Add Interests"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.enableNotificationsSwitchBtn)).perform(click());
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.findEventsListView))
+                    .atPosition(0)
+                    .check(matches(isDisplayed()));
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(entrant);
+            db.DeleteEvent(mockEvent);
         }
     }
 }
