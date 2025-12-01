@@ -256,7 +256,7 @@ public class Event {
         return(total);
     }
 
-    //Actual methods
+    // Actual methods
     /**
      * Changes the status of a user within the event. Updating meta variables like number of people in the waiting list
      * @param userID

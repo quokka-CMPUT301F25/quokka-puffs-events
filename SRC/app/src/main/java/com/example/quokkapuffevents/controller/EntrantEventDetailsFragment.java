@@ -3,6 +3,7 @@ package com.example.quokkapuffevents.controller;
 import static android.view.View.INVISIBLE;
 
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -194,7 +195,24 @@ public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyC
             public void onClick(View v) {
 
                 db.GetUser(db.GetCurrentUserID(), user -> {
-                    db.RegisterUserIntoEvent(event, user);
+                    double userLat = user.getLat();
+                    double userLng = user.getLng();
+                    double eventLat = event.getLat();
+                    double eventLng = event.getLng();
+
+                    float[] distance = new float[1]; // result in METERS
+                    Location.distanceBetween(userLat, userLng, eventLat, eventLng, distance);
+
+                    DashboardActivity activity = (DashboardActivity) getActivity();
+
+                    if (distance[0] <= event.getLockRadius()) {
+                        db.RegisterUserIntoEvent(event, user);
+                        Toast.makeText(activity, "Registered!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(activity,
+                                "Too far from the event (" + Math.round((distance[0] / 1000) * 100) / 100 + "km away)",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 });
 
                 CharSequence message = "You have been added to the waiting list.";
