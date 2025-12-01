@@ -59,7 +59,6 @@ dependencies {
 
     // Location
     implementation(libs.google.maps)
-
     // These were changed from implementation to androidTestImplementation
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.runner)
