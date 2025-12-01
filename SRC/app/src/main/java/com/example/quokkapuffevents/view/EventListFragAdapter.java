@@ -229,15 +229,15 @@ public class EventListFragAdapter extends ArrayAdapter<Event> {
     public void registerForEvent(Event event) {
         db.GetUser(db.GetCurrentUserID(), user -> {
 
-            if (user.getHomeLocation() == null) {
+            if (user.getLat() == null || user.getLng() == null) {
                 Toast.makeText(activity,
-                        "No home location set. Please add one in settings.",
+                        "This event is locked by distance. No location set, please add one in settings.",
                         Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            double userLat = user.getHomeLocation().get(0);
-            double userLng = user.getHomeLocation().get(1);
+            double userLat = user.getLat();
+            double userLng = user.getLng();
             double eventLat = event.getLat();
             double eventLng = event.getLng();
             Log.d("DEBUG_LOC",

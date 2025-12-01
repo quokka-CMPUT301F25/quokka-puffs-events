@@ -63,7 +63,7 @@ public class ChooseEventLocationFragment extends Fragment implements OnMapReadyC
                 getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) mapFragment.getMapAsync(this);
 
-        int STEP = 5; // km
+        int STEP = 1; // km
 
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

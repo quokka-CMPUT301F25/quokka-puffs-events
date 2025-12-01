@@ -84,9 +84,9 @@ public class ChooseUserLocationFragment extends Fragment implements OnMapReadyCa
         confirmButton.setOnClickListener(v->{
             //TODO: save user location / address
 
-//            user.setLocation(lat, lng);
-//            db.SaveUser(user);
             Toast.makeText(requireContext(), "Loaction has been changed.", Toast.LENGTH_SHORT).show();
+
+            db.SaveUser(user);
 
             ChangeProfileSettings frag = new ChangeProfileSettings();
             frag.setUser(user);
@@ -127,6 +127,9 @@ public class ChooseUserLocationFragment extends Fragment implements OnMapReadyCa
                 Address address = addressList.get(0);
                 lat = address.getLatitude();
                 lng = address.getLongitude();
+
+                user.setLat(lat);
+                user.setLng(lng);
 
                 Log.d("SEARCH", "lat=" + lat + ", lng=" + lng);
 

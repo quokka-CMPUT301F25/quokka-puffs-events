@@ -100,9 +100,9 @@ public class Database {
      * @return
      * Returns the user as a new Class. Ensures that the user is saved to the cloud
      */
-    public User CreateUser(String email, Integer type, String hashPass, String userName, String firstName, String lastName, String phoneNumber, ArrayList<Double> location){
+    public User CreateUser(String email, Integer type, String hashPass, String userName, String firstName, String lastName, String phoneNumber){
         String id = usersRef.document().getId(); //Creates a document and returns the id
-        User newUser = new User(id, email, type, hashPass, userName, firstName, lastName, phoneNumber, location); //Creates new User class
+        User newUser = new User(id, email, type, hashPass, userName, firstName, lastName, phoneNumber); //Creates new User class
         GenerateTokenForUser(newUser);
         usersRef.document(id).set(newUser); //Overwrites id in database with new user data
         return(newUser);

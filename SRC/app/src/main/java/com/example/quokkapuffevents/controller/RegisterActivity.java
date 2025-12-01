@@ -46,7 +46,6 @@ public class RegisterActivity extends AppCompatActivity {
         EditText firstName = findViewById(R.id.register_first_name);
         EditText lastName = findViewById(R.id.register_last_name);
         EditText phoneNumber = findViewById(R.id.register_phone_number);
-        EditText homeAddress = findViewById(R.id.home_address);
         CheckBox entrantButton = findViewById(R.id.register_entrant_button);
         CheckBox organizerButton = findViewById(R.id.register_organizer_button);
         Button backButton = findViewById(R.id.login_page_button);
@@ -127,33 +126,9 @@ public class RegisterActivity extends AppCompatActivity {
             String firstNameText = firstName.getText().toString().trim();
             String lastNameText = lastName.getText().toString().trim();
             String phoneNumberText = phoneNumber.getText().toString().trim();
-            ArrayList<Double> location = getLocation(homeAddress.getText().toString());
 
-            ValidateInformation(usernameText, emailText, passwordText, firstNameText, lastNameText, phoneNumberText, entrantButton, organizerButton, location);
+            ValidateInformation(usernameText, emailText, passwordText, firstNameText, lastNameText, phoneNumberText, entrantButton, organizerButton);
         });
-    }
-
-    private ArrayList<Double> getLocation(String locationName) {
-        Geocoder geocoder = new Geocoder(this);
-        try {
-            List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
-            if(!addressList.isEmpty()) {
-                Address address = addressList.get(0);
-                double lat = address.getLatitude();
-                double lng = address.getLongitude();
-
-                ArrayList<Double> location = new ArrayList<>();
-                location.add(lat);
-                location.add(lng);
-
-                return location;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     private void SwitchActivity(Class<?> activity) {
@@ -229,7 +204,7 @@ public class RegisterActivity extends AppCompatActivity {
         return new String(hashedPasswordByte);
     }
 
-    private void ValidateInformation(String username, String email, String password, String firstName, String lastName, String phone, CheckBox entrant, CheckBox organizer, ArrayList<Double> location){
+    private void ValidateInformation(String username, String email, String password, String firstName, String lastName, String phone, CheckBox entrant, CheckBox organizer){
         /**
          * Validates that the information entered by the user is fully filled out / available.
          * @param username
@@ -261,7 +236,7 @@ public class RegisterActivity extends AppCompatActivity {
                         String hashedPassword = PasswordHashing(password);
 
                         //Creating User
-                        User newUser = db.CreateUser(email, 0, hashedPassword, username, firstName, lastName, phone, location);
+                        User newUser = db.CreateUser(email, 0, hashedPassword, username, firstName, lastName, phone);
                         db.SetUserID(newUser.getId());
 
                         SwitchActivity(DashboardActivity.class);
@@ -272,7 +247,7 @@ public class RegisterActivity extends AppCompatActivity {
                         String hashedPassword = PasswordHashing(password);
 
                         //Creating User
-                        User newUser = db.CreateUser(email, 1, hashedPassword, username, firstName, lastName, phone, location);
+                        User newUser = db.CreateUser(email, 1, hashedPassword, username, firstName, lastName, phone);
                         db.SetUserID(newUser.getId());
 
                         SwitchActivity(DashboardActivity.class);

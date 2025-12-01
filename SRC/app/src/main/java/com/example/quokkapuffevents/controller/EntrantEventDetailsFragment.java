@@ -66,8 +66,10 @@ public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyC
         setUpListeners();
         checkAdmin();
 
-        Log.d("EVENT_LAT", "Lat: " + event.getLat());
-        Log.d("EVENT_LNG", "Lng: " + event.getLng());
+//        Log.d("EVENT_LNG", "Lng: " + String.valueOf(event.getLng()));/**/
+
+        Log.d("EVENT_LAT", "Lat: " + String.valueOf(event.getLng()));
+        Log.d("EVENT_LAT", "Lat: " + String.valueOf(event.getLat()));
 
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map);
@@ -79,7 +81,7 @@ public class EntrantEventDetailsFragment extends Fragment implements OnMapReadyC
 
     @Override
     public void onMapReady(GoogleMap googleMap){
-        LatLng location = new LatLng(event.getLat(), event.getLng());
+        LatLng location = new LatLng(event.getLat(),event.getLng());
 
         googleMap.addMarker(new MarkerOptions().position(location).title(event.getName()));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
