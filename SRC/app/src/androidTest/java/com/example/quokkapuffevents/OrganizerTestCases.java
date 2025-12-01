@@ -113,134 +113,134 @@ public class OrganizerTestCases {
 
             Thread.sleep(1500);
 
+            Event event = db.CreateEvent("TestDrawSpecificAttendees", mockOrganizer.getId(),
+                    "Testing specified number of attendees sampling", 5, 1, new Date(), new Date(), 0.0, 0.0, -1);
+            Thread.sleep(1500);
+
         } catch (InterruptedException e) {
             db.DeleteUser(mockOrganizer);
             throw new RuntimeException(e);
         }
 
+        return mockOrganizer;
+    }
+
+    @Test
+    public void SampleSpecificAttendees () {
+        try {
+            Database db = Database.getInstance();
+
+            User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+            Thread.sleep(1500);
+
+            db.SetUserID(mockOrg.getId());
+
             Event event = db.CreateEvent("TestDrawSpecificAttendees", mockOrg.getId(),
                     "Testing specified number of attendees sampling", 5, 1, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1500);
 
-        public void deleteMockUser (User user){
-            db.DeleteUser(user);
-        }
+            List<User> attendees = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                User attendee = db.CreateUser("attendee" + i + "@test.com", 0, "password",
+                        "Attendee" + i, "First" + i, "Last" + i, "555000" + i);
+                attendees.add(attendee);
+                Thread.sleep(500);
 
-        @Test
-        public void SampleSpecificAttendees () {
-            try {
-                Database db = Database.getInstance();
-
-                User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-                Thread.sleep(1500);
-
-                db.SetUserID(mockOrg.getId());
-
-                Event event = db.CreateEvent("TestDrawSpecificAttendees", mockOrg.getId(),
-                        "Testing specified number of attendees sampling", 5, 1, new Date(), new Date());
-                Thread.sleep(1500);
-
-                List<User> attendees = new ArrayList<>();
-                for (int i = 0; i < 10; i++) {
-                    User attendee = db.CreateUser("attendee" + i + "@test.com", 0, "password",
-                            "Attendee" + i, "First" + i, "Last" + i, "555000" + i);
-                    attendees.add(attendee);
-                    Thread.sleep(500);
-
-                    db.RegisterUserIntoEvent(event, attendee);
-                }
-
-                db.SaveEvent(event);
-                Thread.sleep(1500);
-
-                // DEBUG: Check event state before drawing
-                System.out.println("Event toBeDrawn: " + event.getToBeDrawn());
-                System.out.println("Event users count: " + event.getEventUsers().size());
-                System.out.println("Event users: " + event.getEventUsers().keySet());
-
-                ArrayList<String> sampledAttendeeIds = event.drawUsers(-1);
-
-                // DEBUG: Check what was returned
-                System.out.println("Sampled attendees count: " + (sampledAttendeeIds != null ? sampledAttendeeIds.size() : "null"));
-                System.out.println("Sampled attendees: " + sampledAttendeeIds);
-
-                assertNotNull("Sampled attendees list should not be null", sampledAttendeeIds);
-                assertEquals("Should return exactly the specified number of attendees",
-                        5, sampledAttendeeIds.size());
-
-                for (String sampledAttendeeId : sampledAttendeeIds) {
-                    boolean isRegistered = event.getEventUsers().containsKey(sampledAttendeeId);
-                    assertTrue("Sampled attendee should be registered for the event", isRegistered);
-                }
-
-                Set<String> uniqueSampled = new HashSet<>(sampledAttendeeIds);
-                assertEquals("Should have no duplicate attendees in sample",
-                        sampledAttendeeIds.size(), uniqueSampled.size());
-
-                db.DeleteEvent(event);
-                for (User attendee : attendees) {
-                    db.DeleteUser(attendee);
-                }
-                db.DeleteUser(mockOrg);
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                db.RegisterUserIntoEvent(event, attendee);
             }
+
+            db.SaveEvent(event);
+            Thread.sleep(1500);
+
+            // DEBUG: Check event state before drawing
+            System.out.println("Event toBeDrawn: " + event.getToBeDrawn());
+            System.out.println("Event users count: " + event.getEventUsers().size());
+            System.out.println("Event users: " + event.getEventUsers().keySet());
+
+            ArrayList<String> sampledAttendeeIds = event.drawUsers(-1);
+
+            // DEBUG: Check what was returned
+            System.out.println("Sampled attendees count: " + (sampledAttendeeIds != null ? sampledAttendeeIds.size() : "null"));
+            System.out.println("Sampled attendees: " + sampledAttendeeIds);
+
+            assertNotNull("Sampled attendees list should not be null", sampledAttendeeIds);
+            assertEquals("Should return exactly the specified number of attendees",
+                    5, sampledAttendeeIds.size());
+
+            for (String sampledAttendeeId : sampledAttendeeIds) {
+                boolean isRegistered = event.getEventUsers().containsKey(sampledAttendeeId);
+                assertTrue("Sampled attendee should be registered for the event", isRegistered);
+            }
+
+            Set<String> uniqueSampled = new HashSet<>(sampledAttendeeIds);
+            assertEquals("Should have no duplicate attendees in sample",
+                    sampledAttendeeIds.size(), uniqueSampled.size());
+
+            db.DeleteEvent(event);
+            for (User attendee : attendees) {
+                db.DeleteUser(attendee);
+            }
+            db.DeleteUser(mockOrg);
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void OptLimitParticipants () {
+        try {
+        Database db = Database.getInstance();
+
+        // Create organizer
+        User mockOrg = db.CreateUser("TestLimit@email.com", 1, "password123", "LimitOrg", "John", "Limit", "5871112222");
+        Thread.sleep(1500);
+
+        db.SetUserID(mockOrg.getId());
+
+        // Create event with participant limit
+        Event event = db.CreateEvent("TestEventWithLimit", mockOrg.getId(),
+                "Testing participant limit functionality", 30, 150, new Date(), new Date(),
+                0.0, 0.0, -1);
+        Thread.sleep(1500);
+
+        // DEBUG: Check event state before any operations
+        System.out.println("Event toBeDrawn: " + event.getToBeDrawn());
+        System.out.println("Event maxNumWaitlist: " + event.getMaxNumWaitlist());
+        System.out.println("Event description: " + event.getDescription());
+
+        // Verify event was created with correct values
+        assertNotNull("Event should not be null", event);
+        assertEquals("Event should have correct toBeDrawn value", Integer.valueOf(30), event.getToBeDrawn());
+        assertEquals("Event should have correct maxNumWaitlist value", Integer.valueOf(150), event.getMaxNumWaitlist());
+        assertEquals("Event should have correct description", "Testing participant limit functionality", event.getDescription());
+        assertEquals("Event should belong to correct organizer", mockOrg.getId(), event.getOrg());
+
+        // Test adding users up to the limit
+        List<User> testUsers = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            User testUser = db.CreateUser("testuser" + i + "@email.com", 0, "password",
+                    "TestUser" + i, "First" + i, "Last" + i, "555111222" + i);
+            testUsers.add(testUser);
+            Thread.sleep(500);
+
+            db.RegisterUserIntoEvent(event, testUser);
         }
 
-        @Test
-        public void OptLimitParticipants () {
-            try {
-                Database db = Database.getInstance();
+        db.SaveEvent(event);
+        Thread.sleep(1500);
 
-                // Create organizer
-                User mockOrg = db.CreateUser("TestLimit@email.com", 1, "password123", "LimitOrg", "John", "Limit", "5871112222");
-                Thread.sleep(1500);
+        // DEBUG: Check event state after adding users
+        System.out.println("Event users count after registration: " + event.getEventUsers().size());
+        System.out.println("Event users: " + event.getEventUsers().keySet());
 
-                db.SetUserID(mockOrg.getId());
+        // Verify users were added successfully
+        assertEquals("Should have 5 users registered", 5, event.getEventUsers().size());
 
-                // Create event with participant limit
-                Event event = db.CreateEvent("TestEventWithLimit", mockOrg.getId(),
-                        "Testing participant limit functionality", 30, 150, new Date(), new Date());
-                Thread.sleep(1500);
-
-                // DEBUG: Check event state before any operations
-                System.out.println("Event toBeDrawn: " + event.getToBeDrawn());
-                System.out.println("Event maxNumWaitlist: " + event.getMaxNumWaitlist());
-                System.out.println("Event description: " + event.getDescription());
-
-                // Verify event was created with correct values
-                assertNotNull("Event should not be null", event);
-                assertEquals("Event should have correct toBeDrawn value", Integer.valueOf(30), event.getToBeDrawn());
-                assertEquals("Event should have correct maxNumWaitlist value", Integer.valueOf(150), event.getMaxNumWaitlist());
-                assertEquals("Event should have correct description", "Testing participant limit functionality", event.getDescription());
-                assertEquals("Event should belong to correct organizer", mockOrg.getId(), event.getOrg());
-
-                // Test adding users up to the limit
-                List<User> testUsers = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
-                    User testUser = db.CreateUser("testuser" + i + "@email.com", 0, "password",
-                            "TestUser" + i, "First" + i, "Last" + i, "555111222" + i);
-                    testUsers.add(testUser);
-                    Thread.sleep(500);
-
-                    db.RegisterUserIntoEvent(event, testUser);
-                }
-
-                db.SaveEvent(event);
-                Thread.sleep(1500);
-
-                // DEBUG: Check event state after adding users
-                System.out.println("Event users count after registration: " + event.getEventUsers().size());
-                System.out.println("Event users: " + event.getEventUsers().keySet());
-
-                // Verify users were added successfully
-                assertEquals("Should have 5 users registered", 5, event.getEventUsers().size());
-
-                for (User user : testUsers) {
-                    assertTrue("User should be registered in event", event.getEventUsers().containsKey(user.getId()));
-                    assertEquals("User should have 'Waiting' status", "Waiting", event.getEventUsers().get(user.getId()));
-                }
+        for (User user : testUsers) {
+            assertTrue("User should be registered in event", event.getEventUsers().containsKey(user.getId()));
+            assertEquals("User should have 'Waiting' status", "Waiting", event.getEventUsers().get(user.getId()));
+        }
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -250,102 +250,70 @@ public class OrganizerTestCases {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * User Story US 02.07.02 test case
      */
     // TODO: FINISH THIS TEST
     @Test
-    public void TestSendNotifToAllSelected() {
+    public void TestSendNotifToAllSelected () {
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date(), 0.0, 0.0, -1);
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(),
+                "This event is used to test if a entrant is sent a notif", 2,
+                2, new Date(), new Date(), 0.0, 0.0, -1);
         User temp = createMockEntrant();
 
-                // Test date values
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                String eventDrawnDate = formatter.format(event.getDrawnDate());
-                String eventEndDate = formatter.format(event.getEventDate());
+        User mockEntrant1 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest1", "John", "Test", "0");
+        User mockEntrant2 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest2", "John", "Test", "0");
+        try {
+            Thread.sleep(1500);
 
-                System.out.println("Event drawn date: " + eventDrawnDate);
-                System.out.println("Event end date: " + eventEndDate);
+            db.RegisterUserIntoEvent(event, mockEntrant1);
+            db.RegisterUserIntoEvent(event, mockEntrant2);
 
-                // Cleanup
-                db.DeleteEvent(event);
-                for (User user : testUsers) {
-                    db.DeleteUser(user);
-                }
-                db.DeleteUser(mockOrg);
+            event.drawUsers(-1);
+            Thread.sleep(1500);
 
-                System.out.println("Test completed successfully - Participant limit functionality working");
+            ActivityScenario.launch(LoginActivity.class);
+            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant1.getUserName()));
+            closeSoftKeyboard();
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
 
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (Exception e) {
-                System.out.println("Test failed with exception: " + e.getMessage());
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+
+            ActivityScenario.launch(LoginActivity.class);
+            onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant2.getUserName()));
+            closeSoftKeyboard();
+            onView(withId(R.id.login_password)).perform(typeText("password"));
+            closeSoftKeyboard();
+            onView(withId(R.id.sign_in_button)).perform(click());
+            Thread.sleep(1500);
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+
+            //Testing to see if notification has appeared
+            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant1);
+            db.DeleteUser(mockEntrant2);
+            db.DeleteUser(temp);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+        } finally {
+            db.DeleteUser(mockEntrant1);
+            db.DeleteUser(mockEntrant2);
+            db.DeleteUser(temp);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
         }
-        /**
-         * User Story US 02.07.02 test case
-         */
-        // TODO: FINISH THIS TEST
-        @Test
-        public void TestSendNotifToAllSelected () {
-            User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-            Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 2, 2, new Date(), new Date());
-            User temp = createMockEntrant();
-
-            User mockEntrant1 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest1", "John", "Test", "0");
-            User mockEntrant2 = db.CreateUser("MockTest", 0, temp.getHashPassword(), "mockTest2", "John", "Test", "0");
-            try {
-                Thread.sleep(1500);
-
-                db.RegisterUserIntoEvent(event, mockEntrant1);
-                db.RegisterUserIntoEvent(event, mockEntrant2);
-
-                event.drawUsers(-1);
-                Thread.sleep(1500);
-
-                ActivityScenario.launch(LoginActivity.class);
-                onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant1.getUserName()));
-                closeSoftKeyboard();
-                onView(withId(R.id.login_password)).perform(typeText("password"));
-                closeSoftKeyboard();
-                onView(withId(R.id.sign_in_button)).perform(click());
-                Thread.sleep(1500);
-                onView(withId(R.id.notifs_button)).perform(click());
-                Thread.sleep(1500);
-
-                //Testing to see if notification has appeared
-                onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
-
-                ActivityScenario.launch(LoginActivity.class);
-                onView(withId(R.id.login_email_address)).perform(typeText(mockEntrant2.getUserName()));
-                closeSoftKeyboard();
-                onView(withId(R.id.login_password)).perform(typeText("password"));
-                closeSoftKeyboard();
-                onView(withId(R.id.sign_in_button)).perform(click());
-                Thread.sleep(1500);
-                onView(withId(R.id.notifs_button)).perform(click());
-                Thread.sleep(1500);
-
-                //Testing to see if notification has appeared
-                onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
-
-            } catch (InterruptedException e) {
-                db.DeleteUser(mockEntrant1);
-                db.DeleteUser(mockEntrant2);
-                db.DeleteUser(temp);
-                db.DeleteUser(mockOrg);
-                db.DeleteEvent(event);
-            } finally {
-                db.DeleteUser(mockEntrant1);
-                db.DeleteUser(mockEntrant2);
-                db.DeleteUser(temp);
-                db.DeleteUser(mockOrg);
-                db.DeleteEvent(event);
-            }
-        }
+    }
 
     /**
      * User Story US 02.01.01 test case
@@ -356,7 +324,9 @@ public class OrganizerTestCases {
         try {
             Thread.sleep(30000);
 
-            Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            Event event = db.CreateEvent("TestDraw", mockOrg.getId(),
+                    "This event is used to test if a entrant is sent a notif", 1, 1, new Date(),
+                    new Date(), 0.0, 0.0, -1);
 
             Thread.sleep(30000);
 
@@ -380,102 +350,103 @@ public class OrganizerTestCases {
         } finally {
             db.ClearDatabase();
         }
+    }
+    /**
+     * US 02.04.01 As an organizer I want to upload an event poster to the event details page to provide visual information to entrants.
+     */
+    @Test
+    public void EventPosterUpload() {
+        try {
+            Database db = Database.getInstance();
 
-        /**
-         * US 02.04.01 As an organizer I want to upload an event poster to the event details page to provide visual information to entrants.
-         */
-        @Test
-        public void EventPosterUpload () {
-            try {
-                Database db = Database.getInstance();
+            // Create organizer
+            User mockOrg = db.CreateUser("TestPoster@email.com", 1, "password123", "PosterOrg", "John", "Poster", "5871112222");
+            Thread.sleep(1500);
 
-                // Create organizer
-                User mockOrg = db.CreateUser("TestPoster@email.com", 1, "password123", "PosterOrg", "John", "Poster", "5871112222");
-                Thread.sleep(1500);
+            db.SetUserID(mockOrg.getId());
 
-                db.SetUserID(mockOrg.getId());
+            // Create event
+            Event event = db.CreateEvent("TestEventWithPoster", mockOrg.getId(),
+                    "Testing event poster upload functionality", 10, new Date(), new Date(),
+                    0.0, 0.0, -1);
+            Thread.sleep(1500);
 
-                // Create event
-                Event event = db.CreateEvent("TestEventWithPoster", mockOrg.getId(),
-                        "Testing event poster upload functionality", 10, new Date(), new Date());
-                Thread.sleep(1500);
+            // Create a mock poster bitmap
+            Bitmap posterBitmap = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888);
+            // Draw something on the bitmap to make it non-empty
+            Canvas canvas = new Canvas(posterBitmap);
+            Paint paint = new Paint();
+            paint.setColor(Color.BLUE);
+            canvas.drawRect(0, 0, 800, 600, paint);
 
-                // Create a mock poster bitmap
-                Bitmap posterBitmap = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888);
-                // Draw something on the bitmap to make it non-empty
-                Canvas canvas = new Canvas(posterBitmap);
-                Paint paint = new Paint();
-                paint.setColor(Color.BLUE);
-                canvas.drawRect(0, 0, 800, 600, paint);
+            // DEBUG: Check event state before upload
+            System.out.println("Event before upload - ID: " + event.getId());
+            System.out.println("Event image ID before: " + event.getImageID());
 
-                // DEBUG: Check event state before upload
-                System.out.println("Event before upload - ID: " + event.getId());
-                System.out.println("Event image ID before: " + event.getImageID());
+            // Upload poster
+            final String[] uploadedImagePath = new String[1];
+            final CountDownLatch uploadLatch = new CountDownLatch(1);
 
-                // Upload poster
-                final String[] uploadedImagePath = new String[1];
-                final CountDownLatch uploadLatch = new CountDownLatch(1);
+            db.UploadImageToDatabase(posterBitmap, imagePath -> {
+                uploadedImagePath[0] = imagePath;
+                System.out.println("Upload completed - Image path: " + imagePath);
+                uploadLatch.countDown();
+            });
 
-                db.UploadImageToDatabase(posterBitmap, imagePath -> {
-                    uploadedImagePath[0] = imagePath;
-                    System.out.println("Upload completed - Image path: " + imagePath);
-                    uploadLatch.countDown();
-                });
+            // Wait for upload to complete
+            uploadLatch.await(10, TimeUnit.SECONDS);
+            Thread.sleep(1500);
 
-                // Wait for upload to complete
-                uploadLatch.await(10, TimeUnit.SECONDS);
-                Thread.sleep(1500);
+            // Set the image ID to the event and save
+            event.setImageID(uploadedImagePath[0]);
+            db.SaveEvent(event);
+            Thread.sleep(1500);
 
-                // Set the image ID to the event and save
-                event.setImageID(uploadedImagePath[0]);
-                db.SaveEvent(event);
-                Thread.sleep(1500);
+            // DEBUG: Check event state after upload
+            System.out.println("Event image ID after: " + event.getImageID());
 
-                // DEBUG: Check event state after upload
-                System.out.println("Event image ID after: " + event.getImageID());
+            // Verify upload was successful
+            assertNotNull("Uploaded image path should not be null", uploadedImagePath[0]);
+            assertTrue("Image path should contain .jpg extension", uploadedImagePath[0].endsWith(".jpg"));
+            assertEquals("Event should have the correct image ID", uploadedImagePath[0], event.getImageID());
 
-                // Verify upload was successful
-                assertNotNull("Uploaded image path should not be null", uploadedImagePath[0]);
-                assertTrue("Image path should contain .jpg extension", uploadedImagePath[0].endsWith(".jpg"));
-                assertEquals("Event should have the correct image ID", uploadedImagePath[0], event.getImageID());
+            // Test retrieving the uploaded image
+            final Bitmap[] retrievedBitmap = new Bitmap[1];
+            final CountDownLatch retrieveLatch = new CountDownLatch(1);
 
-                // Test retrieving the uploaded image
-                final Bitmap[] retrievedBitmap = new Bitmap[1];
-                final CountDownLatch retrieveLatch = new CountDownLatch(1);
+            db.GetImage(uploadedImagePath[0], bitmap -> {
+                retrievedBitmap[0] = bitmap;
+                System.out.println("Image retrieval completed - Bitmap: " + (bitmap != null ? "valid" : "null"));
+                retrieveLatch.countDown();
+            });
 
-                db.GetImage(uploadedImagePath[0], bitmap -> {
-                    retrievedBitmap[0] = bitmap;
-                    System.out.println("Image retrieval completed - Bitmap: " + (bitmap != null ? "valid" : "null"));
-                    retrieveLatch.countDown();
-                });
+            // Wait for retrieval to complete
+            retrieveLatch.await(10, TimeUnit.SECONDS);
+            Thread.sleep(1500);
 
-                // Wait for retrieval to complete
-                retrieveLatch.await(10, TimeUnit.SECONDS);
-                Thread.sleep(1500);
+            // Verify retrieval was successful
+            assertNotNull("Retrieved bitmap should not be null", retrievedBitmap[0]);
+            assertTrue("Retrieved bitmap should have valid dimensions",
+                    retrievedBitmap[0].getWidth() > 0 && retrievedBitmap[0].getHeight() > 0);
 
-                // Verify retrieval was successful
-                assertNotNull("Retrieved bitmap should not be null", retrievedBitmap[0]);
-                assertTrue("Retrieved bitmap should have valid dimensions",
-                        retrievedBitmap[0].getWidth() > 0 && retrievedBitmap[0].getHeight() > 0);
+            // Verify the event still has the poster reference after retrieval
+            assertEquals("Event should maintain image reference", uploadedImagePath[0], event.getImageID());
 
-                // Verify the event still has the poster reference after retrieval
-                assertEquals("Event should maintain image reference", uploadedImagePath[0], event.getImageID());
+            // Cleanup - delete the uploaded image and event
+            db.DeleteImage(uploadedImagePath[0]);
+            db.DeleteEvent(event);
+            db.DeleteUser(mockOrg);
 
-                // Cleanup - delete the uploaded image and event
-                db.DeleteImage(uploadedImagePath[0]);
-                db.DeleteEvent(event);
-                db.DeleteUser(mockOrg);
+            System.out.println("Test completed successfully - Poster upload and retrieval working");
 
-                System.out.println("Test completed successfully - Poster upload and retrieval working");
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (Exception e) {
-                System.out.println("Test failed with exception: " + e.getMessage());
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println("Test failed with exception: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+    }
 
         /**
          * US 02.04.02 As an organizer I want to update an event poster to provide visual information to entrants.
@@ -493,7 +464,8 @@ public class OrganizerTestCases {
 
                 // Create event with initial poster
                 Event event = db.CreateEvent("TestEventUpdatePoster", mockOrg.getId(),
-                        "Testing event poster update functionality", 10, new Date(), new Date());
+                        "Testing event poster update functionality", 10, new Date(), new Date(),
+                        0.0, 0.0, -1);
                 Thread.sleep(1500);
 
                 // Create initial poster
@@ -588,7 +560,8 @@ public class OrganizerTestCases {
 
                 // Create event
                 Event event = db.CreateEvent("TestEventNotifications", mockOrg.getId(),
-                        "Testing notification functionality", 5, new Date(), new Date());
+                        "Testing notification functionality", 5, new Date(), new Date(),
+                        0.0, 0.0, -1);
                 Thread.sleep(1500);
 
                 // Create test users with different statuses
@@ -714,7 +687,7 @@ public class OrganizerTestCases {
 
                 // Create event
                 Event event = db.CreateEvent("TestEventCancelUnsigned", mockOrg.getId(),
-                        "Testing cancellation of unsigned entrants", 3, new Date(), new Date());
+                        "Testing cancellation of unsigned entrants", 3, new Date(), new Date(), 0.0, 0.0, -1);
                 Thread.sleep(1500);
 
                 // Create users with different scenarios
@@ -830,7 +803,7 @@ public class OrganizerTestCases {
             db.SetUserID(organizer.getId());
 
             // Create event
-            Event event = db.CreateEvent("Invite List Test", organizer.getId(), "Test", 2, new Date(), new Date());
+            Event event = db.CreateEvent("Invite List Test", organizer.getId(), "Test", 2, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1000);
 
             // Create test users with different statuses
@@ -895,7 +868,7 @@ public class OrganizerTestCases {
 
             db.SetUserID(organizer.getId());
 
-            Event event = db.CreateEvent("Cancelled List Test", organizer.getId(), "Test cancelled entrants", 5, new Date(), new Date());
+            Event event = db.CreateEvent("Cancelled List Test", organizer.getId(), "Test cancelled entrants", 5, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1000);
 
             User cancelled1 = db.CreateUser("cancelled1@test.com", 0, "pass", "CancelledOne", "John", "Doe", "5552222222");
@@ -986,7 +959,7 @@ public class OrganizerTestCases {
             db.SetUserID(organizer.getId());
 
             Event event = db.CreateEvent("Final Enrolled List Test", organizer.getId(),
-                    "Test final enrolled entrants", 3, new Date(), new Date());
+                    "Test final enrolled entrants", 3, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1000);
 
             User accepted1 = db.CreateUser("accepted1@test.com", 0, "pass", "AcceptedOne", "John", "Doe", "5552222222");
@@ -1124,7 +1097,7 @@ public class OrganizerTestCases {
         public void ViewWaitingListEntrants () throws Exception {
             User organizer = db.CreateUser("waitlistorg@test.com", 1, "pass", "WaitlistOrg", "Test", "Org", "5551111111");
             db.SetUserID(organizer.getId());
-            Event event = db.CreateEvent("Waiting List Test", organizer.getId(), "Test", 10, new Date(), new Date());
+            Event event = db.CreateEvent("Waiting List Test", organizer.getId(), "Test", 10, new Date(), new Date(), 0.0, 0.0, -1);
             Thread.sleep(1000);
 
             User waiting1 = db.CreateUser("waiting1@test.com", 0, "pass", "User1", "Alice", "Johnson", "5552222222");
@@ -1191,7 +1164,7 @@ public class OrganizerTestCases {
         db.SetUserID(organizer.getId());
 
         Event event = db.CreateEvent("Accepted List Test", organizer.getId(),
-                "Test accepted entrants", 2, new Date(), new Date()
+                "Test accepted entrants", 2, new Date(), new Date(), 0.0, 0.0, -1
         );
 
         User accepted1 = db.CreateUser("accepted1@test.com", 0, "pass",
@@ -1266,7 +1239,7 @@ public class OrganizerTestCases {
         db.SetUserID(organizer.getId());
 
         Event event = db.CreateEvent("Cancelled List Test", organizer.getId(),
-                "Test cancelled entrants", 2, new Date(), new Date()
+                "Test cancelled entrants", 2, new Date(), new Date(), 0.0, 0.0, -1
         );
 
         User cancelled1 = db.CreateUser("cancelled1@test.com", 0, "pass",
@@ -1320,8 +1293,6 @@ public class OrganizerTestCases {
                 assertTrue("cancelled2 should be in cancelled users list", hasCancelled2);
 
             });
-
-
 
             Thread.sleep(1000);
         } catch (InterruptedException e) {

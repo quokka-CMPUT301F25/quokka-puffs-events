@@ -554,7 +554,9 @@ public class EntrantTestCases {
                 "is a chance that you may be drawn in the future.";
         User mockEntrant = accessEntrantDashboard();
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(),
+                "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(),
+                0.0, 0.0, -1);
 
         try {
             Thread.sleep(3000);
@@ -616,7 +618,8 @@ public class EntrantTestCases {
 
             Thread.sleep(1500);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif",
+                    1, 1, new Date(), new Date(), 0.0, 0.0, -1);
 
             Thread.sleep(20000);
 
@@ -687,7 +690,9 @@ public class EntrantTestCases {
 
             Thread.sleep(1500);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(),
+                    "This event is used to test if a entrant is sent a notif", 1,
+                    1, new Date(), new Date(), 0.0, 0.0, -1);
 
             Thread.sleep(20000);
 
@@ -885,7 +890,7 @@ public class EntrantTestCases {
 
             Thread.sleep(1500);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
 
             Thread.sleep(3000);
 

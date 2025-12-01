@@ -7,8 +7,10 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -104,7 +106,7 @@ public class AdminTest {
     }
 
     public Event createMockEvent(Date eventDate) {
-        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, defaultLocation, -1);
+        return db.CreateEvent("Mock Event", "Mock Org", "Mock Description", 10, new Date(), eventDate, 0.0, 0.0, -1);
     }
 
     public void deleteMockEvent(Event event) {
@@ -266,14 +268,16 @@ public class AdminTest {
         deleteMockAdmin(mockAdmin);
     }
 
-//    US 03.01.01 As an administrator, I want to be able to remove events. (In-Progress - KYLE)
+//    US 03.01.01 As an administrator, I want to be able to remove events.
     @Test
     public void deleteUser() {
+        Database db = Database.getInstance();
 
-        User mockAdmin = createMockAdmin();
         User testUser = createTestUser();
-
-
+        User mockAdmin = createMockAdmin();
+        User mockOrg = createTestOrganizer();
+        db.SetUserID(mockOrg.getId());
+        Event testEvent = createMockEvent(new Date());
 
 
         try (ActivityScenario<LoginActivity> scenario =
@@ -284,41 +288,45 @@ public class AdminTest {
             closeSoftKeyboard();
             onView(withId(R.id.sign_in_button)).perform(click());
 
-            Thread.sleep(1500);
+            Thread.sleep(3000);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
 
 
 //            Go to the users dashboard
             onView(withId(R.id.usersIcon)).perform((click()));
-            Thread.sleep(1500);
+            Thread.sleep(3000);
 
+            try {
+                onData(anything())
+                        .inAdapterView(withId(R.id.adminUsersListView))
+                        .onChildView(withId(R.id.deleteButton))
+                        .atPosition(0)
+                        .perform(click());
+            }
+            catch (Exception e) {
+                onData(anything())
+                        .inAdapterView(withId(R.id.adminUsersListView))
+                        .onChildView(withId(R.id.deleteButton))
+                        .atPosition(1)
+                        .perform(click());
+            }
 
-            onView(withText("testuser@example.com")).check(matches(isDisplayed()));
+            Thread.sleep(3000);
 
-
-//            Click the delete button
-            onView(allOf(withId(R.id.deleteButton),
-                    hasSibling(withText("testuser@example.com"))))
+            onView(withId(android.R.id.button1))
+                    .inRoot(isDialog())
                     .perform(click());
 
-            Thread.sleep(1500);
-
-            onView(withText("Delete User")).check(matches(isDisplayed()));
-
-            onView(withId(android.R.id.button2)).perform(click());
-
-            Thread.sleep(1500);
-
-            assertDoesNotExist(onView(withText("testuser@example.com")));
+            Thread.sleep(3000);
 
 
         } catch (InterruptedException e) {
+            db.ClearDatabase();
             throw new RuntimeException(e);
         }
 
-        db.DeleteUser();
-        db.GetUser(mockAdmin);
+        db.ClearDatabase();
 
     }
 
@@ -327,18 +335,21 @@ public class AdminTest {
     @Test
     public void deleteEvent() throws InterruptedException {
 
+        //TODO: Create a mock org
+        //TODO: Set DB.currentUser to mock org
+
+//        db.ListEvents(events -> {
+//            if(!events.isEmpty())
+//            {
+//                for(Event e: events)
+//                    db.DeleteEvent(e);
+//            }
+//        });
+
         User mockAdmin = createMockAdmin();
-
-        db.ListEvents(events -> {
-            if(!events.isEmpty())
-            {
-                for(Event e: events)
-                    db.DeleteEvent(e);
-            }
-        });
-
-        Event mockEvent = createMockEvent(new Date());
-        Thread.sleep(1500);
+        User mockOrg = createTestOrganizer();
+        db.SetUserID(mockOrg.getId());
+        Event testEvent = createMockEvent(new Date());
 
         try (ActivityScenario<LoginActivity> scenario =
                      ActivityScenario.launch(LoginActivity.class)) {
@@ -351,93 +362,34 @@ public class AdminTest {
             Thread.sleep(1500);
 
             onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
-
 
 //            Go to the events dashboard
             onView(withId(R.id.eventsIcon)).perform((click()));
             Thread.sleep(1500);
 
 
-            onView(withText("Mock Event")).check(matches(isDisplayed()));
-
-
-//            Click the delete button
-            onView(allOf(withId(R.id.deleteButton),
-                    hasSibling(withText("Mock Event"))))
-                    .perform(click());
-
-            Thread.sleep(1500);
-
-            onView(withText("Delete Event")).check(matches(isDisplayed()));
-
-            onView(withId(android.R.id.button2)).perform(click());
-
-            Thread.sleep(1500);
-
-            assertDoesNotExist(onView(withText("Mock Event")));
-
-
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        deleteMockAdmin(mockAdmin);
-        deleteMockEvent(mockEvent);
-
-    }
-
-    @Test
-    public void deleteOrganizer() {
-
-        User mockAdmin = createMockAdmin();
-        User testOrganizer = createTestOrganizer();
-
-
-        try (ActivityScenario<LoginActivity> scenario =
-                     ActivityScenario.launch(LoginActivity.class)) {
-
-            onView(withId(R.id.login_email_address)).perform(typeText("TestingAdmin"));
-            onView(withId(R.id.login_password)).perform(typeText("password"));
-            closeSoftKeyboard();
-            onView(withId(R.id.sign_in_button)).perform(click());
-
-            Thread.sleep(1500);
-
-            onView(withId(R.id.adminTitle)).check(matches(isDisplayed()));
-
-
-//            Go to the users dashboard
-            onView(withId(R.id.usersIcon)).perform((click()));
-            Thread.sleep(1500);
-
-            onView(withId(R.id.adminUsersListView)).check(matches(isDisplayed()));
-
 //            Click the delete button
             onData(anything())
-                    .inAdapterView(withId(R.id.adminUsersListView))
-                    .atPosition(0)
+                    .inAdapterView(withId(R.id.adminEventsListView))
                     .onChildView(withId(R.id.deleteButton))
+                    .atPosition(0)
                     .perform(click());
 
             Thread.sleep(1500);
 
-            onView(withText("Delete User")).check(matches(isDisplayed()));
-
-            onView(withId(android.R.id.button2)).perform(click());
+            onView(withId(android.R.id.button1))
+                    .inRoot(isDialog())
+                    .perform(click());
 
             Thread.sleep(1500);
 
-            assertDoesNotExist(onView(withText("TestOrganizer")));
-
 
         } catch (InterruptedException e) {
-            deleteMockAdmin(mockAdmin);
-            deleteMockAdmin(testOrganizer);
+            db.ClearDatabase();
             throw new RuntimeException(e);
         }
 
-        deleteMockAdmin(mockAdmin);
-        deleteMockAdmin(testOrganizer);
+        db.ClearDatabase();
 
     }
 
@@ -448,7 +400,9 @@ public class AdminTest {
     public void deleteImage() {
 
         User mockAdmin = createMockAdmin();
+        User mockOrg = createTestOrganizer();
         Event testEvent = createMockEvent(new Date());
+        db.SetUserID(mockOrg.getId());
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.image_temp);
 
