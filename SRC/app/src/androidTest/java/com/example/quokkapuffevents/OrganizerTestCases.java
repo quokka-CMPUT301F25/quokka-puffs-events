@@ -256,7 +256,6 @@ public class OrganizerTestCases {
             //Testing to see if notification has appeared
             onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
 
-
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant1);
             db.DeleteUser(mockEntrant2);

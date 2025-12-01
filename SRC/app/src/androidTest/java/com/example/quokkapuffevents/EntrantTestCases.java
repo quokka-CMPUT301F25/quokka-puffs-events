@@ -226,10 +226,12 @@ public class EntrantTestCases {
             db.DeleteEvent(testEvent);
 
         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
             db.DeleteUser(entrant);
             db.DeleteEvent(testEvent);
-            throw new RuntimeException(e);
         }
+
     }
 
     /**
@@ -496,6 +498,8 @@ public class EntrantTestCases {
     // TODO: FIX THIS TEST
     @Test
     public void TestNotChosenInDrawNotif() {
+        String wantedMessage = "This event has been drawn. Unfortunately you were not drawn, there " +
+                "is a chance that you may be drawn in the future.";
         User mockEntrant = accessEntrantDashboard();
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
         Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
@@ -506,7 +510,12 @@ public class EntrantTestCases {
             //Check no notification exists
             onView(withId(R.id.notifs_button)).perform(click());
             Thread.sleep(1500);
-            assertDoesNotExist(onView(withText(R.string.not_picked)));
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.removeBtn))
+                    .perform(click());
+            assertDoesNotExist(onView(withText(wantedMessage)));
             onView(withId(R.id.home_button)).perform(click());
             Thread.sleep(1500);
             //Draw User
@@ -516,7 +525,14 @@ public class EntrantTestCases {
             onView(withId(R.id.notifs_button)).perform(click());
             Thread.sleep(1500);
             //Testing to see if notification has appeared
-            onView(withText(R.string.not_picked)).check(matches(isDisplayed()));
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.detailsBtn))
+                    .perform(click());
+            Thread.sleep(1500);
+
+            onView(withText(wantedMessage)).check(matches(isDisplayed()));
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
@@ -528,6 +544,62 @@ public class EntrantTestCases {
             db.DeleteUser(mockOrg);
             db.DeleteEvent(event);
         }
+    }
+
+    /**
+     * User Story US 01.05.01 test case
+     */
+    @Test
+    public void TestSecondChanceAfterUserDeclines() {
+        String wantedMessage = "This event has been drawn. Unfortunately you were not drawn, there " +
+                "is a chance that you may be drawn in the future.";
+        User mockEntrant = accessEntrantDashboard();
+        User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date());
+
+        try {
+            Thread.sleep(3000);
+            db.RegisterUserIntoEvent(event, mockEntrant);
+            //Check no notification exists
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.removeBtn))
+                    .perform(click());
+            assertDoesNotExist(onView(withText(wantedMessage)));
+            onView(withId(R.id.home_button)).perform(click());
+            Thread.sleep(1500);
+            //Draw User
+            event.drawUsers(0);
+            Thread.sleep(1500);
+            //Go back to notif
+            onView(withId(R.id.notifs_button)).perform(click());
+            Thread.sleep(1500);
+            //Testing to see if notification has appeared
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.detailsBtn))
+                    .perform(click());
+            Thread.sleep(1500);
+
+            onView(withText(wantedMessage)).check(matches(isDisplayed()));
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(mockEntrant);
+            db.DeleteUser(mockOrg);
+            db.DeleteEvent(event);
+        }
+
+
+
     }
 
     /**
@@ -550,6 +622,7 @@ public class EntrantTestCases {
             Thread.sleep(1500);
 
             db.RegisterUserIntoEvent(event, mockEntrant);
+
             //Draw User
             event.drawUsers(-1);
             Thread.sleep(1500);
@@ -694,12 +767,15 @@ public class EntrantTestCases {
         Event mockEvent = createMockEvent(new Date());
         ArrayList<String> tempCategories = new ArrayList<>();
         tempCategories.add("Birthdays");
+        mockEvent.setMaxNumWaitlist(-1);
         mockEvent.setInterests(tempCategories);
+        mockEvent.setToBeDrawn(10);
+        db.SaveEvent(mockEvent);
 
         try {
             Thread.sleep(1500);
 
-            onView(withId(R.id.eventsIcon)).perform(click());
+            onView(withId(R.id.all_events_button)).perform(click());
 
             Thread.sleep(1500);
 
@@ -707,39 +783,55 @@ public class EntrantTestCases {
 
             Thread.sleep(1500);
 
-            onView(withId(R.id.interestsButton)).perform(click());
+            onView(withId(R.id.interestsLayoutButton)).perform(click());
 
             Thread.sleep(1500);
-
-            onView(withId(R.id.interestsButton)).perform(click());
 
             // Click "Clear All" first
             onView(withText("Clear All"))
                     .inRoot(isDialog())
                     .perform(click());
 
-            Thread.sleep(1500);
+            onView(withId(R.id.interestsLayoutButton)).perform(click());
 
             // Click "Birthday" item
-            onView(withText("Birthday"))
+            onView(withText("Birthdays"))
                     .inRoot(isDialog())
                     .perform(click());
 
-            Thread.sleep(1500);
 
             // Click "Add Interests" to confirm
             onView(withText("Add Interests"))
                     .inRoot(isDialog())
                     .perform(click());
 
+            Thread.sleep(1500);
+
+            onView(withId(R.id.availabilityButton)).perform(click());
 
             Thread.sleep(1500);
 
-            onView(withId(R.id.enableNotificationsSwitchBtn)).perform(click());
+            // Click "Birthday" item
+            onView(withText("Open"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+
+            // Click "Add Interests" to confirm
+            onView(withText("OK"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            onView(withId(R.id.goBackBtn)).perform(click());
+
+            Thread.sleep(1500);
 
             onData(anything())
                     .inAdapterView(withId(R.id.findEventsListView))
                     .atPosition(0)
+                    .onChildView(withText("Mock Event"))
                     .check(matches(isDisplayed()));
 
         } catch (InterruptedException e) {
