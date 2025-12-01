@@ -301,6 +301,7 @@
                             android:maxLines="8"
                             android:padding="4dp"
                             android:textColor="@color/black"
+                            android:gravity="top|start"
                             android:textSize="16dp">
 
                         </EditText>
