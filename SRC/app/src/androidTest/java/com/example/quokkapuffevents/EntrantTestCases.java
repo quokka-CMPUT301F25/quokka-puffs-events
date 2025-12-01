@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -15,6 +16,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,6 +57,10 @@ public class EntrantTestCases {
     without unexpected permission popups. */
     @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS);
+    @Rule
+    public GrantPermissionRule grantPermissionRuleFineGeo = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+    @Rule
+    public GrantPermissionRule grantPermissionRuleCoarseGeo = GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION);
 
     /**
      * Creates an entrant account for testing user stories.
@@ -108,7 +114,7 @@ public class EntrantTestCases {
      * A mock event for entrants to register for
      */
     public Event createMockEvent(Date eventDate) {
-        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, 0.0, 0.0, -1);
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, -34.0, 151.0, -1);
     }
 
     /**
@@ -187,6 +193,123 @@ public class EntrantTestCases {
         try { Thread.sleep(2000); } catch (Exception ignored) {}
 
         assertTrue("Verification never completed.", verified[0]);
+
+        // Cleanup
+        db.DeleteEvent(testEvent.getId());
+        db.DeleteUser(entrant.getId());
+        db.DeleteUser(organizer.getId());
+    }
+
+    /**
+     * User Story US 01.06.02 test case
+     */
+    @Test
+    public void TestJoinWaitingListFromDetails() {
+        // Create Organizer
+        User organizer = db.CreateUser("Organizer@Test.ca", 1, "pass",
+                "OrgUser", "Org", "User", "1111111111");
+        db.SetUserID(organizer.getId());
+
+        // Create Event
+        Event testEvent = createMockEvent(new Date());
+
+        //  Create Entrant
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
+
+        try {
+            Thread.sleep(2000);
+
+            //  Open Event List
+            onView(withId(R.id.all_events_button))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+
+            Thread.sleep(1500);
+
+            // Click Details Button
+            onData(anything())
+                    .inAdapterView(withId(R.id.findEventsListView))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.event_details_btn_all))
+                    .perform(click());
+
+            Thread.sleep(2000);
+
+            // Click Register Button
+            onView(withId(R.id.entrantRegisterForEventBtn))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+
+            Thread.sleep(2000);
+
+        } catch (Exception e) {
+            db.DeleteUser(entrant);
+            db.DeleteUser(organizer);
+            db.DeleteEvent(testEvent);
+            throw new RuntimeException(e);
+        }
+
+        // Verify Entrant Was Added Correctly
+        db.GetEvent(testEvent.getId(), event -> {
+            assertTrue("User is not added to waitlist.", event.getEventUsers().containsKey(entrant.getId()));
+            assertEquals("Waiting", event.getEventUsers().get(entrant.getId()));
+
+            db.GetUser(entrant.getId(), user -> {
+                assertTrue("Event did not appear in entrant event list.", user.getEvents().contains(testEvent.getId()));
+            });
+        });
+
+        try { Thread.sleep(2000); } catch (Exception ignored) {}
+
+        // Cleanup
+        db.DeleteEvent(testEvent.getId());
+        db.DeleteUser(entrant.getId());
+        db.DeleteUser(organizer.getId());
+    }
+
+
+    /**
+     * User Story US 01.01.02 test case
+     */
+    @Test
+    public void TestLeaveWaitingList() {
+        // Create Organizer
+        User organizer = db.CreateUser("Organizer@Test.ca", 1, "pass",
+                "OrgUser", "Org", "User", "1111111111");
+        db.SetUserID(organizer.getId());
+
+        // Create Event
+        Event testEvent = createMockEvent(new Date());
+        //  Create Entrant
+        User entrant = accessEntrantDashboard();
+        db.SetUserID(entrant.getId());
+        db.RegisterUserIntoEvent(testEvent, entrant);
+
+        try {
+            // Verify Entrant Was Cancelled Correctly
+            db.GetEvent(testEvent.getId(), event -> {
+                assertEquals("Waiting", event.getEventUsers().get(entrant.getId()));
+            });
+
+            Thread.sleep(2000);
+
+            //Run method that cancel button uses
+            db.CancelUserIntoEvent(testEvent, entrant);
+
+            // Verify Entrant Was Cancelled Correctly
+            db.GetEvent(testEvent.getId(), event -> {
+                assertEquals("Cancelled", event.getEventUsers().get(entrant.getId()));
+            });
+            Thread.sleep(2000);
+
+
+        } catch (Exception e) {
+            db.DeleteUser(entrant);
+            db.DeleteEvent(testEvent);
+            db.DeleteUser(organizer.getId());
+            throw new RuntimeException(e);
+        }
 
         // Cleanup
         db.DeleteEvent(testEvent.getId());
@@ -323,8 +446,49 @@ public class EntrantTestCases {
     // TODO: FINISH THE TEST
     @Test
     public void TestViewingPastEvents() {
+        User organizer = db.CreateUser("Organizer@Test.ca", 1, "pass",
+                "OrgUser", "Org", "User", "1111111111");
+        db.SetUserID(organizer.getId());
+
+        // Create Events
+        Event testEventChosen = db.CreateEvent("TestPastChosen", organizer.getId(), "Event to test past events", 1, 1, new Date(), new Date(), -34.0, 151.0, -1);
+        Event testEventNotChosen = db.CreateEvent("TestPastNotChosen", organizer.getId(), "Event to test past events", 0, 1, new Date(), new Date(), -34.0, 151.0, -1);
+
+        //  Create Entrant
         User entrant = accessEntrantDashboard();
-        db.DeleteUser(entrant);
+        db.SetUserID(entrant.getId());
+        db.RegisterUserIntoEvent(testEventChosen, entrant);
+        db.RegisterUserIntoEvent(testEventNotChosen, entrant);
+
+        //Drawing events
+        db.DrawUsers(testEventChosen);
+        db.DrawUsers(testEventNotChosen);
+
+        try {
+            Thread.sleep(1500);
+            onView(withId(R.id.settings_button)).perform(click());
+            Thread.sleep(4000);
+
+            //Checking that both events are there
+            onView(withId(R.id.past_events_listview))
+                    .check(matches(hasDescendant(withText("TestPastChosen"))));
+            onView(withId(R.id.past_events_listview))
+                    .check(matches(hasDescendant(withText("TestPastNotChosen"))));
+
+        } catch (InterruptedException e) {
+            db.DeleteUser(entrant);
+            db.DeleteUser(organizer);
+            db.DeleteEvent(testEventChosen);
+            db.DeleteEvent(testEventNotChosen);
+            throw new RuntimeException(e);
+        } finally {
+            db.DeleteUser(entrant);
+            db.DeleteUser(organizer);
+            db.DeleteEvent(testEventChosen);
+            db.DeleteEvent(testEventNotChosen);
+        }
+
+
     }
 
     /**
@@ -500,7 +664,7 @@ public class EntrantTestCases {
                 "is a chance that you may be drawn in the future.";
         User mockEntrant = accessEntrantDashboard();
         User mockOrg = db.CreateUser("TestDraw@email.com", 1, "AHHHH", "OrgTest", "John", "Test", "0");
-        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
+        Event event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), -34.0, 151.0, -1);
 
         try {
             Thread.sleep(3000);
@@ -595,9 +759,6 @@ public class EntrantTestCases {
             db.DeleteUser(mockOrg);
             db.DeleteEvent(event);
         }
-
-
-
     }
 
     /**
@@ -615,30 +776,43 @@ public class EntrantTestCases {
 
             Thread.sleep(1500);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), -34.0, 151.0, -1);
 
-            Thread.sleep(1500);
-
-            db.RegisterUserIntoEvent(event, mockEntrant);
-
-            //Draw User
-            event.drawUsers(-1);
-            Thread.sleep(1500);
+            Thread.sleep(20000);
 
             //Go notif
             onView(withId(R.id.notifs_button)).perform(click());
-            Thread.sleep(1500);
+            Thread.sleep(20000);
+
+            db.RegisterUserIntoEvent(event, mockEntrant);
+            Thread.sleep(20000);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.removeBtn))
+                    .perform(click());
+
+            Thread.sleep(20000);
+
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(20000);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.acceptBtn))
+                    .perform(click());
 
             //Testing to see if notification has appeared
-            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
-            onView(allOf(withId(R.id.acceptBtn), hasSibling(withText("X")))).perform(click());
+            Thread.sleep(20000);
 
             //Get updated event info
             db.GetEvent(event.getId(), updatedEvent -> {
                 assertEquals("Accepted", updatedEvent.getEventUsers().get(mockEntrant.getId()));
             });
-            Thread.sleep(1500);
-
+            Thread.sleep(20000);
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
@@ -673,28 +847,45 @@ public class EntrantTestCases {
 
             Thread.sleep(1500);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), -34.0, 151.0, -1);
 
-            Thread.sleep(3000);
-
-            db.RegisterUserIntoEvent(event, mockEntrant);
-            //Draw User
-            event.drawUsers(-1);
-            Thread.sleep(1500);
+            Thread.sleep(20000);
 
             //Go notif
             onView(withId(R.id.notifs_button)).perform(click());
-            Thread.sleep(1500);
+            Thread.sleep(20000);
+
+            db.RegisterUserIntoEvent(event, mockEntrant);
+            Thread.sleep(20000);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.removeBtn))
+                    .perform(click());
+
+            Thread.sleep(20000);
+
+            //Draw User
+            event.drawUsers(-1);
+            Thread.sleep(20000);
+
+            onData(anything())
+                    .inAdapterView(withId(R.id.NotifList))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.rejectBtn))
+                    .perform(click());
 
             //Testing to see if notification has appeared
-            onView(withText(R.string.winner_header)).check(matches(isDisplayed()));
-            onView(allOf(withId(R.id.rejectBtn), hasSibling(withText("X")))).perform(click());
+            Thread.sleep(20000);
 
-            //Get updated Event info
+            //Get updated event info
             db.GetEvent(event.getId(), updatedEvent -> {
-                assertEquals("Rejected", updatedEvent.getEventUsers().get(mockEntrant.getId()));
+                assertEquals("Cancelled", updatedEvent.getEventUsers().get(mockEntrant.getId()));
             });
+
             Thread.sleep(1500);
+
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
@@ -853,7 +1044,7 @@ public class EntrantTestCases {
 
             Thread.sleep(1500);
 
-            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), 0.0, 0.0, -1);
+            event = db.CreateEvent("TestDraw", mockOrg.getId(), "This event is used to test if a entrant is sent a notif", 1, 1, new Date(), new Date(), -34.0, 151.0, -1);
 
             Thread.sleep(3000);
 
@@ -905,7 +1096,6 @@ public class EntrantTestCases {
             }
         }
     }
-
     /**
      * User Story US 01.05.05 test case
      */

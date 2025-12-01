@@ -430,11 +430,8 @@
                             style="@style/SquareButton"/>
 
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
-
         </ScrollView>
 
         <Button
