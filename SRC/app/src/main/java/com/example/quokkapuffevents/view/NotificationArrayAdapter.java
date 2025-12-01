@@ -41,7 +41,7 @@ public class NotificationArrayAdapter extends ArrayAdapter<Notif> {
     public int getItemViewType(int position) {
         Notif notification = getItem(position);
 
-        // 🔥 Avoid crash:
+        // Avoid crash:
         if (notification == null) return 0;
         if (notification.getType() == null) return 0;
 

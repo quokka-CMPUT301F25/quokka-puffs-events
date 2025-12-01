@@ -7,12 +7,15 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/temp_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/mainblue"
         android:paddingHorizontal="8dp"
         android:paddingBottom="24dp"
         android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         >
 
         <TextView
@@ -75,9 +78,6 @@
 
 
             </LinearLayout>
-
-
-
         </LinearLayout>
 
     </LinearLayout>

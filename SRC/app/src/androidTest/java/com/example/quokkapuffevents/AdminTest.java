@@ -35,6 +35,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.example.quokkapuffevents.model.Database;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -49,6 +50,7 @@ import java.util.Date;
 @RunWith(AndroidJUnit4.class)
 public class AdminTest {
     Database db = Database.getInstance();
+    private final LatLng defaultLocation = new LatLng(-34, 151);
 
     /* For granting permissions of push notification, allows for tests to run properly
     without unexpected permission popups. */
@@ -102,7 +104,7 @@ public class AdminTest {
     }
 
     public Event createMockEvent(Date eventDate) {
-        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate);
+        return db.CreateEvent("Mock Event", "Mock Organizer", "Mock Description", 10, new Date(), eventDate, defaultLocation, -1);
     }
 
     public void deleteMockEvent(Event event) {

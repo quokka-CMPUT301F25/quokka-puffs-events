@@ -112,6 +112,15 @@
                     android:textColor="@color/black"
                     android:textSize="16dp" />
 
+                <Button
+                    android:id="@+id/setUserAddressBtn"
+                    style="@style/SquareButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/bluebtn"
+                    android:paddingHorizontal="50dp"
+                    android:text="Set Address" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
