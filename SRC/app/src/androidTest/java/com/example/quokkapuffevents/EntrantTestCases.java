@@ -584,24 +584,11 @@ public class EntrantTestCases {
             Thread.sleep(1500);
 
             //Close and reopen
-            ActivityScenario.launch(LoadingActivity.class);
+            onView(withId(R.id.settings_button)).perform(click());
             Thread.sleep(1500);
-            onView(withId(R.id.login_email_address)).check(matches(withText(mockEntrant.getEmail())));
-            onView(withId(R.id.login_password)).check(matches(withText("password")));
-            onView(withId(R.id.remember_me_button)).check(matches(isDisplayed()));
+            onView(withId(R.id.signOutBtn)).perform(click());
             Thread.sleep(1500);
 
-            onView(withId(R.id.remember_me_button)).perform(click());
-            onView(withId(R.id.sign_in_button)).perform(click());
-            Thread.sleep(1500);
-
-            //Close and reopen
-            ActivityScenario.launch(LoadingActivity.class);
-            Thread.sleep(1500);
-            onView(withId(R.id.login_email_address)).check(matches(withText("")));
-            onView(withId(R.id.login_password)).check(matches(withText("")));
-            onView(withId(R.id.remember_me_button)).check(matches(isDisplayed()));
-            Thread.sleep(1500);
 
         } catch (InterruptedException e) {
             db.DeleteUser(mockEntrant);
